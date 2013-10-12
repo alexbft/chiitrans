@@ -1,6 +1,7 @@
 ﻿# Chiitrans Lite
 Chiitrans Lite is an automatic translation tool for Japanese visual novels. It extracts, parses and translates text into English on the fly.
-Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.com/p/chiitrans/)
+
+Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.com/p/chiitrans/).
 # Differences between Chiitrans and Chiitrans Lite
 ## New features
 * Using modified [ITH](http://code.google.com/p/interactive-text-hooker/) engine for text extraction
@@ -37,16 +38,16 @@ Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.co
 * [Visual Nover Reader](https://code.google.com/p/annot-player/) - Modified text extraction engine (vnr\*.dll). The project is huge, I have used only these dll files from this project.
 * [Locale Emulator](https://github.com/xupefei/Locale-Emulator) - An AppLocale alternative
 # License
-   Copyright 2013 alexbft
+    Copyright 2013 alexbft
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this software except in compliance with the License.
-   You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this software except in compliance with the License.
+    You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
