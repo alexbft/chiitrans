@@ -9,6 +9,7 @@ Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.co
 * Japanese proper names dictionary ([JMnedict](http://www.csse.monash.edu.au/~jwb/enamdict_doc.html)) support
 * Improved parsing algorithm
 * Lots of usability improvements
+
 ## Removed features
 * All online translation services removed. ATLAS is the only supported translation software.
 * That means no more horrible Jp->En->Ru PROMT translations, too
@@ -18,12 +19,14 @@ Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.co
 * No user dictionary words (except names)
 * No crowdsourced translations
 * "Fullscreen" mode
+
 # System requirements
 ## Minimal
 * Windows XP or later
 * .NET Framework 4
 * Internet Explorer 8+
 * 500 MB of free memory
+
 ## Recommended
 * Windows 7 or later
 * .NET Framework 4
@@ -37,6 +40,7 @@ Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.co
 * [ITH](http://code.google.com/p/interactive-text-hooker/) - Original text extraction engine
 * [Visual Nover Reader](https://code.google.com/p/annot-player/) - Modified text extraction engine (vnr\*.dll). The project is huge, I have used only these dll files from this project.
 * [Locale Emulator](https://github.com/xupefei/Locale-Emulator) - An AppLocale alternative
+
 # License
     Copyright 2013 alexbft
 
