@@ -1,0 +1,56 @@
+body {
+    background-color: #e4e4e4;
+    overflow: hidden;
+    font: 14px Microsoft Sans Serif;
+    line-height: 150%;
+}
+
+.content {
+    padding: 5px 15px 5px 15px;
+    position: relative;
+}
+
+.groupbox {
+    display: inline-block;
+    margin: 10px 10px 10px 0;
+    padding: 10px;
+    position: relative;
+    border: 1px solid silver;
+    vertical-align: top;
+    height: 110px;
+}
+
+.groupbox:last-child {
+    margin-right: 0;
+}
+
+.groupbox > .caption {
+    position: absolute;
+    top: -12px;
+    background-color: #e4e4e4;
+    padding: 0 5px;
+}
+
+.groupbox label {
+    display: block;
+    line-height: 200%;
+}
+
+.buttons {
+    position: absolute;
+    z-index: 1;
+    bottom: 10px;
+    right: 16px;
+}
+
+.buttons button {
+    width: 80px;
+}
+
+#theme {
+    width: 100%;
+}
+
+.opgroup {
+    margin-bottom: 10px;
+}

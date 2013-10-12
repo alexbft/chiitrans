@@ -1,0 +1,37 @@
+<!doctype html>
+<html class="hint ie9">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="res/style.css" />
+        <link rel="stylesheet" href="res/hint.css" />
+        <script src="js/jquery.js"></script>
+        <script src="js/underscore.js"></script>
+        <script src="js/host.js"></script>
+        <!--[if lte IE 8]>
+            <script>
+                $('html').removeClass('ie9').addClass('ie8');
+            </script>
+        <![endif]-->
+    </head>
+    <body>
+        <div id="hint" class="hint_frame">
+            <div id="pageNumFrame" style="visibility:hidden;">
+                <a href="#" id="prevPage">&larr;</a>
+                <span id="pageNum"></span>
+                <a href="#" id="nextPage">&rarr;</a>
+            </div>
+            <div id="page" class="page">
+                <div style="float:right; max-width: 150px">
+                    <div id="kanji"></div>
+                    <div id="kana"></div>
+                </div>
+                <div id="sense"></div>
+                <div id="nameType"></div>
+                <div id="infType"></div>
+                <div id="tense"></div>
+            </div>
+        </div>
+        <script src="js/hint.js"></script>
+    </body>
+</html>

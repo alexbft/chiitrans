@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LEConfig>
+  <Profiles>
+    <Profile Name="Run in Japanese" Guid="a4bb3b58-1243-4cc1-b72b-49f549a8b448" MainMenu="false">
+      <Parameter></Parameter>
+      <Location>ja-JP</Location>
+      <DefaultFont>MS Gothic</DefaultFont>
+      <Timezone>Tokyo Standard Time</Timezone>
+      <RunWithSuspend>false</RunWithSuspend>
+    </Profile>
+  </Profiles>
+</LEConfig>

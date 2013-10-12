@@ -1,0 +1,63 @@
+<!doctype html>
+<html class="main ie9">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="res/jquery-ui.css" />
+        <link rel="stylesheet" href="res/style.css" />
+        <link rel="stylesheet" href="res/translation.css" />
+        <link rel="stylesheet" href="res/fontello.css" />
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery-ui.js"></script>
+        <script src="js/underscore.js"></script>
+        <script src="js/host.js"></script>
+        <!--[if lte IE 8]>
+            <script>
+                $('html').removeClass('ie9').addClass('ie8');
+            </script>
+        <![endif]-->
+        <style id="fontSizeStyle"></style>
+    </head>
+    <body>
+        <div id="log" style="position:absolute;right:5;bottom:5;color:red;z-index:100"></div>
+        <div class="buttons" id="buttonsLeft">
+            <button class="caption_btn" id="options" title="Options"><i class="icon-cog"></i></button><!--
+            --><span style="position:relative; display:inline-block">
+                <div id="trans_slider" class="slider" style="display:none" title="Transparency level"></div>
+                <button class="caption_btn" id="transparent" title="Transparent Mode"><i class="icon-popup"></i></button>
+            </span><!--
+            --><span style="position:relative; display:inline-block">
+                <div id="font_slider" class="slider" style="display:none" title="Font Size"></div>
+                <button class="caption_btn" id="font_size" title="Font Size"><i class="icon-text-height"></i></button>
+            </span>
+        </div>
+        <div class="buttons" id="buttonsRight">
+            <button class="caption_btn" id="minimize" title="Minimize">_</button><!--
+            --><button class="caption_btn" id="close" title="Close"><i class="icon-cancel"></i></button>
+        </div>
+        <div id="caption"><span id="captionText"></span></div>
+
+        <div style="position: fixed; left: 0; right: 0; top: 20px; text-align: center">
+            <span id="flash" style="display:none"></span>
+        </div>
+
+        <div id="content">
+            <div id="history" style="display:none">
+            </div>
+            <div id="current">
+            </div>
+        </div>
+
+        <div class="sides">
+            <div id="sideTop"></div>
+            <div id="sideBottom"></div>
+            <div id="sideLeft"></div>
+            <div id="sideRight"></div>
+            <div id="sideTopLeft"></div>
+            <div id="sideBottomLeft"></div>
+            <div id="sideTopRight"></div>
+            <div id="sideBottomRight"></div>
+        </div>
+        <script src="js/translation.js"></script>
+    </body>
+</html>

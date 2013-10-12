@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="res/style.css" />
+        <link rel="stylesheet" href="res/index.css" />
+        <link rel="stylesheet" href="res/fontello.css" />
+        <script src="js/jquery.js"></script>
+        <script src="js/underscore.js"></script>
+        <script src="js/host.js"></script>
+    </head>
+    <body class="startup">
+        <div id="log" style="position:absolute;right:0;bottom:0;color:red;z-index:100"></div>
+        <div id="startup">
+            <table class="table_process">
+                <tr>
+                    <td>
+                        <select id="process">
+                            <option id="process_default" value="" selected></option>
+                        </select>
+                    </td>
+                    <td class="td_btn"><button id="browse" title="Browse..." class="icon_btn btn"><i class="icon-folder-open"></i></button></td>
+                    <td class="td_btn"><button id="select_window" title="Select Desktop Window..." class="icon_btn btn"><i class="icon-window"></i></button></td>
+                </tr>
+            </table>
+            <div>
+                <button id="connect" class="btn" title="Connect to process">Connect</button>
+            </div>
+            <div id="connect_status"></div>
+            <div class="controls">
+                <button id="showTranslation1" class="btn showTranslation" title="Show Translation Window"><i class="icon-language"></i> TL Window</button><!--
+                --><button id="clipboard1" class="btn clipboardTranslation" title="Enable Translation from Clipboard"><i class="icon-clipboard"></i> Clipboard</button>
+            </div>
+        </div>
+        <div id="working" style="display:none">
+            <div id="contexts_frame">
+                <table id="contexts"></table>
+            </div>
+            <div class="controls">
+                <div style="float:right">
+                    <select id="newContexts">
+                        <option value="allow" selected>Read all new contexts</option>
+                        <option value="ignore">Ignore new contexts</option>
+                        <option value="switchto">Switch to new contexts</option>
+                    </select>
+                </div>
+                <button id="showTranslation2" class="btn showTranslation" title="Show Translation Window"><i class="icon-language"></i> Text</button><!--
+                --><button id="clipboard2" class="btn clipboardTranslation" title="Enable Translation from Clipboard"><i class="icon-clipboard"></i> Clipboard</button><!--
+                --><button id="showHooks" class="btn"><i class="icon-key" title="Install User Hooks..."></i> Hooks</button>
+            </div>
+        </div>
+    	<script src="js/index.js"></script>
+    </body>
+</html>

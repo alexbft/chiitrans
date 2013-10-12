@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="res/style.css" />
+        <link rel="stylesheet" href="res/textform-options.css" />
+        <script src="js/jquery.js"></script>
+        <script src="js/underscore.js"></script>
+        <script src="js/host.js"></script>
+    </head>
+    <body>
+        <div class="content">
+            <div class="opgroup">
+                <label for="theme">Theme</label><br />
+                <select id="theme">
+                    <option value="">Default</option>
+                </select>
+            </div>
+            <div class="opgroup">
+                <input id="separateWords" type="checkbox" />
+                <label for="separateWords">Separate words by spaces</label>
+            </div>
+            <div style="display:inline-block; margin-bottom: 10px;">
+                <div class="groupbox">
+                    <div class="caption">Display</div>
+                    <label>
+                        <input type="radio" name="display" value="PARSE" />
+                        Display parser only
+                    </label>
+                    <label>
+                        <input type="radio" name="display" value="TRANSLATION" />
+                        Display translation only
+                    </label>
+                    <label>
+                        <input type="radio" name="display" value="BOTH" />
+                        Display both
+                    </label>
+                </div>
+                <div>
+                    <button id="reset" tabindex="-1">Reset Parse Preferences</button>
+                </div>
+            </div>
+            <div class="groupbox">
+                <div class="caption">Okurigana</div>
+                <label>
+                    <input type="radio" name="okuri" value="NONE" />
+                    None
+                </label>
+                <label>
+                    <input type="radio" name="okuri" value="NORMAL" />
+                    Hiragana
+                </label>
+                <label>
+                    <input type="radio" name="okuri" value="ENGLISH" />
+                    Roman
+                </label>
+                <label>
+                    <input type="radio" name="okuri" value="RUSSIAN" />
+                    Cyrillic
+                </label>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="ok" tabindex="1">OK</button>
+            <button id="cancel" tabindex="2">Cancel</button>
+            <button id="apply" tabindex="3">Apply</button>
+        </div>
+        <script src="js/textform-options.js"></script>
+    </body>
+</html>

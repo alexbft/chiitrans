@@ -1,0 +1,7 @@
+.parsed {
+	background-color: transparent;
+}
+
+.parsed:hover {
+	background-color: #bfcae8;
+}
