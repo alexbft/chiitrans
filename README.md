@@ -2,6 +2,9 @@
 Chiitrans Lite is an automatic translation tool for Japanese visual novels. It extracts, parses and translates text into English on the fly.
 
 Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.com/p/chiitrans/).
+
+Visit http://alexbft.github.io/chiitrans/ for more info.
+
 # Differences between Chiitrans and Chiitrans Lite
 ## New features
 * Using modified [ITH](http://code.google.com/p/interactive-text-hooker/) engine for text extraction
