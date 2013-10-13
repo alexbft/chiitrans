@@ -33,6 +33,7 @@ Chiitrans Lite is the successor of the project [Chiitrans](http://code.google.co
 * Internet Explorer 10+
 * 500 MB of free memory
 * [ATLAS V14](http://www.fujitsu.com/global/services/software/translation/atlas/index.html) installed
+
 # Other project mentions
 * [JMDict](http://www.csse.monash.edu.au/~jwb/jmdict.html) - Japanese-English dictionary used in Chiitrans Lite
 * [Translation Aggregator](http://www.hongfire.com/forum/showthread.php/94395-Translation-Aggregator-v0-4-9) - Insight for ATLAS integration, conjugations list, and more. Many thanks to author!
