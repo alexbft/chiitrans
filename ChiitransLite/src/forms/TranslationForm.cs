@@ -189,10 +189,10 @@ namespace ChiitransLite.forms {
                 isFullscreen = Utils.isFullscreen();
                 if (isFullscreen) {
                     setTransparentMode(false);
+                    FormUtil.fixFormPosition(this, Winapi.GetForegroundWindow());
                 } else {
                     Utils.setWindowNoActivate(this.Handle, false);
                 }
-                FormUtil.fixFormPosition(this, Winapi.GetForegroundWindow());
                 this.hideHint();
                 this.BringToFront();
                 if (isFullscreen) {
