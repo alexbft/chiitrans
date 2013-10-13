@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Chiitrans Lite by alexbft</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Chiitrans Lite</h1>
+        <p>Chiitrans Lite is an automatic translation tool for Japanese visual novels</p>
+
+        <p class="view"><a href="https://github.com/alexbft/chiitrans">View the Project on GitHub <small>alexbft/chiitrans</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/alexbft/chiitrans/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/alexbft/chiitrans/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/alexbft/chiitrans">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="chiitrans-lite" class="anchor" href="#chiitrans-lite"><span class="octicon octicon-link"></span></a>Chiitrans Lite</h1>
+
+<p>Chiitrans Lite is an automatic translation tool for Japanese visual novels. It extracts, parses and translates text into English on the fly.</p>
+
+<p>Chiitrans Lite is the successor of the project <a href="http://code.google.com/p/chiitrans/">Chiitrans</a>.</p>
+
+<h1>
+<a name="differences-between-chiitrans-and-chiitrans-lite" class="anchor" href="#differences-between-chiitrans-and-chiitrans-lite"><span class="octicon octicon-link"></span></a>Differences between Chiitrans and Chiitrans Lite</h1>
+
+<h2>
+<a name="new-features" class="anchor" href="#new-features"><span class="octicon octicon-link"></span></a>New features</h2>
+
+<ul>
+<li>Using modified <a href="http://code.google.com/p/interactive-text-hooker/">ITH</a> engine for text extraction</li>
+<li>That means support for multiple user hooks (AGTH codes)</li>
+<li>Japanese proper names dictionary (<a href="http://www.csse.monash.edu.au/%7Ejwb/enamdict_doc.html">JMnedict</a>) support</li>
+<li>Improved parsing algorithm</li>
+<li>Lots of usability improvements</li>
+</ul><h2>
+<a name="removed-features" class="anchor" href="#removed-features"><span class="octicon octicon-link"></span></a>Removed features</h2>
+
+<ul>
+<li>All online translation services removed. ATLAS is the only supported translation software.</li>
+<li>That means no more horrible Jp-&gt;En-&gt;Ru PROMT translations, too</li>
+<li>Parsing: MeCab support</li>
+<li>Parsing: WWWJDIC support</li>
+<li>No arbitrary text replacements</li>
+<li>No user dictionary words (except names)</li>
+<li>No crowdsourced translations</li>
+<li>"Fullscreen" mode</li>
+</ul><h1>
+<a name="system-requirements" class="anchor" href="#system-requirements"><span class="octicon octicon-link"></span></a>System requirements</h1>
+
+<h2>
+<a name="minimal" class="anchor" href="#minimal"><span class="octicon octicon-link"></span></a>Minimal</h2>
+
+<ul>
+<li>Windows XP or later</li>
+<li>.NET Framework 4</li>
+<li>Internet Explorer 8+</li>
+<li>500 MB of free memory</li>
+</ul><h2>
+<a name="recommended" class="anchor" href="#recommended"><span class="octicon octicon-link"></span></a>Recommended</h2>
+
+<ul>
+<li>Windows 7 or later</li>
+<li>.NET Framework 4</li>
+<li>Internet Explorer 10+</li>
+<li>500 MB of free memory</li>
+<li>
+<a href="http://www.fujitsu.com/global/services/software/translation/atlas/index.html">ATLAS V14</a> installed</li>
+</ul><h1>
+<a name="other-project-mentions" class="anchor" href="#other-project-mentions"><span class="octicon octicon-link"></span></a>Other project mentions</h1>
+
+<ul>
+<li>
+<a href="http://www.csse.monash.edu.au/%7Ejwb/jmdict.html">JMDict</a> - Japanese-English dictionary used in Chiitrans Lite</li>
+<li>
+<a href="http://www.hongfire.com/forum/showthread.php/94395-Translation-Aggregator-v0-4-9">Translation Aggregator</a> - Insight for ATLAS integration, conjugations list, and more. Many thanks to author!</li>
+<li>
+<a href="https://sites.google.com/site/agthook/">AGTH</a> - A text extraction tool used in the previous version of Chiitrans. In this version, AGTH is only needed for launching programs using AppLocale without annoying dialog boxes.</li>
+<li>
+<a href="http://code.google.com/p/interactive-text-hooker/">ITH</a> - Original text extraction engine</li>
+<li>
+<a href="https://code.google.com/p/annot-player/">Visual Nover Reader</a> - Modified text extraction engine (vnr*.dll). The project is huge, I have used only these dll files from this project.</li>
+<li>
+<a href="https://github.com/xupefei/Locale-Emulator">Locale Emulator</a> - An AppLocale alternative</li>
+</ul><h1>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
+
+<pre><code>Copyright 2013 alexbft
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this software except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/alexbft">alexbft</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
