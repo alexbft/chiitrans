@@ -65,7 +65,9 @@ namespace ChiitransLite.misc {
             result = result.Replace("っ", "");
             result = result.Replace("u゜", "ū").Replace("o゜", "ō").Replace("i゜", "ī").Replace("a゜", "ā").Replace("e゜", "ē");
             result = result.Replace("np", "mp").Replace("nb", "mb").Replace("nm", "mm");
+            result = result.Replace("deha", "dewa");
             result = result.Replace("\0", "");
+            if (result == "ha") result = "wa";
             return result;
         }
 

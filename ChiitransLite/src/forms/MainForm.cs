@@ -132,7 +132,7 @@ namespace ChiitransLite.forms {
 
             public bool toggleClipboardTranslation() {
                 bool newValue = !Settings.app.clipboardTranslation;
-                TranslationService.instance.setClipboardTranslation(newValue);
+                TranslationForm.instance.setClipboardTranslation(newValue);
                 return newValue;
             }
 
@@ -201,14 +201,11 @@ namespace ChiitransLite.forms {
         }
 
         private void showBrowseDialog() {
-            TranslationForm.instance.TopMost = false;
-            try {
+            TranslationForm.instance.SuspendTopMost(() => {
                 if (openExeFile.ShowDialog() == DialogResult.OK) {
                     setDefaultProcess(0, openExeFile.FileName);
                 }
-            } finally {
-                TranslationForm.instance.TopMost = true;
-            }
+            });
         }
 
         private void connectError(string errMsg) {
@@ -254,6 +251,11 @@ namespace ChiitransLite.forms {
         }
 
         private void showTranslationForm() {
+            // a nasty bug with disappearing form workaround
+            if (TranslationForm.instance.Visible && Settings.app.transparentMode && TranslationForm.instance.WindowState != FormWindowState.Minimized) {
+                TranslationForm.instance.TransparencyKey = Color.Empty;
+                TranslationForm.instance.setTransparentMode(true, false);
+            }
             TranslationForm.instance.Show();
             if (TranslationForm.instance.WindowState == FormWindowState.Minimized) {
                 TranslationForm.instance.WindowState = FormWindowState.Normal;

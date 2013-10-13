@@ -13,6 +13,7 @@ using System.Configuration;
 using ChiitransLite.forms;
 using ChiitransLite.settings;
 using System.Management;
+using System.Drawing;
 
 namespace ChiitransLite.misc {
     static class Utils {
@@ -141,6 +142,38 @@ namespace ChiitransLite.misc {
 
         internal static void info(string p) {
             MessageBox.Show(p, "Chiitrans Lite", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        internal static void setWindowNoActivate(IntPtr hwnd, bool isNoActivate = true) {
+            int oldStyle = Winapi.GetWindowLong(hwnd, Winapi.GWL_EXSTYLE);
+            if (isNoActivate) {
+                Winapi.SetWindowLong(hwnd, Winapi.GWL_EXSTYLE, oldStyle | Winapi.WS_EX_NOACTIVATE);
+            } else {
+                Winapi.SetWindowLong(hwnd, Winapi.GWL_EXSTYLE, oldStyle & ~Winapi.WS_EX_NOACTIVATE);
+            }
+        }
+
+        internal static bool isFullscreen() {
+            Winapi.RECT appBounds;
+            Rectangle screenBounds;
+            IntPtr hWnd;
+
+            //get the dimensions of the active window
+            hWnd = Winapi.GetForegroundWindow();
+            IntPtr desktopHandle = Winapi.GetDesktopWindow();
+            IntPtr shellHandle = Winapi.GetShellWindow();
+            if (hWnd != null && !hWnd.Equals(IntPtr.Zero)) {
+                //Check we haven't picked up the desktop or the shell
+                if (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))) {
+                    Winapi.GetWindowRect(hWnd, out appBounds);
+                    //determine if window is fullscreen
+                    screenBounds = Screen.FromHandle(hWnd).Bounds;
+                    if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

@@ -19,13 +19,13 @@ namespace ChiitransLite.translation.edict.inflect {
             this.suffix = suffix;
             this.form = form;
             string tense = null;
-            if (form != null && !string.IsNullOrEmpty(form.Tense) && form.Tense != "Remove" && form.Tense != "Stem") {
+            if (form != null && !string.IsNullOrEmpty(form.Tense) && form.Tense != "Remove" && form.Tense != "Stem" && form.Tense != "Te-form") {
                 tense = form.Tense;
                 hasOwnTense = true;
             } else {
                 hasOwnTense = false;
             }
-            if (!string.IsNullOrEmpty(prevTense) && prevTense != "Remove" && prevTense != "Stem") {
+            if (!string.IsNullOrEmpty(prevTense) && prevTense != "Remove" && prevTense != "Stem" && form.Tense != "Te-form") {
                 if (tense == null) {
                     tense = prevTense;
                 } else {
@@ -37,7 +37,7 @@ namespace ChiitransLite.translation.edict.inflect {
         }
 
         internal void updateTense(string t) {
-            if (!hasOwnTense && !string.IsNullOrEmpty(t) && t != "Remove" && t != "Stem") {
+            if (!hasOwnTense && !string.IsNullOrEmpty(t) && t != "Remove" && t != "Stem" && form.Tense != "Te-form") {
                 if (tense == null) {
                     tense = t;
                 } else {
@@ -69,9 +69,10 @@ namespace ChiitransLite.translation.edict.inflect {
             {'い', "こ"},
             {'た', "き"},
             {'ち', "き"},
+            {'な', "き"}
         };
 
-        internal string getReading() {
+        internal static string getReading(string suffix) {
             if (!(suffix.Length >= 1 && suffix[0] == '来')) {
                 return suffix;
             } else {
@@ -97,6 +98,10 @@ namespace ChiitransLite.translation.edict.inflect {
                     return "き";
                 }
             }
+        }
+
+        internal string getReading() {
+            return getReading(suffix);
         }
 
     }

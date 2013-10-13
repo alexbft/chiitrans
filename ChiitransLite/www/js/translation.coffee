@@ -3,6 +3,7 @@ $history = null
 $content = null
 $current = null
 separateWords = false
+separateSpeaker = false
 
 $ ->
     options = host().getOptions()
@@ -151,7 +152,7 @@ newTranslationResult = window.newTranslationResult = (id, text) ->
             onNewEntry id
         entry = $currentEntry
     if entry.length
-        $('#translation', entry).text(text)
+        $('#translation', entry).html _.escape(text).replace(/\n/g, '<br>')
     return
 
 newParseResult = window.newParseResult = (id, parseResult) ->
@@ -166,6 +167,11 @@ newParseResult = window.newParseResult = (id, parseResult) ->
     return
 
 setTransparentMode = window.setTransparentMode = (isEnabled) ->
+    aero = host().getAero()
+    if aero
+        $('html').removeClass('no_aero').addClass('aero')
+    else
+        $('html').removeClass('aero').addClass('no_aero')
     if isEnabled
         $('html').addClass('transparent')
     else
@@ -205,8 +211,12 @@ updateReading = window.updateReading = (text, reading) ->
                 rt.html "&#8203;#{_.escape reading}&#8203;"
     return
 
-setSeparateWords = window.setSeparateWords = (sw) ->
-    separateWords = sw
+setSeparateWords = window.setSeparateWords = (b) ->
+    separateWords = b
+    return
+
+setSeparateSpeaker = window.setSeparateSpeaker = (b) ->
+    separateSpeaker = b
     return
 
 moveToHistory = (entry) ->
@@ -236,13 +246,26 @@ renderParseResult = (p) ->
             "<span>" + (_.escape s.charAt j) + "</span>"
         q.join('')
     okuri = parseResult.okuri
+    breakIndex = -1
+    if separateSpeaker
+        lastPart = parseResult.parts[parseResult.parts.length - 1]
+        if not _.isArray(lastPart)
+            lastChar = lastPart.charAt lastPart.length - 1
+            if lastChar in ["』", "」"]
+                if lastChar == "』" then firstChar = "『" else firstChar = "「"
+                for j in [0 ... parseResult.parts.length]
+                    part = parseResult.parts[j]
+                    if not _.isArray(part)
+                        firstCharIdx = part.indexOf(firstChar)
+                        if firstCharIdx != -1 and not (j == 0 and firstCharIdx == 0) 
+                            breakIndex = j
+                            break
     for part in parseResult.parts
         if _.isArray part
             [text, stem, reading, isName] = part
             parsedClassSuffix = if isName then "_name" else colorNum
             if not reading? or reading == ""
                 $block = $ """<span class="noruby"><span data-num="#{i}" class="text parsed parsed#{parsedClassSuffix}"><span class="basetext">#{format text}</span></span></span>"""
-                $block.find('.parsed').data('text', text)
             else
                 readingFormatted = "&#8203;#{_.escape reading}&#8203;"
                 if okuri == "NORMAL"
@@ -250,16 +273,19 @@ renderParseResult = (p) ->
                         #arroor?
                         stem = text
                     inf = text.substr(stem.length)
-                    $block = $ """<span data-num="#{i}" class="text parsed parsed#{parsedClassSuffix}"><ruby class="normal"><span class="basetext">#{format stem}</span><rt>#{readingFormatted}</rt></ruby><span class="basetext">#{format inf}</span></span>"""
+                    $block = $ """<span class="ruby"><span data-num="#{i}" class="text parsed parsed#{parsedClassSuffix}"><ruby class="normal"><span class="basetext">#{format stem}</span><rt>#{readingFormatted}</rt></ruby><span class="basetext">#{format inf}</span></span></span>"""
                     $block.find('rt').data('text', stem)
                 else
-                    $block = $ """<span data-num="#{i}" class="text parsed parsed#{parsedClassSuffix}"><ruby class="special"><span class="basetext">#{format text}</span><rt>#{readingFormatted}</rt></ruby></span>"""
+                    $block = $ """<span class="ruby"><span data-num="#{i}" class="text parsed parsed#{parsedClassSuffix}"><ruby class="special"><span class="basetext">#{format text}</span><rt>#{readingFormatted}</rt></ruby></span></span>"""
                     $block.find('rt').data('text', text)
-                $block.data('text', text)
+            $block.find('.parsed').data('text', text)
             res.append $block
             colorNum = 1 - colorNum
         else
-            res.append $ """<span data-num="#{i}" class="text unparsed">#{format part}</span>"""
+            unparsed = format part
+            if i == breakIndex
+                unparsed = unparsed.replace(firstChar, '<br />' + firstChar)
+            res.append $ """<span data-num="#{i}" class="text unparsed">#{unparsed}</span>"""
         if separateWords
             res.append "<span>&#8203; &#8203;</span>"
         i += 1

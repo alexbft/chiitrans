@@ -1,5 +1,5 @@
 ﻿(function() {
-  var $content, $current, $currentEntry, $history, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, separateWords, setFontSize, setSeparateWords, setTransparentMode, updateReading;
+  var $content, $current, $currentEntry, $history, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparentMode, updateReading;
 
   MAX_LOG = 20;
 
@@ -10,6 +10,8 @@
   $current = null;
 
   separateWords = false;
+
+  separateSpeaker = false;
 
   $(function() {
     var captionLastClick, fromLg, hiding, hidingTimer, makeResizer, options, toLg;
@@ -173,7 +175,7 @@
       entry = $currentEntry;
     }
     if (entry.length) {
-      $('#translation', entry).text(text);
+      $('#translation', entry).html(_.escape(text).replace(/\n/g, '<br>'));
     }
   };
 
@@ -193,6 +195,13 @@
   };
 
   setTransparentMode = window.setTransparentMode = function(isEnabled) {
+    var aero;
+    aero = host().getAero();
+    if (aero) {
+      $('html').removeClass('no_aero').addClass('aero');
+    } else {
+      $('html').removeClass('aero').addClass('no_aero');
+    }
     if (isEnabled) {
       $('html').addClass('transparent');
     } else {
@@ -248,8 +257,12 @@
     }
   };
 
-  setSeparateWords = window.setSeparateWords = function(sw) {
-    separateWords = sw;
+  setSeparateWords = window.setSeparateWords = function(b) {
+    separateWords = b;
+  };
+
+  setSeparateSpeaker = window.setSeparateSpeaker = function(b) {
+    separateSpeaker = b;
   };
 
   moveToHistory = function(entry) {
@@ -269,7 +282,7 @@
   };
 
   renderParseResult = function(p) {
-    var $block, colorNum, format, i, inf, isName, okuri, parseResult, parsedClassSuffix, part, reading, readingFormatted, res, stem, text, _i, _len, _ref;
+    var $block, breakIndex, colorNum, firstChar, firstCharIdx, format, i, inf, isName, j, lastChar, lastPart, okuri, parseResult, parsedClassSuffix, part, reading, readingFormatted, res, stem, text, unparsed, _i, _j, _len, _ref, _ref1;
     parseResult = JSON.parse(p);
     lastParseResult = parseResult;
     res = $("<span>");
@@ -291,15 +304,38 @@
       return q.join('');
     };
     okuri = parseResult.okuri;
-    _ref = parseResult.parts;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      part = _ref[_i];
+    breakIndex = -1;
+    if (separateSpeaker) {
+      lastPart = parseResult.parts[parseResult.parts.length - 1];
+      if (!_.isArray(lastPart)) {
+        lastChar = lastPart.charAt(lastPart.length - 1);
+        if (lastChar === "』" || lastChar === "」") {
+          if (lastChar === "』") {
+            firstChar = "『";
+          } else {
+            firstChar = "「";
+          }
+          for (j = _i = 0, _ref = parseResult.parts.length; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
+            part = parseResult.parts[j];
+            if (!_.isArray(part)) {
+              firstCharIdx = part.indexOf(firstChar);
+              if (firstCharIdx !== -1 && !(j === 0 && firstCharIdx === 0)) {
+                breakIndex = j;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    _ref1 = parseResult.parts;
+    for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
+      part = _ref1[_j];
       if (_.isArray(part)) {
         text = part[0], stem = part[1], reading = part[2], isName = part[3];
         parsedClassSuffix = isName ? "_name" : colorNum;
         if (!(reading != null) || reading === "") {
           $block = $("<span class=\"noruby\"><span data-num=\"" + i + "\" class=\"text parsed parsed" + parsedClassSuffix + "\"><span class=\"basetext\">" + (format(text)) + "</span></span></span>");
-          $block.find('.parsed').data('text', text);
         } else {
           readingFormatted = "&#8203;" + (_.escape(reading)) + "&#8203;";
           if (okuri === "NORMAL") {
@@ -307,18 +343,22 @@
               stem = text;
             }
             inf = text.substr(stem.length);
-            $block = $("<span data-num=\"" + i + "\" class=\"text parsed parsed" + parsedClassSuffix + "\"><ruby class=\"normal\"><span class=\"basetext\">" + (format(stem)) + "</span><rt>" + readingFormatted + "</rt></ruby><span class=\"basetext\">" + (format(inf)) + "</span></span>");
+            $block = $("<span class=\"ruby\"><span data-num=\"" + i + "\" class=\"text parsed parsed" + parsedClassSuffix + "\"><ruby class=\"normal\"><span class=\"basetext\">" + (format(stem)) + "</span><rt>" + readingFormatted + "</rt></ruby><span class=\"basetext\">" + (format(inf)) + "</span></span></span>");
             $block.find('rt').data('text', stem);
           } else {
-            $block = $("<span data-num=\"" + i + "\" class=\"text parsed parsed" + parsedClassSuffix + "\"><ruby class=\"special\"><span class=\"basetext\">" + (format(text)) + "</span><rt>" + readingFormatted + "</rt></ruby></span>");
+            $block = $("<span class=\"ruby\"><span data-num=\"" + i + "\" class=\"text parsed parsed" + parsedClassSuffix + "\"><ruby class=\"special\"><span class=\"basetext\">" + (format(text)) + "</span><rt>" + readingFormatted + "</rt></ruby></span></span>");
             $block.find('rt').data('text', text);
           }
-          $block.data('text', text);
         }
+        $block.find('.parsed').data('text', text);
         res.append($block);
         colorNum = 1 - colorNum;
       } else {
-        res.append($("<span data-num=\"" + i + "\" class=\"text unparsed\">" + (format(part)) + "</span>"));
+        unparsed = format(part);
+        if (i === breakIndex) {
+          unparsed = unparsed.replace(firstChar, '<br />' + firstChar);
+        }
+        res.append($("<span data-num=\"" + i + "\" class=\"text unparsed\">" + unparsed + "</span>"));
       }
       if (separateWords) {
         res.append("<span>&#8203; &#8203;</span>");

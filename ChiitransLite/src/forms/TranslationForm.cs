@@ -4,6 +4,7 @@ using ChiitransLite.texthook;
 using ChiitransLite.translation;
 using ChiitransLite.translation.edict;
 using ChiitransLite.translation.edict.parseresult;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChiitransLite.forms {
@@ -27,6 +30,7 @@ namespace ChiitransLite.forms {
         private int waitingForId = -1;
         private string lastSelection = null;
         private bool lastIsRealSelection = true;
+        private bool isFullscreen = false;
         
         class InteropMethods {
             private TranslationForm form;
@@ -139,10 +143,8 @@ namespace ChiitransLite.forms {
                 };
             }
 
-            public bool toggleClipboardTranslation() {
-                bool newValue = !Settings.app.clipboardTranslation;
-                TranslationService.instance.setClipboardTranslation(newValue);
-                return newValue;
+            public bool getAero() {
+                return Utils.isWindowsVistaOrLater() && Winapi.DwmIsCompositionEnabled();
             }
 
             public void showContextMenu(string selection, bool isRealSelection, int selectedParseResultId) {
@@ -178,6 +180,31 @@ namespace ChiitransLite.forms {
                     this.SuspendTopMostEnd();
                 }
             };
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+            //Utils.setWindowNoActivate(this.Handle);
+        }
+
+        void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) {
+            if (this.Visible) {
+                isFullscreen = Utils.isFullscreen();
+                if (isFullscreen) {
+                    setTransparentMode(false);
+                } else {
+                    Utils.setWindowNoActivate(this.Handle, false);
+                }
+                FormUtil.fixFormPosition(this, Winapi.GetForegroundWindow());
+                this.hideHint();
+                this.BringToFront();
+                if (isFullscreen) {
+                    Task.Factory.StartNew(() => {
+                        Thread.Sleep(2000);
+                        Invoke(new Action(() => {
+                            hideHint();
+                            BringToFront();
+                        }));
+                    });
+                }
+            }
         }
 
         private static TranslationForm _instance = null;
@@ -427,16 +454,20 @@ namespace ChiitransLite.forms {
         }
 
         internal void setTransparentMode(bool isEnabled, bool propagateToClient = true) {
-            Settings.app.transparentMode = isEnabled;
+            if (Settings.app.transparentMode != isEnabled) {
+                Settings.app.transparentMode = isEnabled;
+            }
             if (isEnabled) {
-                this.TransparencyKey = Color.FromArgb(0, 0, 1);
-                this.BackColor = Color.FromArgb(0, 0, 1);
                 moveBackgroundForm();
                 this.backgroundForm.Show();
+                this.TransparencyKey = Color.FromArgb(0, 0, 1);
+                this.BackColor = Color.FromArgb(0, 0, 1);
+                Utils.setWindowNoActivate(Handle, isFullscreen);
             } else {
                 this.TransparencyKey = Color.Empty;
                 this.BackColor = SystemColors.Window;
                 this.backgroundForm.Hide();
+                Utils.setWindowNoActivate(Handle, isFullscreen);
             }
             if (propagateToClient) {
                 webBrowser1.callScript("setTransparentMode", isEnabled);
@@ -449,8 +480,9 @@ namespace ChiitransLite.forms {
         }
 
         private void TranslationForm_Shown(object sender, EventArgs e) {
-            TranslationService.instance.setClipboardTranslation(Settings.app.clipboardTranslation);
+            setClipboardTranslation(Settings.app.clipboardTranslation);
             applyCurrentSettings();
+            SystemEvents_DisplaySettingsChanged(null, null);
         }
 
         private void transparentModeToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -476,6 +508,7 @@ namespace ChiitransLite.forms {
         internal void applyCurrentSettings() {
             webBrowser1.callScript("applyTheme", Settings.app.cssTheme);
             webBrowser1.callScript("setSeparateWords", Settings.app.separateWords);
+            webBrowser1.callScript("setSeparateSpeaker", Settings.app.separateSpeaker);
             hintForm.applyTheme(Settings.app.cssTheme);
         }
 
@@ -518,6 +551,42 @@ namespace ChiitransLite.forms {
 
         private void TranslationForm_Activated(object sender, EventArgs e) {
             moveBackgroundForm();
+        }
+
+        public void setClipboardTranslation(bool isEnabled) {
+            if (Settings.app.clipboardTranslation != isEnabled) {
+                Settings.app.clipboardTranslation = isEnabled;
+            }
+            _setClipboardTranslation(isEnabled);
+        }
+
+        private void _setClipboardTranslation(bool isEnabled) {
+            if (isEnabled) {
+                clipboardMonitor1.ClipboardChanged += clipboardMonitor1_ClipboardChanged;
+            } else {
+                clipboardMonitor1.ClipboardChanged -= clipboardMonitor1_ClipboardChanged;
+            }
+        }
+
+        void clipboardMonitor1_ClipboardChanged(object sender, EventArgs e) {
+            if (Clipboard.ContainsText()) {
+                TranslationService.instance.update(TextHookContext.cleanText(Clipboard.GetText()));
+            }
+        }
+
+        protected override bool ShowWithoutActivation {
+            get {
+                return true;
+            }
+        }
+
+        const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
+        
+        protected override void WndProc(ref Message m) {
+            if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
+                setTransparentMode(Settings.app.transparentMode);
+            }
+            base.WndProc(ref m);
         }
     }
 }

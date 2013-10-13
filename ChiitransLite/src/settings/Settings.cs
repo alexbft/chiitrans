@@ -210,6 +210,15 @@ namespace ChiitransLite.settings {
             }
         }
 
+        public bool separateSpeaker {
+            get {
+                return Properties.Settings.Default.separateSpeaker;
+            }
+            set {
+                Properties.Settings.Default.separateSpeaker = value;
+            }
+        }
+
         public bool transparentMode {
             get {
                 return Properties.Settings.Default.transparentMode;

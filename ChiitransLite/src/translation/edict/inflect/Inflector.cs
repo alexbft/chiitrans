@@ -74,7 +74,7 @@ namespace ChiitransLite.translation.edict.inflect {
 
        internal IEnumerable<InflectionState> findMatching(bool canUseKatakana, List<string> POS, string text, int position) {
             List<InflectionState> results = new List<InflectionState>();
-            Logger.log("Finding inflections in: " + text.Substring(position));
+            //Logger.log("Finding inflections in: " + text.Substring(position));
             List<Tuple<InflectionTrie, InflectionState, string>> cur = new List<Tuple<InflectionTrie,InflectionState,string>>();
             foreach (string pos in POS) {
                 InflectionTrie trie;
@@ -84,7 +84,7 @@ namespace ChiitransLite.translation.edict.inflect {
             }
             int offset = 0;
             while (cur.Count > 0 && position + offset <= text.Length) {
-                Logger.log("POS List: " + string.Join(", ", cur.Select((q) => q.Item3)));
+                //Logger.log("POS List: " + string.Join(", ", cur.Select((q) => q.Item3)));
                 List<Tuple<InflectionTrie, InflectionState, string>> added = new List<Tuple<InflectionTrie, InflectionState, string>>();
                 List<Tuple<InflectionTrie, InflectionState, string>> added2 = new List<Tuple<InflectionTrie, InflectionState, string>>();
                 List<Tuple<InflectionTrie, InflectionState, string>> next = new List<Tuple<InflectionTrie, InflectionState, string>>();
@@ -94,7 +94,7 @@ namespace ChiitransLite.translation.edict.inflect {
                         if (addedPOS.Add(link.NextType)) {
                             InflectionState linked = new InflectionState("", link, it.Item2 == null ? null : it.Item2.tense);
                             added.Add(Tuple.Create(index[link.NextType], linked, it.Item3));
-                            Logger.log("Added: " + link.NextType);
+                            //Logger.log("Added: " + link.NextType);
                         }
                     }
                 }
@@ -103,7 +103,7 @@ namespace ChiitransLite.translation.edict.inflect {
                         if (addedPOS.Add(link.NextType)) {
                             InflectionState linked = new InflectionState("", link, it.Item2 == null ? null : it.Item2.tense);
                             added2.Add(Tuple.Create(index[link.NextType], linked, it.Item3));
-                            Logger.log("Added2: " + link.NextType);
+                            //Logger.log("Added2: " + link.NextType);
                         }
                     }
                 }
@@ -119,7 +119,7 @@ namespace ChiitransLite.translation.edict.inflect {
                 }
                 foreach (var it in cur.Concat(added).Concat(added2)) {
                     foreach (var form in it.Item1.forms) {
-                        Logger.log("Got form: " + form.Suffix + " (" + it.Item3 + ")");
+                        //Logger.log("Got form: " + form.Suffix + " (" + it.Item3 + ")");
                         if (newState == null) {
                             newState = new InflectionState(text.Substring(position, offset), form, it.Item2 == null ? null : it.Item2.tense);
                         } else {
@@ -129,12 +129,14 @@ namespace ChiitransLite.translation.edict.inflect {
                     }
                     InflectionTrie nextTrie;
                     if (it.Item1.children.TryGetValue(c, out nextTrie)) {
-                        Logger.log(it.Item3 + ": going deeper to " + c);
+                        //Logger.log(it.Item3 + ": going deeper to " + c);
                         next.Add(Tuple.Create(nextTrie, it.Item2, it.Item3));
                     }
                 }
                 if (newState != null) {
-                    results.Add(newState);
+                    if (!newState.suffix.EndsWith("てい") && !newState.suffix.EndsWith("でい")) { // dirty HACK. bad bad me :(
+                        results.Add(newState);
+                    }
                 }
                 cur = next;
                 offset += 1;

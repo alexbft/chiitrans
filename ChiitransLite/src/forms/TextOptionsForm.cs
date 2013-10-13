@@ -82,7 +82,8 @@ namespace ChiitransLite.forms {
                 okuri = Settings.app.okuriganaType.ToString(),
                 theme = Settings.app.cssTheme,
                 themes = getThemes(),
-                separateWords = Settings.app.separateWords
+                separateWords = Settings.app.separateWords,
+                separateSpeaker = Settings.app.separateSpeaker
             };
         }
 
@@ -91,6 +92,7 @@ namespace ChiitransLite.forms {
             string okuriStr = (string)op["okuri"];
             string theme = (string)op["theme"];
             bool separateWords = (bool)op["separateWords"];
+            bool separateSpeaker = (bool)op["separateSpeaker"];
 
             TranslationDisplay display;
             OkuriganaType okuri;
@@ -102,6 +104,7 @@ namespace ChiitransLite.forms {
             }
             Settings.app.cssTheme = theme;
             Settings.app.separateWords = separateWords;
+            Settings.app.separateSpeaker = separateSpeaker;
             TranslationForm.instance.applyCurrentSettings();
         }
 
@@ -117,7 +120,7 @@ namespace ChiitransLite.forms {
         }
 
         internal void resetParsePreferences() {
-            if (Utils.confirm("Reset all parse preferences?\r\nThis includes selected dictionary pages, user names and word bans.")) {
+            if (Utils.confirm("Reset all parse preferences?\r\nThis includes selected dictionary pages, user names and parse result bans.")) {
                 Settings.app.resetSelectedPages();
                 Settings.app.resetWordBans();
                 Settings.session.resetUserNames();

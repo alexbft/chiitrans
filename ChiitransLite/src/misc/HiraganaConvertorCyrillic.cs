@@ -67,6 +67,7 @@ namespace ChiitransLite.misc {
             result = result.Replace("нп", "мп").Replace("нб", "мб").Replace("нм", "мм").Replace("оу", "оо").Replace("ёу", "ё");
             result = Regex.Replace(result, @"([аеёоуыэюя])и\b", "$1й");
             result = result.Replace("\0", "");
+            if (result == "ха") result = "ва";
             return result;
         }
 
@@ -132,7 +133,7 @@ namespace ChiitransLite.misc {
             a.push("ге", "げ");
             a.push("го", "ご");
             a.push("за", "ざ");
-            a.push("джы", "じ");
+            a.push("джи", "じ");
             a.push("зу", "ず");
             a.push("зэ", "ぜ");
             a.push("зо", "ぞ");

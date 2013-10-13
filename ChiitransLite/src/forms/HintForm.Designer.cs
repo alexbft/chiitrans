@@ -52,6 +52,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "HintForm";
             this.TopMost = true;
+            this.Shown += new System.EventHandler(this.HintForm_Shown);
             this.ResumeLayout(false);
 
         }

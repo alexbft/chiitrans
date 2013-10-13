@@ -24,35 +24,21 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.banWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.parseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.banWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.transparentModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clipboardMonitor1 = new ChiitransLite.forms.ClipboardMonitor();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // webBrowser1
-            // 
-            this.webBrowser1.AllowNavigation = false;
-            this.webBrowser1.AllowWebBrowserDrop = false;
-            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser1.IsWebBrowserContextMenuEnabled = false;
-            this.webBrowser1.Location = new System.Drawing.Point(0, 0);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(652, 272);
-            this.webBrowser1.TabIndex = 0;
-            this.webBrowser1.WebBrowserShortcutsEnabled = false;
-            this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webBrowser1_PreviewKeyDown);
             // 
             // contextMenuStrip1
             // 
@@ -72,26 +58,12 @@
             this.contextMenuStrip1.Size = new System.Drawing.Size(207, 192);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
-            // copyToolStripMenuItem
+            // banWordToolStripMenuItem
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.copyToolStripMenuItem.Text = "Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
-            // 
-            // pasteToolStripMenuItem
-            // 
-            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+V";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.pasteToolStripMenuItem.Text = "Paste";
-            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
+            this.banWordToolStripMenuItem.Name = "banWordToolStripMenuItem";
+            this.banWordToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.banWordToolStripMenuItem.Text = "Mark as incorrect";
+            this.banWordToolStripMenuItem.Click += new System.EventHandler(this.banWordToolStripMenuItem_Click);
             // 
             // parseSelectionToolStripMenuItem
             // 
@@ -117,12 +89,26 @@
             this.addNewNameToolStripMenuItem.Text = "Add new name...";
             this.addNewNameToolStripMenuItem.Click += new System.EventHandler(this.addNewNameToolStripMenuItem_Click);
             // 
-            // banWordToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.banWordToolStripMenuItem.Name = "banWordToolStripMenuItem";
-            this.banWordToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.banWordToolStripMenuItem.Text = "Mark as incorrect";
-            this.banWordToolStripMenuItem.Click += new System.EventHandler(this.banWordToolStripMenuItem_Click);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // pasteToolStripMenuItem
+            // 
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+V";
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.pasteToolStripMenuItem.Text = "Paste";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -145,12 +131,39 @@
             this.optionsToolStripMenuItem.Text = "Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
+            // clipboardMonitor1
+            // 
+            this.clipboardMonitor1.BackColor = System.Drawing.Color.Red;
+            this.clipboardMonitor1.Location = new System.Drawing.Point(0, 0);
+            this.clipboardMonitor1.Name = "clipboardMonitor1";
+            this.clipboardMonitor1.Size = new System.Drawing.Size(75, 23);
+            this.clipboardMonitor1.TabIndex = 1;
+            this.clipboardMonitor1.Text = "clipboardMonitor1";
+            this.clipboardMonitor1.Visible = false;
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.AllowNavigation = false;
+            this.webBrowser1.AllowWebBrowserDrop = false;
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.IsWebBrowserContextMenuEnabled = false;
+            this.webBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.ScrollBarsEnabled = false;
+            this.webBrowser1.Size = new System.Drawing.Size(652, 272);
+            this.webBrowser1.TabIndex = 0;
+            this.webBrowser1.WebBrowserShortcutsEnabled = false;
+            this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webBrowser1_PreviewKeyDown);
+            // 
             // TranslationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(652, 272);
+            this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.clipboardMonitor1);
             this.Controls.Add(this.webBrowser1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = global::ChiitransLite.Properties.Resources.ohayo_small;
@@ -172,7 +185,6 @@
 
         #endregion
 
-        private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
@@ -184,5 +196,7 @@
         private System.Windows.Forms.ToolStripMenuItem banWordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateSelectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private ClipboardMonitor clipboardMonitor1;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }

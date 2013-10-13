@@ -60,6 +60,7 @@
     }
     $theme.val((_ref1 = op.theme) != null ? _ref1 : "");
     $('#separateWords').prop('checked', op.separateWords);
+    $('#separateSpeaker').prop('checked', op.separateSpeaker);
     $('#reset').blur();
     $('#ok').focus();
     return setDirty(false);
@@ -72,7 +73,8 @@
         display: getRadioValue("display"),
         okuri: getRadioValue("okuri"),
         theme: $('#theme').val(),
-        separateWords: $('#separateWords').prop('checked')
+        separateWords: $('#separateWords').prop('checked'),
+        separateSpeaker: $('#separateSpeaker').prop('checked')
       };
       host().saveOptions(op);
       return setDirty(false);

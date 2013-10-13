@@ -258,5 +258,17 @@ namespace ChiitransLite.Properties {
                 this["ieUpgradeAsk"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool separateSpeaker {
+            get {
+                return ((bool)(this["separateSpeaker"]));
+            }
+            set {
+                this["separateSpeaker"] = value;
+            }
+        }
     }
 }

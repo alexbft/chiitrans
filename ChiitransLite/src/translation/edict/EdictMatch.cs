@@ -29,6 +29,11 @@ namespace ChiitransLite.translation.edict {
 
         internal void addEntry(RatedEntry newEntry) {
             entries.Add(newEntry);
+            updatePOS();
+        }
+
+        internal void updatePOS() {
+            allPOS = null;
         }
 
         internal double getMultiplier(ISet<string> allowedPOS, bool isZeroSuffix) {
@@ -54,22 +59,22 @@ namespace ChiitransLite.translation.edict {
             }
         }
 
-        internal IEnumerable<Tuple<int, RatedEntry>> getRatedEntriesWithPageNumber(ISet<string> allowedPOS, bool isZeroSuffix) {
+        internal IEnumerable<Tuple<int, RatedEntry>> getRatedEntriesWithPageNumber(ISet<string> allowedPOS, bool isZeroSuffix, bool returnAll) {
             bool isEmpty = allowedPOS == null || allowedPOS.Count == 0;
             int i = 0;
             List<Tuple<int, RatedEntry>> firstMatches = new List<Tuple<int, RatedEntry>>();
-            List<Tuple<int, RatedEntry>> otherMatches = new List<Tuple<int, RatedEntry>>();
+            //List<Tuple<int, RatedEntry>> otherMatches = new List<Tuple<int, RatedEntry>>();
             foreach (RatedEntry re in entries) {
-                if (isZeroSuffix && (re.entry.POS.Count == 0 || !Inflector.knownPOS.Overlaps(re.entry.POS)) || (!isEmpty && allowedPOS.Overlaps(re.entry.POS))) {
+                if (returnAll || (isZeroSuffix && (re.entry.POS.Count == 0 || !Inflector.knownPOS.Overlaps(re.entry.POS)) || (!isEmpty && allowedPOS.Overlaps(re.entry.POS)))) {
                     firstMatches.Add(Tuple.Create(i, re));
                 } else {
-                    if (stem != "") { // buggy bugs :(
+                    /*if (stem != "") { // buggy bugs :(
                         otherMatches.Add(Tuple.Create(i, re));
-                    }
+                    }*/
                 }
                 i += 1;
             }
-            return firstMatches.OrderByDescending((t) => t.Item2).Concat(otherMatches.OrderByDescending((t) => t.Item2));
+            return firstMatches.OrderByDescending((t) => t.Item2); //.Concat(otherMatches.OrderByDescending((t) => t.Item2));
         }
 
         internal EdictEntry findAnyName() {

@@ -8,43 +8,6 @@ using System.Runtime.InteropServices;
 
 namespace ChiitransLite.misc {
     class Winapi {
-        /*
-        [DllImport("user32.dll")]
-        public static extern bool EnumDesktopWindows(IntPtr hDesktop,
-            EnumDesktopWindowsDelegate lpfn, IntPtr lParam);
-
-        public delegate bool EnumDesktopWindowsDelegate(IntPtr hWnd, int lParam);
-
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetWindowTextLength(IntPtr hWnd);
-
-        public static string GetWindowText(IntPtr hWnd) {
-            // Allocate correct string length first
-            int length = GetWindowTextLength(hWnd);
-            StringBuilder sb = new StringBuilder(length + 1);
-            GetWindowText(hWnd, sb, sb.Capacity);
-            return sb.ToString();
-        }
-
-
-        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
-
-        public static bool IsWow64Process(IntPtr process) {
-            bool res;
-            IsWow64Process(process, out res);
-            return res;
-        }
-        */
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern IntPtr GetForegroundWindow();
-
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
@@ -96,5 +59,38 @@ namespace ChiitransLite.misc {
         [DllImport("kernel32.dll")]
         public static extern Int32 GetSystemDefaultLCID();
 
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_EX_LAYERED = 0x00080000;
+        public const int WS_EX_NOACTIVATE = 0x08000000;
+        public const int WS_EX_TRANSPARENT = 0x00000020;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("dwmapi.dll", PreserveSig = false)]
+        public static extern bool DwmIsCompositionEnabled();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool BringWindowToTop(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetDesktopWindow();
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetShellWindow();
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowRect(IntPtr hwnd, out RECT rc);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
     }
 }

@@ -37,7 +37,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "BackgroundForm";
-            this.Activated += new System.EventHandler(this.BackgroundForm_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BackgroundForm_FormClosing);
             this.ResumeLayout(false);
 

@@ -33,11 +33,11 @@ a {
 }
 .misc_set {
   font-style: italic;
-  color: brown;
+  color: #33b;
   font-size: 11px !important;
 }
 .transparent .misc_set {
-  color: lightcoral;
+  color: lightblue;
 }
 .page {
   padding: 0 10px 5px 10px;
@@ -75,7 +75,11 @@ a {
 }
 #nameType,
 #infType {
-  color: #696;
+  color: #b66;
   font-size: 11px;
+}
+.btcf:after {
+  content: "";
+  display: table;
   clear: both;
 }

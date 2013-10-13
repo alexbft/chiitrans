@@ -80,6 +80,7 @@ namespace ChiitransLite.translation.edict.parseresult {
             }
             if (match.matchType == EdictMatchType.KANJI) {
                 var entry = getSelectedEntry();
+                if (entry == null) return null;
                 // hack :(
                 string suffix = null;
                 if (entry.kanji.Count > 0) {
@@ -92,6 +93,7 @@ namespace ChiitransLite.translation.edict.parseresult {
                         }
                     }
                     if (suffix == null) suffix = "";
+                    suffix = InflectionState.getReading(suffix);
                     string kanaStem = null;
                     foreach (DictionaryKey k in entry.kana) {
                         if (k.text.EndsWith(suffix)) {
@@ -114,6 +116,9 @@ namespace ChiitransLite.translation.edict.parseresult {
         internal EdictEntry getSelectedEntry() {
             int pageNum = Settings.app.getSelectedPage(getMatchStem());
             var entries = getRatedEntries().ToList();
+            if (entries.Count == 0) {
+                return null;
+            }
             EdictEntry entry = null;
             if (pageNum != -1) {
                 var tt = entries.FirstOrDefault((t) => t.Item1 == pageNum);
@@ -128,14 +133,27 @@ namespace ChiitransLite.translation.edict.parseresult {
         }
 
         private IEnumerable<Tuple<int, RatedEntry>> getRatedEntries() {
+            bool found = false;
             int pageStart = 0;
             foreach (var add in matches) {
                 var match2 = add.Item1;
                 var inf2 = add.Item2;
-                foreach (var t in match2.match.getRatedEntriesWithPageNumber(inf2.POS, inf2.suffix.Length == 0)) {
+                foreach (var t in match2.match.getRatedEntriesWithPageNumber(inf2.POS, inf2.suffix.Length == 0, false)) {
+                    found = true;
                     yield return Tuple.Create(t.Item1 + pageStart, t.Item2);
                 }
                 pageStart += 1000;
+            }
+            if (!found) {
+                pageStart = 0;
+                foreach (var add in matches) {
+                    var match2 = add.Item1;
+                    var inf2 = add.Item2;
+                    foreach (var t in match2.match.getRatedEntriesWithPageNumber(inf2.POS, inf2.suffix.Length == 0, true)) {
+                        yield return Tuple.Create(t.Item1 + pageStart, t.Item2);
+                    }
+                    pageStart += 1000;
+                }
             }
         }
         
@@ -205,11 +223,14 @@ namespace ChiitransLite.translation.edict.parseresult {
         }
 
         internal bool isName() {
-            return getSelectedEntry().POS.Contains("name");
+            var entry = getSelectedEntry();
+            if (entry == null) return false;
+            return entry.POS.Contains("name");
         }
 
         internal EdictEntry findAnyName() {
             EdictEntry entry = getSelectedEntry();
+            if (entry == null) return null;
             if (entry.POS.Contains("name")) {
                 return entry;
             }

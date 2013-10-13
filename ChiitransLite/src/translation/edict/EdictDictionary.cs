@@ -60,6 +60,14 @@ namespace ChiitransLite.translation.edict {
                 dake.rate = 2.0F;
                 /*var tai = mainIndex["た"].entries.First((re) => re.entry.kanji.Count == 0 && re.entry.kana[0].text == "たい");
                 tai.rate = 3.0F;*/
+                var gozaimasu = mainIndex["御座います"].entries[0].entry;
+                gozaimasu.POS.Add("v-imasu");
+                addToIndex(gozaimasu, 2.0F, 2.0F);
+                mainIndex.Remove("御座います");
+                kanaIndex.Remove("ございます");
+                var go = mainIndex["御"].entries[0].entry;
+                addToIndex(kanaIndex, "ご", 2.0, go);
+                addToIndex(kanaIndex, "お", 2.0, go);
 
                 zeroStemForms = new Dictionary<string, EdictMatch>();
                 EdictMatch zeroStem = mainIndex[""];
@@ -344,6 +352,31 @@ namespace ChiitransLite.translation.edict {
                         double rate = entry.globalMultiplier * entry.globalKanaMultiplier * key.rate;
                         if (rate > 0) {
                             addToIndex(kanaIndex, stem, rate, entry);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void addToIndex(EdictEntry entry, double kanjiRate, double kanaRate) {
+            foreach (DictionaryKey key in entry.kanji) {
+                if (key.text.Length == 1 && TextUtils.isAllKatakana(key.text)) {
+                    continue;
+                }
+                string stem = inflect.getStem(key.text, entry.POS);
+                addToIndex(mainIndex, stem, kanjiRate, entry);
+            }
+            if (entry.kanji.Count == 0 && entry.kana.Count > 0) {
+                foreach (DictionaryKey key in entry.kana) {
+                    string stem = inflect.getStem(key.text, entry.POS);
+                    addToIndex(mainIndex, stem, kanjiRate, entry);
+                }
+            } else {
+                foreach (DictionaryKey key in entry.kana) {
+                    if (key.text.Length > 1) {
+                        string stem = inflect.getStem(key.text, entry.POS);
+                        if (kanaRate > 0) {
+                            addToIndex(kanaIndex, stem, kanaRate, entry);
                         }
                     }
                 }

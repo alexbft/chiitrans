@@ -75,6 +75,9 @@ namespace ChiitransLite.texthook {
                     if (!string.IsNullOrEmpty(text)) {
                         lock (textBuffer) {
                             textBuffer.Append(text);
+                            /*if (isNewLine) {
+                                textBuffer.Append("<br>");
+                            }*/
                         }
                         if (flushTimer == null) {
                             flushTimer = new Timer(new TimerCallback((_) => flush()));

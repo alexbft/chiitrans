@@ -87,7 +87,7 @@ namespace ChiitransLite.translation.edict {
                         } else {
                             baseFormMult = 1.0;
                         }
-                        double score = scoreTable[i].score + match.match.getMultiplier(inf.POS, inf.suffix.Length == 0) * totalLength * totalLength * baseFormMult;
+                        double score = scoreTable[i].score + match.match.getMultiplier(inf.POS, inf.suffix.Length == 0) * getLengthMultiplier(totalLength) * baseFormMult;
                         if (parseOptions != null) {
                             score += parseOptions.bonusRating(matchText);
                         }
@@ -120,6 +120,14 @@ namespace ChiitransLite.translation.edict {
                 }
             }
             return ParseResult.concat(results.Reverse());
+        }
+
+        private double getLengthMultiplier(int len) {
+            if (len <= 4) {
+                return len * len;
+            } else {
+                return 4 * len;
+            }
         }
 
         internal EdictMatch lookup(string p) {

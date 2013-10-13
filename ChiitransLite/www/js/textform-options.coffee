@@ -48,6 +48,7 @@ resetOptionsInt = (op) ->
         $theme.append("""<option value="#{_.escape theme}">#{_.escape theme}</option>""")
     $theme.val(op.theme ? "")
     $('#separateWords').prop 'checked', op.separateWords
+    $('#separateSpeaker').prop 'checked', op.separateSpeaker
     $('#reset').blur();
     $('#ok').focus();
     setDirty false
@@ -59,5 +60,6 @@ saveOptions = ->
             okuri: getRadioValue "okuri"
             theme: $('#theme').val()
             separateWords: $('#separateWords').prop('checked')
+            separateSpeaker: $('#separateSpeaker').prop('checked')
         host().saveOptions op
         setDirty false

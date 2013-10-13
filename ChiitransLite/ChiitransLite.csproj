@@ -63,6 +63,12 @@
     <Compile Include="src\forms\BackgroundForm.Designer.cs">
       <DependentUpon>BackgroundForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\forms\ClipboardMonitor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\forms\ClipboardMonitor.Designer.cs">
+      <DependentUpon>ClipboardMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\forms\ContextLogForm.cs">
       <SubType>Form</SubType>
     </Compile>

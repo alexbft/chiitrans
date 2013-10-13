@@ -7,6 +7,7 @@
   border: 1px solid gray;
   background-color: white;
   color: black;
+  overflow: hidden;
 }
 .transparent body {
   background-color: #000001;
@@ -210,11 +211,17 @@ ruby.normal rt {
 .ie8 .sides div {
   filter: alpha(opacity=0);
 }
-.ie8.transparent #caption {
+.no_aero.transparent #caption {
   background-color: #666;
 }
-.ie8.transparent .sides div {
+.no_aero.transparent .sides div {
+  opacity: 1;
+}
+.no_aero.transparent.ie8 .sides div {
   filter: alpha(opacity=100);
+}
+.ie9 .ruby {
+  display: inline-block;
 }
 .ie9 .noruby {
   display: inline-block;

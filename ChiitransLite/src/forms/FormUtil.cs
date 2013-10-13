@@ -16,6 +16,7 @@ namespace ChiitransLite.forms {
 
         internal static void restoreLocation(Form form) {
             Rectangle loc;
+            form.VisibleChanged += form_VisibleChanged;
             if (Settings.app.getProperty("location_" + form.Name, out loc)) {
                 if (Screen.GetWorkingArea(loc).Contains(loc)) {
                     form.DesktopBounds = loc;
@@ -23,6 +24,43 @@ namespace ChiitransLite.forms {
                 }
             }
             form.StartPosition = FormStartPosition.CenterScreen;
+        }
+
+        internal static void fixFormPosition(Form form, IntPtr targetWindow = default(IntPtr)) {
+            if (form.Visible && form.WindowState != FormWindowState.Minimized) {
+                var bounds = form.DesktopBounds;
+                Rectangle workingArea;
+                if (targetWindow == IntPtr.Zero) {
+                    workingArea = Screen.GetWorkingArea(bounds);
+                } else {
+                    workingArea = Screen.FromHandle(targetWindow).WorkingArea;
+                }
+                bool isChanged = false;
+                var newPos = bounds.Location;
+                if (bounds.Left >= workingArea.Right - 10) {
+                    isChanged = true;
+                    newPos.X = workingArea.Right - bounds.Width;
+                }
+                if (bounds.Top >= workingArea.Bottom - 10) {
+                    isChanged = true;
+                    newPos.Y = workingArea.Bottom - bounds.Height;
+                }
+                if (newPos.X + bounds.Width <= workingArea.Left + 10) {
+                    isChanged = true;
+                    newPos.X = workingArea.Left;
+                }
+                if (newPos.Y < workingArea.Top) {
+                    isChanged = true;
+                    newPos.Y = workingArea.Top;
+                }
+                if (isChanged) {
+                    form.Location = newPos;
+                }
+            }
+        }
+
+        static void form_VisibleChanged(object sender, EventArgs e) {
+            fixFormPosition(sender as Form);
         }
 
         internal static void saveLocation(Form form) {

@@ -125,44 +125,6 @@ namespace ChiitransLite.translation {
             }
         }
 
-        private Timer clipboardTimer;
-        private readonly TimeSpan clipboardTimerDelay = TimeSpan.FromMilliseconds(200);
-
-        private void _setClipboardTranslation(bool isEnabled) {
-            if (isEnabled) {
-                if (clipboardTimer == null) {
-                    clipboardTimer = new Timer(new TimerCallback(clipboardTimerProc));
-                }
-                clipboardTimer.Change(TimeSpan.Zero, clipboardTimerDelay);
-            } else {
-                if (clipboardTimer != null) {
-                    clipboardTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                }
-            }
-        }
-
-        private void clipboardTimerProc(object state) {
-            // todo optimize / use some other instance
-            try {
-                MainForm.instance.Invoke(new Action(() => {
-                    if (Clipboard.ContainsText()) {
-                        update(TextHookContext.cleanText(Clipboard.GetText()));
-                    }
-                }));
-            } catch {
-                if (clipboardTimer != null) {
-                    clipboardTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                }
-            }
-        }
-
-        public void setClipboardTranslation(bool isEnabled) {
-            if (Settings.app.clipboardTranslation != isEnabled) {
-                Settings.app.clipboardTranslation = isEnabled;
-            }
-            _setClipboardTranslation(isEnabled);
-        }
-
         public delegate void AtlasDoneHandler(int id, string text);
         public event AtlasDoneHandler onAtlasDone;
 

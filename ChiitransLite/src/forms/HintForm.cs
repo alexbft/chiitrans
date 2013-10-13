@@ -15,7 +15,7 @@ using ChiitransLite.settings;
 namespace ChiitransLite.forms {
     public partial class HintForm : Form {
         private TranslationForm mainForm;
-        private bool isVisible = false;
+        public bool isVisible = false;
         private bool definitionsSent = false;
         private bool nameDefinitionsSent = false;
 
@@ -49,6 +49,7 @@ namespace ChiitransLite.forms {
             webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
             webBrowser1.Url = Utils.getUriForBrowser("hint.html");
             moveAway();
+            Utils.setWindowNoActivate(this.Handle);
         }
 
         internal void setMainForm(TranslationForm form) {
@@ -129,6 +130,9 @@ namespace ChiitransLite.forms {
 
         internal void applyTheme(string theme) {
             webBrowser1.callScript("applyTheme", theme);
+        }
+
+        private void HintForm_Shown(object sender, EventArgs e) {
         }
     }
 }
