@@ -51,6 +51,9 @@
         return host().connectClick(+pid, exeName, function() {});
       }
     });
+    $('#about').click(function() {
+      return host().showAbout(function() {});
+    });
     $('#contexts').on('change', '.check input', function() {
       var ctx, ctxId;
       ctxId = $(this).data('id');

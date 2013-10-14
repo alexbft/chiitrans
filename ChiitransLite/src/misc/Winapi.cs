@@ -92,5 +92,6 @@ namespace ChiitransLite.misc {
             public int Right;
             public int Bottom;
         }
+
     }
 }

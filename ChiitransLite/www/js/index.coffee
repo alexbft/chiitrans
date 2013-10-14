@@ -58,6 +58,9 @@ $ ->
             $('#connect').prop 'disabled', true
             host().connectClick +pid, exeName, ->
 
+    $('#about').click ->
+        host().showAbout(->)
+
     $('#contexts').on 'change', '.check input', ->
         ctxId = $(this).data 'id'
         ctx = contexts[ctxId]

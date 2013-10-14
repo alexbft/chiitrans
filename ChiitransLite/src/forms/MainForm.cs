@@ -136,6 +136,12 @@ namespace ChiitransLite.forms {
                 return newValue;
             }
 
+            public void showAbout() {
+                form.Invoke(new Action(() => {
+                    new AboutForm().ShowDialog();
+                }));
+            }
+
         }
 
         private static MainForm _instance;
