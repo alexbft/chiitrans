@@ -270,5 +270,28 @@ namespace ChiitransLite.Properties {
                 this["separateSpeaker"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Rectangle location_HookOptionsForm {
+            get {
+                return ((global::System.Drawing.Rectangle)(this["location_HookOptionsForm"]));
+            }
+            set {
+                this["location_HookOptionsForm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string selectedReadings {
+            get {
+                return ((string)(this["selectedReadings"]));
+            }
+            set {
+                this["selectedReadings"] = value;
+            }
+        }
     }
 }

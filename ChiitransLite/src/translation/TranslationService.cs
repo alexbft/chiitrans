@@ -5,6 +5,7 @@ using ChiitransLite.texthook;
 using ChiitransLite.translation.atlas;
 using ChiitransLite.translation.edict;
 using ChiitransLite.translation.edict.parseresult;
+using ChiitransLite.translation.po;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -43,7 +44,22 @@ namespace ChiitransLite.translation {
             if (!checkDifferent || text != prevText) {
                 prevText = text;
                 var curId = Interlocked.Increment(ref textId);
-                startParse(curId, text, Settings.app.translationDisplay == TranslationDisplay.TRANSLATION || Settings.app.translationDisplay == TranslationDisplay.BOTH, null);
+                bool doTranslation = Settings.app.translationDisplay == TranslationDisplay.TRANSLATION || Settings.app.translationDisplay == TranslationDisplay.BOTH;
+                if (doTranslation) {
+                    if (Settings.session.po != null) {
+                        var poTrans = PoManager.instance.getTranslation(text);
+                        if (!string.IsNullOrEmpty(poTrans)) {
+                            if (onAtlasDone != null) {
+                                onAtlasDone(curId, new TranslationResult(poTrans, false));
+                            }
+                            doTranslation = false;
+                        }
+                    }
+                }
+                bool doParse = Settings.app.translationDisplay == TranslationDisplay.PARSE || Settings.app.translationDisplay == TranslationDisplay.BOTH || doTranslation;
+                if (doParse) {
+                    startParse(curId, text, doTranslation, null);
+                }
             }
         }
 
@@ -77,16 +93,17 @@ namespace ChiitransLite.translation {
             });
         }
 
-        public Task<string> startTranslation(int curId, ParseResult parseData) {
-            return Task.Factory.StartNew(() => {
+        public void startTranslation(int curId, ParseResult parseData) {
+            Task.Factory.StartNew(() => {
                 try {
                     var text2 = Edict.instance.replaceNames(parseData);
                     string translatedText = Atlas.instance.translate(text2);
                     if (translatedText != null) {
+                        var tres = new TranslationResult(translatedText, true);
                         if (onAtlasDone != null) {
-                            onAtlasDone(curId, translatedText);
+                            onAtlasDone(curId, tres);
                         }
-                        return translatedText;
+                        return tres;
                     } else {
                         return null;
                     }
@@ -125,7 +142,7 @@ namespace ChiitransLite.translation {
             }
         }
 
-        public delegate void AtlasDoneHandler(int id, string text);
+        public delegate void AtlasDoneHandler(int id, TranslationResult translationResult);
         public event AtlasDoneHandler onAtlasDone;
 
         public delegate void EdictDoneHandler(int id, ParseResult parseResult);

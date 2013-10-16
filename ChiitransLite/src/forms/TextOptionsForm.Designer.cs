@@ -50,7 +50,7 @@
             this.Icon = global::ChiitransLite.Properties.Resources.ohayo_small;
             this.Name = "TextOptionsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Options";
+            this.Text = "Translation Options";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TextOptionsForm_FormClosing);
             this.Move += new System.EventHandler(this.TextOptionsForm_Move);
             this.Resize += new System.EventHandler(this.TextOptionsForm_Resize);

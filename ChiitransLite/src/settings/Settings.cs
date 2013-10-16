@@ -22,6 +22,7 @@ namespace ChiitransLite.settings {
         protected Settings() {
             initSelectedPages();
             initBannedWords();
+            initSelectedReadings();
         }
 
         private static volatile SessionSettings cachedSessionSettings = null;
@@ -43,6 +44,8 @@ namespace ChiitransLite.settings {
         private ConcurrentDictionary<string, bool> bannedWords;
         private ConcurrentDictionary<string, bool> bannedWordsKana;
         private bool isBannedWordsDirty = false;
+        private ConcurrentDictionary<string, string> selectedReadings;
+        private bool isSelectedReadingsDirty = false;
 
         public T getProperty<T>(string prop) {
             T res;
@@ -81,6 +84,10 @@ namespace ChiitransLite.settings {
                 Properties.Settings.Default.bannedWordsKana = Utils.getJsonSerializer().Serialize(bannedWordsKana.Keys);
                 isBannedWordsDirty = false;
             }
+            if (selectedReadings != null && isSelectedReadingsDirty) {
+                Properties.Settings.Default.selectedReadings = Utils.getJsonSerializer().Serialize(selectedReadings);
+                isSelectedReadingsDirty = false;
+            }
             Properties.Settings.Default.Save();
             SessionSettings.saveAll();
         }
@@ -92,6 +99,17 @@ namespace ChiitransLite.settings {
                 if (selectedPages == null) selectedPages = new ConcurrentDictionary<string, int>();
             } catch {
                 selectedPages = new ConcurrentDictionary<string, int>();
+            }
+        }
+
+
+        private void initSelectedReadings() {
+            string selectedReadingsJson = Properties.Settings.Default.selectedReadings;
+            try {
+                selectedReadings = Utils.getJsonSerializer().Deserialize<ConcurrentDictionary<string, string>>(selectedReadingsJson);
+                if (selectedReadings == null) selectedReadings = new ConcurrentDictionary<string, string>();
+            } catch {
+                selectedReadings = new ConcurrentDictionary<string, string>();
             }
         }
 
@@ -122,6 +140,15 @@ namespace ChiitransLite.settings {
         internal void setSelectedPage(string stem, int page) {
             selectedPages[stem] = page;
             selectedPagesDirty = true;
+        }
+
+        internal string getSelectedReading(string word) {
+            return selectedReadings.GetOrDefault(word);
+        }
+
+        internal void setSelectedReading(string word, string reading) {
+            selectedReadings[word] = reading;
+            isSelectedReadingsDirty = true;
         }
 
         internal static void setCurrentSession(string exeName) {
@@ -271,6 +298,11 @@ namespace ChiitransLite.settings {
             isBannedWordsDirty = true;
         }
 
+        internal void resetSelectedReadings() {
+            selectedReadings.Clear();
+            isSelectedReadingsDirty = true;
+        }
+
         public bool atlasAsk {
             get {
                 return Properties.Settings.Default.atlasAsk;
@@ -288,5 +320,6 @@ namespace ChiitransLite.settings {
                 Properties.Settings.Default.ieUpgradeAsk = value;
             }
         }
+
     }
 }

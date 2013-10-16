@@ -99,10 +99,6 @@ namespace ChiitransLite.forms {
                 form.showTranslationForm();
             }
 
-            public void showHookForm() {
-                form.showHookForm();
-            }
-
             public void setNewContextsBehavior(string b) {
                 MyContextFactory.instance.setNewContextsBehavior(b);
             }
@@ -126,20 +122,16 @@ namespace ChiitransLite.forms {
                 }
             }
 
-            public bool getClipboardTranslation() {
-                return Settings.app.clipboardTranslation;
-            }
-
-            public bool toggleClipboardTranslation() {
-                bool newValue = !Settings.app.clipboardTranslation;
-                TranslationForm.instance.setClipboardTranslation(newValue);
-                return newValue;
-            }
-
             public void showAbout() {
                 form.Invoke(new Action(() => {
-                    new AboutForm().ShowDialog();
+                    TranslationForm.instance.SuspendTopMost(() => {
+                        new AboutForm().ShowDialog();
+                    });
                 }));
+            }
+
+            public void showOptions() {
+                form.showOptions();
             }
 
         }
@@ -223,19 +215,9 @@ namespace ChiitransLite.forms {
             TextHook.instance.onNewContext += (ctx) => {
                 webBrowser1.callScript("newContext", ctx.id, ctx.name, ctx.context, ctx.subcontext, (ctx as MyContext).enabled);
                 ctx.onSentence += ctx_onSentence;
-                if (MyContextFactory.instance.newContextsBehavior == MyContextFactory.NewContextsBehavior.SWITCH_TO_NEW) {
-                    List<int> disabledContexts = new List<int>();
-                    foreach (var ctx2 in TextHook.instance.getContexts()) {
-                        if (ctx2.internalId < ctx.internalId) {
-                            if ((ctx2 as MyContext).enabled) {
-                                (ctx2 as MyContext).enabled = false;
-                                disabledContexts.Add(ctx2.id);
-                            }
-                        }
-                    }
-                    if (disabledContexts.Count > 0) {
-                        webBrowser1.callScript("disableContexts", Utils.toJson(disabledContexts));
-                    }
+                List<int> disabledContexts = MyContextFactory.instance.disableContextsIfNeeded(TextHook.instance, ctx);
+                if (disabledContexts != null && disabledContexts.Count > 0) {
+                    webBrowser1.callScript("disableContexts", Utils.toJson(disabledContexts));
                 }
             };
             TextHook.instance.onDisconnect += () => {
@@ -277,14 +259,6 @@ namespace ChiitransLite.forms {
             FormUtil.saveLocation(this);
         }
 
-        internal void showHookForm() {
-            UserHookForm.instance.Show();
-            if (UserHookForm.instance.WindowState == FormWindowState.Minimized) {
-                UserHookForm.instance.WindowState = FormWindowState.Normal;
-            }
-            UserHookForm.instance.Activate();
-        }
-
         internal void showLog(int ctxId) {
             var ctx = (MyContext)TextHook.instance.getContext(ctxId);
             if (ctx != null) {
@@ -310,5 +284,8 @@ namespace ChiitransLite.forms {
             }
         }
 
+        internal void showOptions() {
+            HookOptionsForm.instance.updateAndShow();
+        }
     }
 }

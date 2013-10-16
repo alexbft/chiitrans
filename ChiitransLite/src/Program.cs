@@ -8,14 +8,19 @@ using ChiitransLite.forms;
 using ChiitransLite.translation.atlas;
 using ChiitransLite.translation.edict;
 using ChiitransLite.misc;
+using System.Diagnostics;
+using System.Threading;
 
 namespace ChiitransLite {
     static class Program {
+
+        public static string[] arguments;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main() {
+        static void Main(string[] cmd) {
+            arguments = cmd;
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => {
                 Exception ex = (Exception)args.ExceptionObject;
                 Logger.logException(ex);
@@ -31,10 +36,16 @@ namespace ChiitransLite {
             Application.ApplicationExit += new EventHandler((_1, _2) => {
                 try {
                     settings.Settings.app.save();
-                    texthook.TextHookInterop.TextHookCleanup();
                     Atlas.instance.close();
+                    texthook.TextHookInterop.TextHookCleanup();
                 } catch (Exception e) {
                     Logger.logException(e);
+                }
+                
+                if (texthook.TextHook.instance.isCompat) {
+                    Thread.Sleep(2500);
+                    // goodbye, cruel ITH :(
+                    Process.GetCurrentProcess().Kill();
                 }
             });
             Application.Run(new MainForm());

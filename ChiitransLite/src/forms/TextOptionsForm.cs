@@ -123,6 +123,7 @@ namespace ChiitransLite.forms {
             if (Utils.confirm("Reset all parse preferences?\r\nThis includes selected dictionary pages, user names and parse result bans.")) {
                 Settings.app.resetSelectedPages();
                 Settings.app.resetWordBans();
+                Settings.app.resetSelectedReadings();
                 Settings.session.resetUserNames();
                 Utils.info("Parse preferences have been reset to default.");
             }

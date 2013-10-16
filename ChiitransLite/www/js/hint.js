@@ -1,5 +1,5 @@
 ﻿(function() {
-  var $hint, $infType, $kana, $kanji, $nameType, $page, $pageNum, $pageNumFrame, $sense, $tense, data, defs, makeDictKey, makeMisc, makeMiscSingle, makeSense, nameDefs, pageNext, pageNum, pagePrev, setDefinitions, setNameDefinitions, show, showPage, showSense;
+  var $hint, $infType, $kana, $kanji, $nameType, $page, $pageNum, $pageNumFrame, $sense, $tense, data, defs, makeDictKey, makeMisc, makeMiscSingle, makeReading, makeSense, nameDefs, pageNext, pageNum, pagePrev, setDefinitions, setNameDefinitions, show, showPage, showSense;
 
   data = null;
 
@@ -37,7 +37,10 @@
     $nameType = $('#nameType');
     $infType = $('#infType');
     $tense = $('#tense');
-    return $hint = $('#hint');
+    $hint = $('#hint');
+    return $page.on('click', '.reading', function() {
+      host().setReading(data.stem, $(this).data('text'));
+    });
   });
 
   show = window.show = function(json, _pageNum, isTransparent) {
@@ -107,7 +110,11 @@
     if (page != null) {
       kanji = _.map(page.kanji, makeDictKey);
       $kanji.html(kanji.join(', '));
-      kana = _.map(page.kana, makeDictKey);
+      if (kanji.length > 0 && page.kana.length >= 2) {
+        kana = _.map(page.kana, makeReading);
+      } else {
+        kana = _.map(page.kana, makeDictKey);
+      }
       if (kanji.length === 0) {
         showKana = $kanji;
         $kana.empty();
@@ -170,6 +177,13 @@
     var misc;
     misc = d.misc != null ? makeMisc(d.misc) : "";
     return "<span class=\"dict_key\"><span class=\"key\">" + (_.escape(d.text)) + "</span>" + misc + "</span>";
+  };
+
+  makeReading = function(d) {
+    var misc, txt;
+    misc = d.misc != null ? makeMisc(d.misc) : "";
+    txt = _.escape(d.text);
+    return "<span class=\"dict_key\"><span class=\"key reading\" data-text=\"" + txt + "\" title=\"Select this reading\">" + txt + "</span>" + misc + "</span>";
   };
 
   makeMisc = function(misc) {

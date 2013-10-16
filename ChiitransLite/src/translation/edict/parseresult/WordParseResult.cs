@@ -95,10 +95,15 @@ namespace ChiitransLite.translation.edict.parseresult {
                     if (suffix == null) suffix = "";
                     suffix = InflectionState.getReading(suffix);
                     string kanaStem = null;
-                    foreach (DictionaryKey k in entry.kana) {
-                        if (k.text.EndsWith(suffix)) {
-                            kanaStem = k.text.Substring(0, k.text.Length - suffix.Length);
-                            break;
+                    var userReading = (Settings.app.getSelectedReading(stem));
+                    if (userReading != null && userReading.EndsWith(suffix)) {
+                        kanaStem = userReading.Substring(0, userReading.Length - suffix.Length);
+                    } else {
+                        foreach (DictionaryKey k in entry.kana) {
+                            if (k.text.EndsWith(suffix)) {
+                                kanaStem = k.text.Substring(0, k.text.Length - suffix.Length);
+                                break;
+                            }
                         }
                     }
                     if (kanaStem == null) {

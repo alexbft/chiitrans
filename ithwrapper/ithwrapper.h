@@ -11,7 +11,7 @@
 
 #define DLLEXPORT __declspec(dllexport)
 
-typedef DWORD (__stdcall *OnCreateThreadFunc)(DWORD thread_id, LPWSTR name, DWORD hook, DWORD context, DWORD subcontext);
+typedef DWORD (__stdcall *OnCreateThreadFunc)(DWORD thread_id, LPWSTR name, DWORD hook, DWORD context, DWORD subcontext, DWORD is_unicode);
 typedef DWORD (__stdcall *OnInputFunc)(DWORD thread_id, BYTE* data, DWORD len, DWORD is_newline);
 typedef DWORD (__stdcall *OnRemoveThreadFunc)(DWORD thread_id);
 typedef DWORD (__stdcall *CallbackFunc)();

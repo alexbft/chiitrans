@@ -64,7 +64,7 @@ namespace ChiitransLite.misc {
             result = Regex.Replace(result, @"っ\s?(\w)", match => match.Groups[1].Value + match.Groups[1].Value);
             result = Regex.Replace(result, @"(\w)\s?゜", match => match.Groups[1].Value + match.Groups[1].Value);
             result = result.Replace("っ", "").Replace("゜", "");
-            result = result.Replace("нп", "мп").Replace("нб", "мб").Replace("нм", "мм").Replace("оу", "оо").Replace("ёу", "ё");
+            result = result.Replace("нп", "мп").Replace("нб", "мб").Replace("нм", "мм").Replace("оу", "оо").Replace("ёу", "ёо");
             result = Regex.Replace(result, @"([аеёоуыэюя])и\b", "$1й");
             result = result.Replace("\0", "");
             if (result == "ха") result = "ва";

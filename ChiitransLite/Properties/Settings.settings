@@ -65,5 +65,11 @@
     <Setting Name="separateSpeaker" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="location_HookOptionsForm" Type="System.Drawing.Rectangle" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="selectedReadings" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,5 +1,5 @@
 ﻿(function() {
-  var $content, $current, $currentEntry, $history, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparentMode, updateReading;
+  var $content, $current, $currentEntry, $history, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, renderTranslationResult, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparentMode, updateReading;
 
   MAX_LOG = 20;
 
@@ -59,6 +59,20 @@
     makeResizer('sideBottomLeft', -1, 1);
     makeResizer('sideTopRight', 1, -1);
     makeResizer('sideBottomRight', 1, 1);
+    $('#sideRightScroll, #sideRight').mouseenter(function() {
+      if ($history.css('display') === 'none') {
+        $history.show();
+        $content.scrollTop(99999);
+        return $(document).on('mousemove.scroll', function(ev) {
+          if (ev.pageX < $(window).width() - 20) {
+            if ($content.scrollTop() >= $history.height() - 10) {
+              $history.hide();
+            }
+            return $(document).off('mousemove.scroll');
+          }
+        });
+      }
+    });
     hiding = false;
     hidingTimer = null;
     $(document).on('mouseenter', '.basetext', function(ev) {
@@ -164,7 +178,7 @@
 
   $currentEntry = null;
 
-  newTranslationResult = window.newTranslationResult = function(id, text) {
+  newTranslationResult = window.newTranslationResult = function(id, translationResult) {
     var entry;
     if (id < lastEntryId) {
       entry = $history.find(".entry[data-id=\"" + id + "\"]");
@@ -175,7 +189,7 @@
       entry = $currentEntry;
     }
     if (entry.length) {
-      $('#translation', entry).html(_.escape(text).replace(/\n/g, '<br>'));
+      $('#translation', entry).html(renderTranslationResult(translationResult));
     }
   };
 
@@ -366,6 +380,19 @@
       i += 1;
     }
     return res;
+  };
+
+  renderTranslationResult = function(tr) {
+    var $res;
+    tr = JSON.parse(tr);
+    $res = $('<span>');
+    if (!tr.isAtlas) {
+      $res.addClass('no_atlas');
+    } else {
+      $res.addClass('atlas');
+    }
+    $res.html(_.escape(tr.text).replace(/\n/g, '<br>'));
+    return $res;
   };
 
   log = function(s) {

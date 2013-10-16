@@ -34,7 +34,8 @@ namespace ChiitransLite.texthook {
             [MarshalAs(UnmanagedType.LPWStr)] string name,
             Int32 hook,
             Int32 context,
-            Int32 subcontext
+            Int32 subcontext,
+            Int32 status
         );
 
         [DllImport("ithwrapper.dll")]

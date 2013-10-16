@@ -17,6 +17,13 @@ $ ->
     #        alert JSON.stringify q
     #    return
 
+    $(document).keydown (ev) ->
+        if ev.keyCode == 27 and isSelectWindow
+            ev.preventDefault()
+            isSelectWindow = false
+            $('#connect_status').empty()
+            host().selectWindowClick(isSelectWindow)
+
     host().getProcesses ({procs, defaultName, defaultPid}) ->
         $pSel = $ '#process'
         for p in procs
@@ -40,14 +47,8 @@ $ ->
     $('.showTranslation').click ->
         host().showTranslationForm()
 
-    if (host().getClipboardTranslation())
-        setClipboardTranslation true
-    
-    $('.clipboardTranslation').click ->
-        setClipboardTranslation host().toggleClipboardTranslation()
-
-    $('#showHooks').click ->
-        host().showHookForm()
+    $('.options').click ->
+        host().showOptions()
 
     $('#connect').click ->
         sel = $('#process')
@@ -59,7 +60,7 @@ $ ->
             host().connectClick +pid, exeName, ->
 
     $('#about').click ->
-        host().showAbout(->)
+        host().showAbout ->
 
     $('#contexts').on 'change', '.check input', ->
         ctxId = $(this).data 'id'
@@ -157,7 +158,7 @@ newContext = window.newContext = (id, name, addr, sub, enabled) ->
     if sub
         nameStr += " (" + sub + ")"
     ctx.tr = $ """<tr>
-        <td class="check"><input type=checkbox data-id="#{id}" #{if enabled then 'checked' else ''} /></td>
+        <td class="check"><input type=checkbox title="Double click to select only this context" data-id="#{id}" #{if enabled then 'checked' else ''} /></td>
         <td class="addr">[#{formatAddr(addr, sub)}]</td>
         <td class="name"><span class="name_s">#{nameStr}</span></td>
         <td class="text"><div class="text_s" data-id="#{id}"></div></td>
@@ -188,11 +189,4 @@ disableContexts = window.disableContexts = (idsJson) ->
         if ctx?
             ctx.enabled = false
             ctx.tr.find('.check input').prop('checked', false)
-    return
-
-setClipboardTranslation = (isEnabled) ->
-    if isEnabled
-        $('.clipboardTranslation').addClass('pressed').attr('title', 'Disable Translation from Clipboard')
-    else
-        $('.clipboardTranslation').removeClass('pressed').attr('title', 'Enable Translation from Clipboard')
     return

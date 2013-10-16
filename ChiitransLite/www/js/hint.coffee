@@ -36,6 +36,10 @@ $ ->
     $tense = $('#tense')
     $hint = $('#hint')
 
+    $page.on 'click', '.reading', ->
+        host().setReading data.stem, $(this).data('text')
+        return
+
 show = window.show = (json, _pageNum, isTransparent) ->
     data = JSON.parse json
     found = false
@@ -86,7 +90,10 @@ showPage = (data, pageNum) ->
     if page?
         kanji = _.map page.kanji, makeDictKey
         $kanji.html kanji.join(', ')
-        kana = _.map page.kana, makeDictKey
+        if kanji.length > 0 and page.kana.length >= 2 #enable changing reading only if readings >= 2
+            kana = _.map page.kana, makeReading
+        else
+            kana = _.map page.kana, makeDictKey
         if kanji.length == 0
             showKana = $kanji
             $kana.empty()
@@ -133,6 +140,11 @@ showSense = window.showSense = ->
 makeDictKey = (d) ->
     misc = if d.misc? then makeMisc(d.misc) else ""
     """<span class="dict_key"><span class="key">#{_.escape d.text}</span>#{misc}</span>"""
+
+makeReading = (d) ->
+    misc = if d.misc? then makeMisc(d.misc) else ""
+    txt = _.escape d.text
+    """<span class="dict_key"><span class="key reading" data-text="#{txt}" title="Select this reading">#{txt}</span>#{misc}</span>"""
 
 makeMisc = (misc) ->
     """<span class="misc_set">(#{_.map(misc, makeMiscSingle).join(', ')})</span>"""

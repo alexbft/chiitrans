@@ -7,6 +7,7 @@
 #include "ith/srv/srv.h"
 #include "ith/sys/sys.h"
 #include "ith/common/defs.h"
+#include "ith/common/const.h"
 
 //static HANDLE hHeap;
 static HookManager *hm = NULL;
@@ -167,7 +168,20 @@ DWORD ThreadCreate(TextThread *t) {
 	if (onCreateThreadFunc != NULL) {
 		WCHAR buf[1001];
 		t->GetThreadString(buf, 1000);
-		DWORD err = onCreateThreadFunc(t->Number(), buf, tp->hook, tp->retn, tp->spl);
+		bool is_unicode = false;
+		if (ProcessRecord *pr = hm->GetProcessRecord(t->PID())) {
+			NtWaitForSingleObject(pr->hookman_mutex, 0, 0);
+			Hook *hk = static_cast<Hook *>(pr->hookman_map);
+			for (int i = 0; i < MAX_HOOK; i++) {
+				if (hk[i].Address() == t->Addr()) {
+				if (hk[i].Type() & USING_UNICODE)
+					is_unicode = true;
+				break;
+				}
+			}
+			NtReleaseMutant(pr->hookman_mutex, 0);
+		}
+		DWORD err = onCreateThreadFunc(t->Number(), buf, tp->hook, tp->retn, tp->spl, is_unicode ? 1 : 0);
 		if (err) {
 			return 0;
 		}

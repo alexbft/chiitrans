@@ -42,6 +42,10 @@ namespace ChiitransLite.forms {
             public void onWheel(int units) {
                 form.onWheel(units);
             }
+
+            public void setReading(string stem, string reading) {
+                form.setReading(stem, reading);
+            }
         }
 
         public HintForm() {
@@ -49,7 +53,7 @@ namespace ChiitransLite.forms {
             webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
             webBrowser1.Url = Utils.getUriForBrowser("hint.html");
             moveAway();
-            Utils.setWindowNoActivate(this.Handle);
+            //Utils.setWindowNoActivate(this.Handle);
         }
 
         internal void setMainForm(TranslationForm form) {
@@ -133,6 +137,24 @@ namespace ChiitransLite.forms {
         }
 
         private void HintForm_Shown(object sender, EventArgs e) {
+        }
+
+        internal void setReading(string stem, string reading) {
+            if (mainForm != null && lastData != null && lastData.getMatchStem() == stem) {
+                Settings.app.setSelectedReading(stem, reading);
+                OkuriganaType okType = Settings.app.okuriganaType;
+                if (okType == OkuriganaType.NORMAL) {
+                    mainForm.updateReading(lastData.getMatchStem(), lastData.getReading(okType));
+                } else if (okType == OkuriganaType.ENGLISH || okType == OkuriganaType.RUSSIAN) {
+                    mainForm.updateReading(lastData.asText(), lastData.getReading(okType));
+                }
+            }
+        }
+
+        protected override bool ShowWithoutActivation {
+            get {
+                return true;
+            }
         }
     }
 }

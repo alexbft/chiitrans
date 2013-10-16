@@ -1,9 +1,17 @@
 ﻿(function() {
-  var clearContexts, connectError, connectSuccess, contexts, disableContexts, disconnect, formatAddr, formatProcessName, isSelectWindow, log, logParse, longToHex, newContext, newSentence, selectWindowEnd, setClipboardTranslation, setDefaultProcess;
+  var clearContexts, connectError, connectSuccess, contexts, disableContexts, disconnect, formatAddr, formatProcessName, isSelectWindow, log, logParse, longToHex, newContext, newSentence, selectWindowEnd, setDefaultProcess;
 
   isSelectWindow = false;
 
   $(function() {
+    $(document).keydown(function(ev) {
+      if (ev.keyCode === 27 && isSelectWindow) {
+        ev.preventDefault();
+        isSelectWindow = false;
+        $('#connect_status').empty();
+        return host().selectWindowClick(isSelectWindow);
+      }
+    });
     host().getProcesses(function(_arg) {
       var $op, $pSel, defaultName, defaultPid, p, procs, _i, _len;
       procs = _arg.procs, defaultName = _arg.defaultName, defaultPid = _arg.defaultPid;
@@ -31,14 +39,8 @@
     $('.showTranslation').click(function() {
       return host().showTranslationForm();
     });
-    if (host().getClipboardTranslation()) {
-      setClipboardTranslation(true);
-    }
-    $('.clipboardTranslation').click(function() {
-      return setClipboardTranslation(host().toggleClipboardTranslation());
-    });
-    $('#showHooks').click(function() {
-      return host().showHookForm();
+    $('.options').click(function() {
+      return host().showOptions();
     });
     $('#connect').click(function() {
       var exeName, index, pid, sel;
@@ -180,7 +182,7 @@
     if (sub) {
       nameStr += " (" + sub + ")";
     }
-    ctx.tr = $("<tr>\n    <td class=\"check\"><input type=checkbox data-id=\"" + id + "\" " + (enabled ? 'checked' : '') + " /></td>\n    <td class=\"addr\">[" + (formatAddr(addr, sub)) + "]</td>\n    <td class=\"name\"><span class=\"name_s\">" + nameStr + "</span></td>\n    <td class=\"text\"><div class=\"text_s\" data-id=\"" + id + "\"></div></td>\n</tr>");
+    ctx.tr = $("<tr>\n    <td class=\"check\"><input type=checkbox title=\"Double click to select only this context\" data-id=\"" + id + "\" " + (enabled ? 'checked' : '') + " /></td>\n    <td class=\"addr\">[" + (formatAddr(addr, sub)) + "]</td>\n    <td class=\"name\"><span class=\"name_s\">" + nameStr + "</span></td>\n    <td class=\"text\"><div class=\"text_s\" data-id=\"" + id + "\"></div></td>\n</tr>");
     contexts[id] = ctx;
     $('#contexts').append(ctx.tr);
   };
@@ -214,14 +216,6 @@
         ctx.enabled = false;
         ctx.tr.find('.check input').prop('checked', false);
       }
-    }
-  };
-
-  setClipboardTranslation = function(isEnabled) {
-    if (isEnabled) {
-      $('.clipboardTranslation').addClass('pressed').attr('title', 'Disable Translation from Clipboard');
-    } else {
-      $('.clipboardTranslation').removeClass('pressed').attr('title', 'Enable Translation from Clipboard');
     }
   };
 

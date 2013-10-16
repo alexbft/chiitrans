@@ -10,22 +10,57 @@ using System.Windows.Forms;
 using ChiitransLite.texthook.ext;
 using ChiitransLite.settings;
 using System.Threading;
+using ChiitransLite.translation.po;
+using System.IO;
 
 namespace ChiitransLite.texthook {
     class TextHook {
         public const int OK = 0;
         public const int ERROR_ALREADY_RUNNING = 1001;
         
-        private static bool isInitialized = false;
+        private bool isInitialized = false;
+        internal bool isCompat = false;
 
-        public static int init() {
-            lock (typeof(TextHook)) {
+        public int init(bool isCompat) {
+            lock (this) {
                 if (isInitialized) {
-                    return TextHook.OK;
+                    if (this.isCompat == isCompat) {
+                        return TextHook.OK;
+                    } else {
+                        throw new MyException("Initialization error. Please restart Chiitrans Lite and try again.");
+                    }
                 } else {
-                    int res = TextHookInterop.TextHookInit();
-                    isInitialized = res == TextHook.OK;
-                    return res;
+                    this.isCompat = isCompat;
+                    try {
+                        handleCreateThreadDelegate = new TextHookInterop.OnCreateThreadFunc(handleCreateThread);
+                        handleRemoveThreadDelegate = new TextHookInterop.OnRemoveThreadFunc(handleRemoveThread);
+                        handleConnectDelegate = new TextHookInterop.CallbackFunc(handleConnect);
+                        handleDisconnectDelegate = new TextHookInterop.CallbackFunc(handleDisconnect);
+                        handleInputDelegate = new TextHookInterop.OnInputFunc(handleInput);
+                        int res;
+                        if (isCompat) {
+                            TextHookInteropCompat.TextHookOnConnect(handleConnectDelegate);
+                            TextHookInteropCompat.TextHookOnCreateThread(handleCreateThreadDelegate);
+                            TextHookInteropCompat.TextHookOnRemoveThread(handleRemoveThreadDelegate);
+                            TextHookInteropCompat.TextHookOnDisconnect(handleDisconnectDelegate);
+                            TextHookInteropCompat.TextHookOnInput(handleInputDelegate);
+                            res = TextHookInteropCompat.TextHookInit();
+                            isInitialized = res == TextHook.OK;
+                            return res;
+                        } else {
+                            TextHookInterop.TextHookOnConnect(handleConnectDelegate);
+                            TextHookInterop.TextHookOnCreateThread(handleCreateThreadDelegate);
+                            TextHookInterop.TextHookOnRemoveThread(handleRemoveThreadDelegate);
+                            TextHookInterop.TextHookOnDisconnect(handleDisconnectDelegate);
+                            TextHookInterop.TextHookOnInput(handleInputDelegate);
+                            res = TextHookInterop.TextHookInit();
+                            isInitialized = res == TextHook.OK;
+                            return res;
+                        }
+                    } catch (Exception ex) {
+                        Logger.logException(ex);
+                        return 1;
+                    }
                 }
             }
         }
@@ -33,27 +68,13 @@ namespace ChiitransLite.texthook {
             public static readonly TextHook _instance = new TextHook();
         }
 
-        private readonly TextHookInterop.OnCreateThreadFunc handleCreateThreadDelegate;
-        private readonly TextHookInterop.OnRemoveThreadFunc handleRemoveThreadDelegate;
-        private readonly TextHookInterop.CallbackFunc handleConnectDelegate;
-        private readonly TextHookInterop.CallbackFunc handleDisconnectDelegate;
-        private readonly TextHookInterop.OnInputFunc handleInputDelegate;
+        private TextHookInterop.OnCreateThreadFunc handleCreateThreadDelegate;
+        private TextHookInterop.OnRemoveThreadFunc handleRemoveThreadDelegate;
+        private TextHookInterop.CallbackFunc handleConnectDelegate;
+        private TextHookInterop.CallbackFunc handleDisconnectDelegate;
+        private TextHookInterop.OnInputFunc handleInputDelegate;
 
         private TextHook() {
-            try {
-                handleCreateThreadDelegate = new TextHookInterop.OnCreateThreadFunc(handleCreateThread);
-                handleRemoveThreadDelegate = new TextHookInterop.OnRemoveThreadFunc(handleRemoveThread);
-                handleConnectDelegate = new TextHookInterop.CallbackFunc(handleConnect);
-                handleDisconnectDelegate = new TextHookInterop.CallbackFunc(handleDisconnect);
-                handleInputDelegate = new TextHookInterop.OnInputFunc(handleInput);
-                TextHookInterop.TextHookOnConnect(handleConnectDelegate);
-                TextHookInterop.TextHookOnCreateThread(handleCreateThreadDelegate);
-                TextHookInterop.TextHookOnRemoveThread(handleRemoveThreadDelegate);
-                TextHookInterop.TextHookOnDisconnect(handleDisconnectDelegate);
-                TextHookInterop.TextHookOnInput(handleInputDelegate);
-            } catch (Exception ex) {
-                Logger.logException(ex);
-            }
         }
 
         public static TextHook instance {
@@ -67,8 +88,8 @@ namespace ChiitransLite.texthook {
         public String currentProcessTitle { get; private set; }
         private volatile bool isConnected = false;
 
-        private int handleCreateThread(int id, string name, int hook, int context, int subcontext) {
-            contexts[id] = factory.create(id, name, hook, context, subcontext);
+        private int handleCreateThread(int id, string name, int hook, int context, int subcontext, int status) {
+            contexts[id] = factory.create(id, name, hook, context, subcontext, status);
             Task.Factory.StartNew(() => {
                 if (onNewContext != null) {
                     onNewContext(contexts[id]);
@@ -103,13 +124,14 @@ namespace ChiitransLite.texthook {
                     onDisconnect();
                 }
             });
+            Settings.setDefaultSession();
             return 0;
         }
 
         private int handleInput(int id, IntPtr data, int len, int isNewline) {
             TextHookContext ctx;
             if (contexts.TryGetValue(id, out ctx)) {
-                ctx.handleInput(data, len, isNewline != 0);
+                ctx.handleInput(data, len, (isNewline & 2) != 0);
             }
             return 0;
         }
@@ -118,7 +140,11 @@ namespace ChiitransLite.texthook {
             if (!isInitialized) {
                 return false;
             } else {
-                TextHookInterop.TextHookConnect(pid); // cannot determine success :(
+                if (isCompat) {
+                    TextHookInteropCompat.TextHookConnect(pid); // cannot determine success :(
+                } else {
+                    TextHookInterop.TextHookConnect(pid);
+                }
                 contexts.Clear();
                 isConnected = true;
                 return true;
@@ -126,7 +152,14 @@ namespace ChiitransLite.texthook {
         }
 
         public void connect(int pid, string exeName) {
-            int err = init();
+            bool needCompat = Program.arguments.Contains("--compat") ||
+                Path.GetFileName(exeName).ToLower() == "fatefd.exe";
+            if (needCompat && !isInitialized) {
+                if (!Utils.confirm("Entering ITH compatible mode. Continue?")) {
+                    throw new MyException("Aborted.");
+                }
+            }
+            int err = init(needCompat);
             if (err != TextHook.OK) {
                 if (err == TextHook.ERROR_ALREADY_RUNNING) {
                     throw new MyException("Cannot initialize TextHook: already running!");
@@ -188,7 +221,12 @@ namespace ChiitransLite.texthook {
             if (Settings.session.isHookAlreadyInstalled(userHook)) {
                 return false;
             }
-            bool ok = TextHookInterop.TextHookAddHook(ref userHook.hookParam, userHook.getName()) == OK;
+            bool ok;
+            if (isCompat) {
+                ok = TextHookInteropCompat.TextHookAddHook(ref userHook.hookParam, userHook.getName()) == OK;
+            } else {
+                ok = TextHookInterop.TextHookAddHook(ref userHook.hookParam, userHook.getName()) == OK;
+            }
             if (ok) {
                 Settings.session.addUserHook(userHook);
             }
@@ -204,7 +242,11 @@ namespace ChiitransLite.texthook {
             }
             bool ok = true;
             Thread removingThread = new Thread(new ThreadStart(() => {
-                ok = TextHookInterop.TextHookRemoveHook(hook.addr) == OK;
+                if (isCompat) {
+                    ok = TextHookInteropCompat.TextHookRemoveHook(hook.addr) == OK;
+                } else {
+                    ok = TextHookInterop.TextHookRemoveHook(hook.addr) == OK;
+                }
             }));
             removingThread.IsBackground = true;
             removingThread.Start();
@@ -219,7 +261,11 @@ namespace ChiitransLite.texthook {
 
         private void installHooks() {
             foreach (UserHook h in Settings.session.getHookList()) {
-                TextHookInterop.TextHookAddHook(ref h.hookParam, h.getName());
+                if (isCompat) {
+                    TextHookInteropCompat.TextHookAddHook(ref h.hookParam, h.getName());
+                } else {
+                    TextHookInterop.TextHookAddHook(ref h.hookParam, h.getName());
+                }
             }
         }
 

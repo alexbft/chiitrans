@@ -7,9 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ChiitransLite.misc;
-
-//xaababacaaaababacaaab
-//bakabakaataata
+using ChiitransLite.settings;
 
 namespace ChiitransLite.texthook {
     class TextHookContext {
@@ -23,7 +21,6 @@ namespace ChiitransLite.texthook {
 
         public Encoding encoding { get; set; }
         public bool isListening { get; set; }
-        public TimeSpan listenDelay { get; set; }
 
         private StringBuilder textBuffer = new StringBuilder();
         private Timer flushTimer = null;
@@ -39,20 +36,14 @@ namespace ChiitransLite.texthook {
         private int irregularRepeatConfidence = 0;
         private bool irregularRepeatDetermined { get { return irregularRepeatConfidence >= 20; } }
 
-        public TextHookContext(int id, string name, int hook, int context, int subcontext) {
+        public TextHookContext(int id, string name, int hook, int context, int subcontext, int status) {
             this.id = id;
             this.internalId = Interlocked.Increment(ref internalIdCounter);
             this.name = name;
             this.context = context;
             this.subcontext = subcontext;
-            // 'Intelligent' guess
-            if (this.name != null && this.name.EndsWith("W")) { // like TextOutW :3
-                this.encoding = Encoding.Unicode;
-            } else {
-                this.encoding = Encoding.GetEncoding(932);
-            }
+            this.encoding = status != 0 ? Encoding.Unicode : Encoding.GetEncoding(932);
             this.isListening = true;
-            this.listenDelay = TimeSpan.FromMilliseconds(100);
         }
 
         public string getFullName() {
@@ -71,7 +62,7 @@ namespace ChiitransLite.texthook {
                 byte[] buf = new byte[len];
                 Marshal.Copy(data, buf, 0, len);
                 Action work = () => {
-                    string text = encoding.GetString(buf);
+                    string text =encoding.GetString(buf);
                     if (!string.IsNullOrEmpty(text)) {
                         lock (textBuffer) {
                             textBuffer.Append(text);
@@ -82,7 +73,7 @@ namespace ChiitransLite.texthook {
                         if (flushTimer == null) {
                             flushTimer = new Timer(new TimerCallback((_) => flush()));
                         }
-                        flushTimer.Change((long)listenDelay.TotalMilliseconds, Timeout.Infinite);
+                        flushTimer.Change((long)Settings.session.sentenceDelay.TotalMilliseconds, Timeout.Infinite);
                         if (onInput != null) {
                             onInput(this, text);
                         }

@@ -161,8 +161,8 @@ namespace ChiitransLite.forms {
             FormUtil.restoreLocation(this);
             webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
             webBrowser1.Url = Utils.getUriForBrowser("translation.html");
-            TranslationService.instance.onAtlasDone += (id, text) => {
-                webBrowser1.callScript("newTranslationResult", id, text);
+            TranslationService.instance.onAtlasDone += (id, tr) => {
+                webBrowser1.callScript("newTranslationResult", id, Utils.toJson(tr));
             };
             TranslationService.instance.onEdictDone += (id, parse) => {
                 lastParseResult = parse;
@@ -173,7 +173,20 @@ namespace ChiitransLite.forms {
                 lastParseOptions = null;
                 submitParseResult(parse);
             };
+            if (TextOptionsForm.instance.Visible) {
+                this.SuspendTopMostBegin();
+            }
             TextOptionsForm.instance.VisibleChanged += (sender, e) => {
+                if ((sender as Form).Visible) {
+                    this.SuspendTopMostBegin();
+                } else {
+                    this.SuspendTopMostEnd();
+                }
+            };
+            if (HookOptionsForm.instance.Visible) {
+                this.SuspendTopMostBegin();
+            }
+            HookOptionsForm.instance.VisibleChanged += (sender, e) => {
                 if ((sender as Form).Visible) {
                     this.SuspendTopMostBegin();
                 } else {
@@ -186,15 +199,16 @@ namespace ChiitransLite.forms {
 
         void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) {
             if (this.Visible) {
-                isFullscreen = Utils.isFullscreen();
+                isFullscreen = !isFullscreen && Utils.isFullscreen();
                 if (isFullscreen) {
                     setTransparentMode(false);
-                    FormUtil.fixFormPosition(this, Winapi.GetForegroundWindow());
+                    FormUtil.fixFormPosition(this);
                 } else {
-                    Utils.setWindowNoActivate(this.Handle, false);
+                    setWindowNoActivate(false);
                 }
-                this.hideHint();
-                this.BringToFront();
+                hideHint();
+                BringToFront();
+                moveBackgroundForm();
                 if (isFullscreen) {
                     Task.Factory.StartNew(() => {
                         Thread.Sleep(2000);
@@ -205,6 +219,11 @@ namespace ChiitransLite.forms {
                     });
                 }
             }
+        }
+
+        private void setWindowNoActivate(bool p) {
+            Utils.setWindowNoActivate(Handle, p);
+            Utils.setWindowNoActivate(hintForm.Handle, p);
         }
 
         private static TranslationForm _instance = null;
@@ -458,16 +477,17 @@ namespace ChiitransLite.forms {
                 Settings.app.transparentMode = isEnabled;
             }
             if (isEnabled) {
-                moveBackgroundForm();
-                this.backgroundForm.Show();
                 this.TransparencyKey = Color.FromArgb(0, 0, 1);
                 this.BackColor = Color.FromArgb(0, 0, 1);
-                Utils.setWindowNoActivate(Handle, isFullscreen);
+                setWindowNoActivate(isFullscreen);
+                this.backgroundForm.Show();
+                moveBackgroundForm();
+                backgroundForm.Refresh();
             } else {
                 this.TransparencyKey = Color.Empty;
                 this.BackColor = SystemColors.Window;
                 this.backgroundForm.Hide();
-                Utils.setWindowNoActivate(Handle, isFullscreen);
+                setWindowNoActivate(isFullscreen);
             }
             if (propagateToClient) {
                 webBrowser1.callScript("setTransparentMode", isEnabled);

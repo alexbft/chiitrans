@@ -98,7 +98,9 @@ namespace ChiitransLite.translation.edict {
                     nameDefinitions = entities;
                     entities = null;
                     mainIndex = new Dictionary<string, EdictMatch>(mainIndex); // no concurrency needed at this point
+                    GC.Collect();
                 });
+                 
             } catch (Exception ex) {
                 Logger.logException(ex);
             }

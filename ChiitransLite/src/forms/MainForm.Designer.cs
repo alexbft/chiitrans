@@ -42,7 +42,7 @@
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(456, 176);
+            this.webBrowser1.Size = new System.Drawing.Size(427, 180);
             this.webBrowser1.TabIndex = 0;
             // 
             // openExeFile
@@ -76,7 +76,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(456, 176);
+            this.ClientSize = new System.Drawing.Size(427, 180);
             this.Controls.Add(this.webBrowser1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = global::ChiitransLite.Properties.Resources.ohayo_small;

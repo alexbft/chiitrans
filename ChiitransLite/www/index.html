@@ -32,8 +32,10 @@
                 <div style="float:right">
                     <button id="about" class="btn" title="About Chiitrans Lite"><i class="icon-info"></i></button>
                 </div>
-                <button id="showTranslation1" class="btn showTranslation" title="Show Translation Window"><i class="icon-language"></i> TL Window</button><!--
-                --><button id="clipboard1" class="btn clipboardTranslation" title="Enable Translation from Clipboard"><i class="icon-clipboard"></i> Clipboard</button>
+                <div class="buttonpanel">
+                    <button id="showTranslation1" class="btn showTranslation" title="Show Translation Window"><i class="icon-language"></i> TL Window</button><!--
+                    --><button id="options1" class="btn options" title="Options"><i class="icon-cog"></i> Options</button>
+                </div>
             </div>
         </div>
         <div id="working" style="display:none">
@@ -43,14 +45,19 @@
             <div class="controls">
                 <div style="float:right">
                     <select id="newContexts">
-                        <option value="allow" selected>Read all new contexts</option>
+                        <option value="smart" selected>Smart filtering</option>
+                        <option value="allow">Read all new contexts</option>
                         <option value="ignore">Ignore new contexts</option>
                         <option value="switchto">Switch to new contexts</option>
                     </select>
                 </div>
-                <button id="showTranslation2" class="btn showTranslation" title="Show Translation Window"><i class="icon-language"></i> Text</button><!--
-                --><button id="clipboard2" class="btn clipboardTranslation" title="Enable Translation from Clipboard"><i class="icon-clipboard"></i> Clipboard</button><!--
-                --><button id="showHooks" class="btn"><i class="icon-key" title="Install User Hooks..."></i> Hooks</button>
+                <div class="buttonpanel">
+                    <button id="showTranslation2" class="btn showTranslation" title="Show Translation Window"><i class="icon-language"></i> Text</button><!--
+                    --><button id="options2" class="btn options" title="Options"><i class="icon-cog"></i> Options</button><!--
+                    <button id="clipboard2" class="btn clipboardTranslation" title="Enable Translation from Clipboard"><i class="icon-clipboard"></i> Clipboard</button><!--
+                    <button id="showHooks" class="btn"><i class="icon-key" title="Install User Hooks..."></i> Hooks</button><!--
+                    <button id="showPoFiles" class="btn"><i class="icon-key" title="Use PO Files..."></i> PO Files</button>-->
+                </div>
             </div>
         </div>
     	<script src="js/index.js"></script>

@@ -22,8 +22,8 @@ namespace ChiitransLite.texthook.ext {
 
         public ConcurrentQueue<string> log = new ConcurrentQueue<string>();
 
-        public MyContext(int id, string name, int hook, int context, int subcontext, bool enabled):
-        base(id, name, hook, context, subcontext) {
+        public MyContext(int id, string name, int hook, int context, int subcontext, int status, bool enabled):
+        base(id, name, hook, context, subcontext, status) {
             this.enabled = enabled;
             this.onSentence += MyContext_onSentence;
         }

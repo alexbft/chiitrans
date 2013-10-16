@@ -18,16 +18,41 @@ namespace ChiitransLite.settings {
 
         private readonly string key;
         private readonly string fileName;
+        public readonly string processExe;
         public Dictionary<string, EdictMatch> userNames { get; private set; }
         private Dictionary<long, bool> contextsEnabled;
         private List<UserHook> userHooks;
         private bool isDirty;
+        private string _po;
+        public string po {
+            get {
+                return _po;
+            }
+            set {
+                if (_po != value) {
+                    _po = value;
+                    isDirty = true;
+                }
+            }
+        }
+        private TimeSpan _sentenceDelay;
+        public TimeSpan sentenceDelay {
+            get {
+                return _sentenceDelay;
+            }
+            set {
+                if (_sentenceDelay != value) {
+                    _sentenceDelay = value;
+                    isDirty = true;
+                }
+            }
+        }
 
-        internal static SessionSettings get(string key) {
+        internal static SessionSettings get(string key, string processExe = null) {
             lock (classLock) {
                 SessionSettings res;
                 if (!cache.TryGetValue(key, out res)) {
-                    res = new SessionSettings(key);
+                    res = new SessionSettings(key, processExe);
                     res.tryLoad();
                     cache[key] = res;
                 }
@@ -36,7 +61,7 @@ namespace ChiitransLite.settings {
         }
 
         internal static SessionSettings getByExeName(string exeName) {
-            return get(getKey(exeName));
+            return get(getKey(exeName), exeName);
         }
 
         internal static SessionSettings getDefault() {
@@ -61,13 +86,16 @@ namespace ChiitransLite.settings {
             }
         }
 
-        public SessionSettings(string key) {
+        public SessionSettings(string key, string processExe) {
             this.key = key;
+            this.processExe = processExe;
             this.fileName = Path.Combine(Utils.getAppDataPath(), key + ".json");
             this.userNames = new Dictionary<string, EdictMatch>();
             this.contextsEnabled = new Dictionary<long, bool>();
             this.userHooks = new List<UserHook>();
             this.isDirty = false;
+            this._po = null;
+            this._sentenceDelay = TimeSpan.FromMilliseconds(100);
         }
 
         private void tryLoad() {
@@ -97,6 +125,11 @@ namespace ChiitransLite.settings {
                         if (hook != null) {
                             userHooks.Add(hook);
                         }
+                    }
+                    _po = data["po"] as string;
+                    if (data["sentenceDelay"] != null) {
+                        int sd = (int)data["sentenceDelay"];
+                        _sentenceDelay = TimeSpan.FromMilliseconds(sd);
                     }
                 }
             } catch (Exception e) {
@@ -148,11 +181,13 @@ namespace ChiitransLite.settings {
                 }),
                 contexts = contextsEnabled.ToDictionary((kv) => kv.Key.ToString(), (kv) => kv.Value),
                 newContexts = newContextsBehavior.ToString(),
-                hooks = (from h in userHooks select h.code)
+                hooks = (from h in userHooks select h.code),
+                po = _po,
+                sentenceDelay = sentenceDelay.TotalMilliseconds
             };
         }
 
-        private MyContextFactory.NewContextsBehavior _newContextsBehavior = MyContextFactory.NewContextsBehavior.ALLOW;
+        private MyContextFactory.NewContextsBehavior _newContextsBehavior = MyContextFactory.NewContextsBehavior.SMART;
         public MyContextFactory.NewContextsBehavior newContextsBehavior {
             get {
                 return _newContextsBehavior;

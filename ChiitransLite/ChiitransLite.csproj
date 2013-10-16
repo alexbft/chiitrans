@@ -81,6 +81,18 @@
     <Compile Include="src\forms\ContextLogForm.Designer.cs">
       <DependentUpon>ContextLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\forms\HookOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\forms\HookOptionsForm.Designer.cs">
+      <DependentUpon>HookOptionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\forms\POFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\forms\POFilesForm.Designer.cs">
+      <DependentUpon>POFilesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\forms\UpgradeIEForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +161,7 @@
     <Compile Include="src\settings\Settings.cs" />
     <Compile Include="src\settings\TranslationDisplay.cs" />
     <Compile Include="src\texthook\ContextFactory.cs" />
+    <Compile Include="src\texthook\TextHookInteropCompat.cs" />
     <Compile Include="src\texthook\DefaultContextFactory.cs" />
     <Compile Include="src\texthook\ext\MyContext.cs" />
     <Compile Include="src\texthook\ext\MyContextFactory.cs" />
@@ -180,6 +193,9 @@
     <Compile Include="src\translation\edict\parseresult\UnparsedParseResult.cs" />
     <Compile Include="src\translation\edict\parseresult\WordParseResult.cs" />
     <Compile Include="src\translation\edict\RatedEntry.cs" />
+    <Compile Include="src\translation\po\PoManager.cs" />
+    <Compile Include="src\translation\po\PoTranslation.cs" />
+    <Compile Include="src\translation\TranslationResult.cs" />
     <Compile Include="src\translation\TranslationService.cs" />
     <EmbeddedResource Include="src\forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
@@ -192,6 +208,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\forms\ContextLogForm.resx">
       <DependentUpon>ContextLogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\forms\HookOptionsForm.resx">
+      <DependentUpon>HookOptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\forms\POFilesForm.resx">
+      <DependentUpon>POFilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\forms\UpgradeIEForm.resx">
       <DependentUpon>UpgradeIEForm.cs</DependentUpon>
@@ -236,11 +258,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="www\js\hook-options.coffee" />
     <None Include="www\js\textform-options.coffee" />
     <None Include="www\js\hint.coffee" />
     <None Include="www\js\host.coffee" />
     <None Include="www\js\index.coffee" />
     <None Include="www\js\translation.coffee" />
+    <None Include="www\res\hook-options.less" />
     <None Include="www\res\textform-options.less" />
     <None Include="www\res\index.less" />
     <None Include="www\res\hint.less" />
@@ -254,8 +278,18 @@
     <Content Include="ohayo.ico" />
     <None Include="src\ohayo_small.ico" />
     <Content Include="src\todo.txt" />
+    <Content Include="www\hook-options.html" />
+    <Content Include="www\js\hook-options.js">
+      <DependentUpon>hook-options.coffee</DependentUpon>
+    </Content>
     <Content Include="www\js\textform-options.js">
       <DependentUpon>textform-options.coffee</DependentUpon>
+    </Content>
+    <Content Include="www\res\hook-options.css">
+      <DependentUpon>hook-options.less</DependentUpon>
+    </Content>
+    <Content Include="www\res\hook-options.min.css">
+      <DependentUpon>hook-options.less</DependentUpon>
     </Content>
     <Content Include="www\res\textform-options.css">
       <DependentUpon>textform-options.less</DependentUpon>

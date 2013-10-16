@@ -83,3 +83,10 @@ a {
   display: table;
   clear: both;
 }
+.reading {
+  cursor: pointer;
+}
+.reading:hover {
+  background-color: #bfcae8;
+  color: black;
+}

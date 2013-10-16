@@ -50,6 +50,16 @@ $ ->
     makeResizer('sideTopRight', 1, -1)
     makeResizer('sideBottomRight', 1, 1)
 
+    $('#sideRightScroll, #sideRight').mouseenter ->
+        if $history.css('display') == 'none'
+            $history.show()
+            $content.scrollTop 99999
+            $(document).on 'mousemove.scroll', (ev) ->
+                if (ev.pageX < $(window).width() - 20)
+                    if $content.scrollTop() >= $history.height() - 10
+                        $history.hide()
+                    $(document).off('mousemove.scroll')
+
     hiding = false
     hidingTimer = null
 
@@ -144,7 +154,7 @@ lastEntryId = -1
 lastParseResult = null
 $currentEntry = null
 
-newTranslationResult = window.newTranslationResult = (id, text) ->
+newTranslationResult = window.newTranslationResult = (id, translationResult) ->
     if id < lastEntryId
         entry = $history.find(""".entry[data-id="#{id}"]""")
     else
@@ -152,7 +162,7 @@ newTranslationResult = window.newTranslationResult = (id, text) ->
             onNewEntry id
         entry = $currentEntry
     if entry.length
-        $('#translation', entry).html _.escape(text).replace(/\n/g, '<br>')
+        $('#translation', entry).html renderTranslationResult translationResult
     return
 
 newParseResult = window.newParseResult = (id, parseResult) ->
@@ -290,6 +300,16 @@ renderParseResult = (p) ->
             res.append "<span>&#8203; &#8203;</span>"
         i += 1
     res
+
+renderTranslationResult = (tr) ->
+    tr = JSON.parse tr
+    $res = $('<span>')
+    if not tr.isAtlas
+        $res.addClass 'no_atlas'
+    else
+        $res.addClass 'atlas'
+     $res.html _.escape(tr.text).replace(/\n/g, '<br>')
+     $res
 
 log = (s) ->
     $('<div>').text(s).appendTo $('#log')

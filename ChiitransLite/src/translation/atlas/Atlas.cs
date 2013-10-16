@@ -154,6 +154,9 @@ namespace ChiitransLite.translation.atlas {
                 interop.translatePair(inp, out outp, out tmp, out size);
                 string result;
                 if (outp != IntPtr.Zero) {
+                    if (size > 5000) {
+                        size = 5000;
+                    }
                     byte[] data = new byte[size];
                     Marshal.Copy(outp, data, 0, (int)size);
                     int boundary = Array.IndexOf<byte>(data, 0);
