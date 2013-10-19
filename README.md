@@ -11,6 +11,7 @@ Visit http://alexbft.github.io/chiitrans/ for more info.
 * That means support for multiple user hooks (AGTH codes)
 * Japanese proper names dictionary ([JMnedict](http://www.csse.monash.edu.au/~jwb/enamdict_doc.html)) support
 * Improved parsing algorithm
+* PO files support
 * Lots of usability improvements
 
 ## Removed features
