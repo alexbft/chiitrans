@@ -4,3 +4,4 @@ ithwrapper/
 *.sln
 *.suo
 *.sdf
+*.ipch
