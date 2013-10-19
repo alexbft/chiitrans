@@ -123,11 +123,7 @@ namespace ChiitransLite.translation.edict {
         }
 
         private double getLengthMultiplier(int len) {
-            if (len <= 4) {
-                return len * len;
-            } else {
-                return 4 * len;
-            }
+            return len * len;
         }
 
         internal EdictMatch lookup(string p) {

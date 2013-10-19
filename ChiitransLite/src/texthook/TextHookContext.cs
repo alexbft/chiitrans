@@ -28,7 +28,8 @@ namespace ChiitransLite.texthook {
 
         private int charsRepeat; // like aabbccbbddeeff, number of repeating characters
         private int charsRepeatConfidence = 0;
-        private bool charsRepeatDetermined { get { return charsRepeatConfidence >= 20; } }
+        // hmmm... seems like this should be done
+        private bool charsRepeatDetermined { get { return charsRepeatConfidence >= 999999; } }
         private int phrasesRepeat; // like AbcdefgAbcdefgAbcd, number of phrases repeating (-1 is infinite repeat)
         private int phrasesRepeatConfidence = 0;
         private bool phrasesRepeatDetermined { get { return phrasesRepeatConfidence >= 20; } }

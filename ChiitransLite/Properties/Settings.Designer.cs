@@ -177,7 +177,10 @@ namespace ChiitransLite.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[\"どうか\",\"二十年\",\"には\",\"ホン\",\"様な\",\"だと\",\"ものか\",\"内の者\",\"これ\",\"それ\",\"いいか\",\"お言葉\",\"ので\",\"のか\",\"そうも" +
+            "ない\",\"有馬殿\",\"そうな\",\"のだ\",\"何がな\",\"てもいい\",\"ても\",\"じゃわ\",\"間に\",\"様に\",\"とも\",\"だの\",\"もので\",\"ないで\",\"声を" +
+            "上げて\",\"タン\",\"話をした\",\"その子\",\"かっこ\",\"んとしてくれ\",\"らか\",\"たの\",\"今日は\",\"のです\",\"今来\",\"とけよ\",\"す\",\"事がない" +
+            "\",\"ださいです\"]")]
         public string bannedWords {
             get {
                 return ((string)(this["bannedWords"]));
@@ -237,7 +240,7 @@ namespace ChiitransLite.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"[""はま"",""だいちゃって"",""こって"",""とのご"",""さんや"",""こっか"",""してい"",""わけない"",""すって"",""いよ"",""につき"",""ような"",""とけよ"",""かされました"",""どうか"",""ある"",""しょう"",""のバラ"",""もんだ"",""ことに"",""もと"",""たから"",""はご"",""にご"",""とがないで"",""とご"",""あんたい"",""くらい"",""うちに"",""わけないで"",""かな"",""うご"",""とお"",""かがされました"",""すね"",""ちらから"",""そうし"",""るか"",""らか"",""ました"",""なのか"",""はやめません"",""ないや"",""はいる"",""さんが"",""らい"",""はもう"",""はいかん"",""そうこ"",""なら"",""したん"",""ことし"",""そうなん"",""さんがして"",""ないといけない"",""そうな"",""ほうがい"",""いわ"",""になってから"",""われてなくて"",""きと"",""かと"",""がなって"",""さと"",""いいん"",""そこに"",""のか"",""ないといけな"",""カッコして"",""す"",""いか"",""もが"",""おか"",""にい"",""からぬ"",""たいよ"",""ともない"",""もとは"",""ござい"",""うなら"",""いなら"",""うなったら"",""にそう"",""はどう"",""カッコし"",""たばかり"",""さんがし"",""くり"",""けそう"",""ろうか"",""ましたら"",""はこ"",""どうかされました"",""いるか"",""あるか"",""にない"",""とない"",""もお"",""ござ"",""ないと"",""うかされました"",""こない"",""みにいってた"",""これは"",""ろう""]")]
         public string bannedWordsKana {
             get {
                 return ((string)(this["bannedWordsKana"]));
