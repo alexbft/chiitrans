@@ -18,7 +18,7 @@
       $pSel = $('#process');
       for (_i = 0, _len = procs.length; _i < _len; _i++) {
         p = procs[_i];
-        $op = $("<option value=\"" + p.id + "\">" + (formatProcessName(p.name)) + "</option>");
+        $op = $("<option value=\"" + p.pid + "\">" + (formatProcessName(p.name)) + "</option>");
         $op.data('exe', p.name);
         $pSel.append($op);
       }

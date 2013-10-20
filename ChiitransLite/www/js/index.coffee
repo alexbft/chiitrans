@@ -27,7 +27,7 @@ $ ->
     host().getProcesses ({procs, defaultName, defaultPid}) ->
         $pSel = $ '#process'
         for p in procs
-            $op = $ """<option value="#{p.id}">#{formatProcessName p.name}</option>"""
+            $op = $ """<option value="#{p.pid}">#{formatProcessName p.name}</option>"""
             $op.data 'exe', p.name
             $pSel.append $op
         setDefaultProcess defaultPid, defaultName
