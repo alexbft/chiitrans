@@ -72,7 +72,7 @@ namespace ChiitransLite.translation.edict.inflect {
             }
         }
 
-       internal IEnumerable<InflectionState> findMatching(bool canUseKatakana, List<string> POS, string text, int position) {
+        internal IEnumerable<InflectionState> findMatching(bool canUseKatakana, List<string> POS, string text, int position) {
             List<InflectionState> results = new List<InflectionState>();
             //Logger.log("Finding inflections in: " + text.Substring(position));
             List<Tuple<InflectionTrie, InflectionState, string>> cur = new List<Tuple<InflectionTrie,InflectionState,string>>();
@@ -83,6 +83,7 @@ namespace ChiitransLite.translation.edict.inflect {
                 }
             }
             int offset = 0;
+            bool hasEmptySuf = false;
             while (cur.Count > 0 && position + offset <= text.Length) {
                 //Logger.log("POS List: " + string.Join(", ", cur.Select((q) => q.Item3)));
                 List<Tuple<InflectionTrie, InflectionState, string>> added = new List<Tuple<InflectionTrie, InflectionState, string>>();
@@ -135,15 +136,18 @@ namespace ChiitransLite.translation.edict.inflect {
                 }
                 if (newState != null) {
                     if (!newState.suffix.EndsWith("てい") && !newState.suffix.EndsWith("でい")) { // dirty HACK. bad bad me :(
+                        if (newState.suffix == "") {
+                            hasEmptySuf = true;
+                        }
                         results.Add(newState);
                     }
                 }
                 cur = next;
                 offset += 1;
             }
-            if (results.Count == 0 && (POS == null || POS.Count == 0 || !knownPOS.IsSupersetOf(POS))) { 
+            if (!hasEmptySuf && (POS == null || !knownPOS.IsSupersetOf(POS))) { 
                 InflectionState state = new InflectionState("");
-                return Enumerable.Repeat(state, 1);
+                results.Add(state);
             }
             return results;
         }

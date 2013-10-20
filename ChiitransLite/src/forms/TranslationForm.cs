@@ -250,6 +250,8 @@ namespace ChiitransLite.forms {
             if (e.CloseReason == CloseReason.UserClosing) {
                 e.Cancel = true;
                 this.Hide();
+            } else {
+                this.clipboardMonitor1.Close();
             }
         }
 
@@ -360,11 +362,15 @@ namespace ChiitransLite.forms {
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e) {
-            string sel = lastIsRealSelection ? lastSelection : null;
-            if (sel != null) {
-                Clipboard.SetText(sel);
-            } else if (lastParseResult != null) {
-                Clipboard.SetText(lastParseResult.asText());
+            try {
+                string sel = lastIsRealSelection ? lastSelection : null;
+                if (sel != null) {
+                    Clipboard.SetText(sel);
+                } else if (lastParseResult != null) {
+                    Clipboard.SetText(lastParseResult.asText());
+                }
+            } catch {
+                // some weird errors may be possible
             }
         }
 
@@ -583,6 +589,7 @@ namespace ChiitransLite.forms {
         private void _setClipboardTranslation(bool isEnabled) {
             if (isEnabled) {
                 clipboardMonitor1.ClipboardChanged += clipboardMonitor1_ClipboardChanged;
+                clipboardMonitor1.initialize();
             } else {
                 clipboardMonitor1.ClipboardChanged -= clipboardMonitor1_ClipboardChanged;
             }

@@ -14,25 +14,24 @@ namespace ChiitransLite.forms {
     [DefaultEvent("ClipboardChanged")]
     public partial class ClipboardMonitor : Control {
         IntPtr nextClipboardViewer;
+        private bool initialized;
 
         public ClipboardMonitor() {
             this.BackColor = Color.Red;
             this.Visible = false;
+        }
 
-            nextClipboardViewer = (IntPtr)SetClipboardViewer((int)this.Handle);
+        public void initialize() {
+            if (!initialized) {
+                nextClipboardViewer = (IntPtr)SetClipboardViewer((int)this.Handle);
+                initialized = true;
+            }
         }
 
         /// <summary>
         /// Clipboard contents changed.
         /// </summary>
         public event EventHandler ClipboardChanged;
-
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                ChangeClipboardChain(this.Handle, nextClipboardViewer);
-            }
-            base.Dispose(disposing);
-        }
 
         [DllImport("User32.dll")]
         protected static extern int SetClipboardViewer(int hWndNewViewer);
@@ -78,6 +77,14 @@ namespace ChiitransLite.forms {
                 // Trace.Write(e.ToString());
                 Logger.logException(e);
             }
+        }
+
+        internal void Close() {
+            try {
+                if (initialized) {
+                    ChangeClipboardChain(this.Handle, nextClipboardViewer);
+                }
+            } catch { }
         }
     }
 
