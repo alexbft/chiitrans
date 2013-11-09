@@ -13,7 +13,7 @@ $ ->
     .mouseleave ->
         host().hideForm()
 
-    document.attachEvent 'onmousewheel', (e) ->
+    document_attachEvent 'onmousewheel', (e) ->
         host().onWheel(-(e.wheelDelta / 120))
         return
 

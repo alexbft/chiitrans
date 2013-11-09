@@ -45,8 +45,17 @@ hostCallback = window.hostCallback = (queryId, responseJSON) ->
 
 ##########
 
+if navigator.userAgent.indexOf "MSIE" == -1
+    $('html').addClass('ie11')
+
 applyTheme = window.applyTheme = (theme) ->
     $('link#currentTheme').remove()
     if theme
         $('head').append("""<link id="currentTheme" rel="stylesheet" href="themes/#{theme}.css" />""")
     return
+
+window.document_attachEvent = (ev, cb) ->
+    if document.attachEvent?
+        document.attachEvent ev, cb
+    else
+        document.addEventListener ev.substr(2), cb, false

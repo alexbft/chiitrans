@@ -43,7 +43,7 @@
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(175, 117);
+            this.button1.Location = new System.Drawing.Point(155, 117);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(119, 31);
             this.button1.TabIndex = 2;
@@ -55,20 +55,20 @@
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(450, 38);
+            this.label2.Size = new System.Drawing.Size(405, 38);
             this.label2.TabIndex = 3;
             this.label2.Text = "You are using Internet Explorer 8. Chiitrans Lite has partial support for IE 8, b" +
-    "ut we strongly recommend you to upgrade to IE 10.";
+    "ut we strongly recommend you to upgrade to IE 11.";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(12, 47);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(447, 16);
+            this.linkLabel1.Size = new System.Drawing.Size(392, 16);
             this.linkLabel1.TabIndex = 4;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "http://www.microsoft.com/en-us/download/internet-explorer-10-details.aspx";
+            this.linkLabel1.Text = "http://windows.microsoft.com/en-us/internet-explorer/download-ie";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // UpgradeIEForm
@@ -76,7 +76,7 @@
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(467, 160);
+            this.ClientSize = new System.Drawing.Size(418, 160);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);

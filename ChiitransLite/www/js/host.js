@@ -67,10 +67,22 @@
     }
   };
 
+  if (navigator.userAgent.indexOf("MSIE" === -1)) {
+    $('html').addClass('ie11');
+  }
+
   applyTheme = window.applyTheme = function(theme) {
     $('link#currentTheme').remove();
     if (theme) {
       $('head').append("<link id=\"currentTheme\" rel=\"stylesheet\" href=\"themes/" + theme + ".css\" />");
+    }
+  };
+
+  window.document_attachEvent = function(ev, cb) {
+    if (document.attachEvent != null) {
+      return document.attachEvent(ev, cb);
+    } else {
+      return document.addEventListener(ev.substr(2), cb, false);
     }
   };
 

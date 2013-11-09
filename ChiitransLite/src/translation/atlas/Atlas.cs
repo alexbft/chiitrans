@@ -47,10 +47,20 @@ namespace ChiitransLite.translation.atlas {
             }
         }
 
-        private readonly Dictionary<string, char> stopChars = new Dictionary<string, char> { 
-            {".", '.'}, {"?", '?'}, {"!", '!'},
-            {"。", '.'}, {"？", '?'}, {"！", '!'}
-        };
+
+        private static char normalizeStopChar(char c) {
+            switch (c) {
+                case '。':
+                    return '.';
+                case '？':
+                    return '?';
+                case '！':
+                    return '!';
+                default:
+                    return c;
+            }
+        }
+
         private readonly Dictionary<char, char> openAndClose = new Dictionary<char, char> { { '『', '』' }, { '「', '」' }, { '【', '】' } };
         
         public string translate(string src) {
@@ -90,11 +100,11 @@ namespace ChiitransLite.translation.atlas {
             int ignoreStopCharsUntil = 0;
             while (i < src.Length) {
                 char c = src[i];
-                if (stopChars.ContainsKey(c.ToString()) && i >= ignoreStopCharsUntil) {
+                if (".?!。？！".IndexOf(c) != -1 && i >= ignoreStopCharsUntil) {
                     if (buf.Length == 0) {
-                        res.Append(stopChars[c.ToString()]);
+                        res.Append(normalizeStopChar(c));
                     } else {
-                        while (i < src.Length && stopChars.ContainsKey(src[i].ToString())) {
+                        while (i < src.Length && ".?!。？！".IndexOf(src[i]) != -1) {
                             buf.Append(src[i]);
                             i += 1;
                         }

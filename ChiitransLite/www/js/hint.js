@@ -19,7 +19,7 @@
     }).mouseleave(function() {
       return host().hideForm();
     });
-    document.attachEvent('onmousewheel', function(e) {
+    document_attachEvent('onmousewheel', function(e) {
       host().onWheel(-(e.wheelDelta / 120));
     });
     $('#prevPage').click(function() {

@@ -63,7 +63,7 @@
       if ($history.css('display') === 'none') {
         $history.show();
         $content.scrollTop(99999);
-        return $(document).on('mousemove.scroll', function(ev) {
+        $(document).on('mousemove.scroll', function(ev) {
           if (ev.pageX < $(window).width() - 20) {
             if ($content.scrollTop() >= $history.height() - 10) {
               $history.hide();
@@ -117,7 +117,7 @@
     $content = $('#content');
     $history = $('#history');
     $current = $('#current');
-    document.attachEvent('onmousewheel', function(e) {
+    document_attachEvent('onmousewheel', function(e) {
       var ev;
       ev = $.Event(e);
       if (host().onWheel(-(e.wheelDelta / 120))) {
@@ -237,7 +237,11 @@
   };
 
   getTextSelection = window.getTextSelection = function() {
-    return document.selection.createRange().text;
+    if (document.selection != null) {
+      return document.selection.createRange().text;
+    } else {
+      return window.getSelection().toString();
+    }
   };
 
   getSelectedEntryId = window.getSelectedEntryId = function() {
@@ -436,7 +440,11 @@
   };
 
   setFontSize = function(size) {
-    return $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: " + size + "% }";
+    try {
+      $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: " + size + "% }";
+    } catch (e) {
+      $('#fontSizeStyle').html(".font_zoom { font-size: " + size + "% }");
+    }
   };
 
 }).call(this);

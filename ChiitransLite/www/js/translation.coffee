@@ -59,6 +59,7 @@ $ ->
                     if $content.scrollTop() >= $history.height() - 10
                         $history.hide()
                     $(document).off('mousemove.scroll')
+        return
 
     hiding = false
     hidingTimer = null
@@ -101,7 +102,7 @@ $ ->
     $history = $('#history')
     $current = $('#current')
 
-    document.attachEvent 'onmousewheel', (e) ->
+    document_attachEvent 'onmousewheel', (e) ->
         ev = $.Event e
         if host().onWheel(-(e.wheelDelta / 120))
             ev.preventDefault()
@@ -197,7 +198,10 @@ onNewEntry = (id) ->
     $currentEntry = createNewEntry id
 
 getTextSelection = window.getTextSelection = ->
-    document.selection.createRange().text
+    if document.selection?
+        document.selection.createRange().text
+    else
+        window.getSelection().toString()
 
 getSelectedEntryId = window.getSelectedEntryId = ->
     if window.getSelection?
@@ -349,4 +353,8 @@ makePopupSlider = (slider, trig) ->
     return
 
 setFontSize = (size) ->
-    $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: #{size}% }"
+    try
+        $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: #{size}% }"
+    catch e
+        $('#fontSizeStyle').html ".font_zoom { font-size: #{size}% }"
+    return
