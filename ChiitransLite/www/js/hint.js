@@ -95,7 +95,6 @@
 
   showPage = function(data, pageNum) {
     var infType, kana, kanji, page, s, sense, showKana, _i, _len, _ref;
-    $page.hide();
     if (data.word.length > 1) {
       $pageNum.html((pageNum + 1) + "/" + data.word.length);
       $pageNumFrame.css({
@@ -150,12 +149,18 @@
       } else {
         $infType.empty();
       }
-      if (data.inf.tense != null) {
-        $tense.html(data.inf.tense);
+      if ((page.POS != null) && page.POS.length) {
+        $tense.html(makeMisc(page.POS));
+        $tense.append("<span> </span>");
       } else {
         $tense.empty();
       }
+      if (data.inf.tense != null) {
+        $tense.append(data.inf.tense);
+      }
       $page.show();
+    } else {
+      $page.hide();
     }
     return host().setHeight($hint.height() + 5);
   };

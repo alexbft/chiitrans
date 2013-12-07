@@ -80,7 +80,6 @@ setNameDefinitions = window.setNameDefinitions = (data) ->
     return
 
 showPage = (data, pageNum) ->
-    $page.hide()
     if data.word.length > 1
         $pageNum.html (pageNum + 1) + "/" + data.word.length
         $pageNumFrame.css visibility: 'visible'
@@ -121,11 +120,16 @@ showPage = (data, pageNum) ->
             $infType.html infType
         else
             $infType.empty()
-        if data.inf.tense?
-            $tense.html data.inf.tense
+        if page.POS? and page.POS.length
+            $tense.html makeMisc page.POS
+            $tense.append "<span> </span>"
         else
             $tense.empty()
+        if data.inf.tense?
+            $tense.append data.inf.tense
         $page.show()
+    else
+        $page.hide()
     host().setHeight($hint.height() + 5)
 
 showSense = window.showSense = ->

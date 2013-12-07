@@ -41,7 +41,7 @@ namespace ChiitransLite.translation.edict {
                 kanji = kanji.Select((k) => k.build()).ToList(),
                 kana = kana.Select((k) => k.build()).ToList(),
                 sense = sense,
-                POS = POS,
+                POS = POS.Distinct().ToList(),
                 nameType = nameType
             };
         }

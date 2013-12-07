@@ -19,13 +19,13 @@ namespace ChiitransLite.translation.edict.inflect {
             this.suffix = suffix;
             this.form = form;
             string tense = null;
-            if (form != null && !string.IsNullOrEmpty(form.Tense) && form.Tense != "Remove" && form.Tense != "Stem" && form.Tense != "Te-form") {
+            if (form != null && !string.IsNullOrEmpty(form.Tense) && form.Tense != "Remove" && form.Tense != "Stem") {
                 tense = form.Tense;
                 hasOwnTense = true;
             } else {
                 hasOwnTense = false;
             }
-            if (!string.IsNullOrEmpty(prevTense) && prevTense != "Remove" && prevTense != "Stem" && form.Tense != "Te-form") {
+            if (!string.IsNullOrEmpty(prevTense) && prevTense != "Remove" && prevTense != "Stem") {
                 if (tense == null) {
                     tense = prevTense;
                 } else {

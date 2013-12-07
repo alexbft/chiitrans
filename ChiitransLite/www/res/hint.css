@@ -69,7 +69,8 @@ a {
 .sense {
   margin-bottom: 3px;
 }
-#tense {
+#tense,
+#tense .misc_set {
   color: #66b;
   font-size: 11px;
 }
