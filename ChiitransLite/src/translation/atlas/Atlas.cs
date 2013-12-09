@@ -103,6 +103,7 @@ namespace ChiitransLite.translation.atlas {
                 if (".?!。？！".IndexOf(c) != -1 && i >= ignoreStopCharsUntil) {
                     if (buf.Length == 0) {
                         res.Append(normalizeStopChar(c));
+                        i += 1;
                     } else {
                         while (i < src.Length && ".?!。？！".IndexOf(src[i]) != -1) {
                             buf.Append(src[i]);
