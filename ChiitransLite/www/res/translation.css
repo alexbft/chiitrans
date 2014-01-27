@@ -59,6 +59,10 @@
   z-index: 2;
   background: transparent;
 }
+
+.ie11 #sideRightScroll {
+  z-index: -1;
+}
 #sideTopLeft {
   position: absolute;
   top: 0;

@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Clipboard = System.Windows.Forms.Clipboard;
@@ -43,6 +44,7 @@ namespace ChiitransLite.translation {
             }
             if (!checkDifferent || text != prevText) {
                 prevText = text;
+                text = preParseReplacements(text);
                 var curId = Interlocked.Increment(ref textId);
                 bool doTranslation = Settings.app.translationDisplay == TranslationDisplay.TRANSLATION || Settings.app.translationDisplay == TranslationDisplay.BOTH;
                 if (doTranslation) {
@@ -61,6 +63,14 @@ namespace ChiitransLite.translation {
                     startParse(curId, text, doTranslation, null);
                 }
             }
+        }
+
+        private string preParseReplacements(string text) {
+            var match = Regex.Match(text, "^(「.*」)([^「」]+)$");
+            if (match.Success) {
+                return match.Groups[2].Value + match.Groups[1].Value;
+            }
+            return text;
         }
 
         public Task<ParseResult> startParse(int curId, string text, bool doTranslation, ParseOptions parseOptions) {

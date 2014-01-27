@@ -41,13 +41,13 @@ namespace ChiitransLite.translation.edict {
                     do {
                         part.Append(text[i]);
                         i += 1;
-                    } while (i < text.Length && !char.IsLetter(text[i]));
+                    } while (i < text.Length && !char.IsLetterOrDigit(text[i]));
                     results.Add(ParseResult.unparsed(part.ToString()));
                 } else {
                     do {
                         part.Append(text[i]);
                         i += 1;
-                    } while (i < text.Length && char.IsLetter(text[i]));
+                    } while (i < text.Length && char.IsLetterOrDigit(text[i]));
                     results.Add(parseTextPart(part.ToString(), parseOptions));
                 }
             }
