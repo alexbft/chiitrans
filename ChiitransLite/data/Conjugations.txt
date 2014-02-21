@@ -3905,13 +3905,6 @@
       {
         "Formal" : false, 
         "Negative" : false, 
-        "Next Type" : "v-u-stem", 
-        "Suffix" : "する", 
-        "Tense" : "Stem"
-      },
-      {
-        "Formal" : false, 
-        "Negative" : false, 
         "Next Type" : "v-i-stem", 
         "Suffix" : "し", 
         "Tense" : "Stem"
@@ -4328,13 +4321,6 @@
         "Negative" : false, 
         "Suffix" : "すれ", 
         "Tense" : "Hypothetical"
-      },
-      {
-        "Formal" : false, 
-        "Negative" : false, 
-        "Next Type" : "v-u-stem", 
-        "Suffix" : "する", 
-        "Tense" : "Stem"
       },
       {
         "Formal" : false, 

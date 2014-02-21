@@ -135,7 +135,8 @@ namespace ChiitransLite.translation.edict.inflect {
                     }
                 }
                 if (newState != null) {
-                    if (!newState.suffix.EndsWith("てい") && !newState.suffix.EndsWith("でい")) { // dirty HACK. bad bad me :(
+                    if (!newState.suffix.EndsWith("てい") && !newState.suffix.EndsWith("でい")
+                        && !newState.suffix.EndsWith("るた")) { // dirty HACK. bad bad me :(
                         if (newState.suffix == "") {
                             hasEmptySuf = true;
                         }

@@ -1,5 +1,5 @@
 ﻿(function() {
-  var $content, $current, $currentEntry, $history, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, renderTranslationResult, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparentMode, updateReading;
+  var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, renderTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, updateReading;
 
   MAX_LOG = 20;
 
@@ -9,15 +9,22 @@
 
   $current = null;
 
+  $trans = null;
+
+  $font = null;
+
   separateWords = false;
 
   separateSpeaker = false;
+
+  roundTo1_100 = function(n) {
+    return Math.round(n * 100) / 100;
+  };
 
   $(function() {
     var captionLastClick, fromLg, hiding, hidingTimer, makeResizer, options, toLg;
     options = host().getOptions();
     setTransparentMode(options.transparentMode);
-    setFontSize(options.fontSize);
     captionLastClick = 0;
     $('#caption').mousedown(function(ev) {
       var now;
@@ -134,25 +141,28 @@
         return ev.preventDefault();
       }
     });
-    $('#trans_slider').slider({
+    $trans = $('#trans_slider').slider({
       orientation: 'vertical',
       min: 0,
       max: 100,
+      step: 0.01,
       value: options.transparencyLevel,
       slide: function(ev, ui) {
+        setTransparencyLevel(ui.value);
         host().setTransparencyLevel(ui.value);
       }
     });
     makePopupSlider($('#trans_slider'), $('#transparent'));
+    setTransparencyLevel(options.transparencyLevel);
     fromLg = function(v) {
       v = (-v) / 100;
-      return 100 * Math.pow(4, v);
+      return roundTo1_100(100 * Math.pow(4, v));
     };
     toLg = function(v) {
       v = v / 100;
       return -(100 * (Math.log(v)) / (Math.log(4)));
     };
-    $('#font_slider').slider({
+    $font = $('#font_slider').slider({
       orientation: 'vertical',
       min: -100,
       max: 100,
@@ -161,10 +171,20 @@
         var v;
         v = fromLg(ui.value);
         setFontSize(v);
-        host().setFontSize(Math.round(v));
+        host().setFontSize(v);
+      }
+    }).dblclick(function() {
+      var v;
+      v = prompt("Enter font size: ", fromLg($font.slider('value')));
+      if (v && !isNaN(Number(v))) {
+        v = Number(v);
+        $font.slider('value', toLg(v));
+        setFontSize(v);
+        host().setFontSize(v);
       }
     });
     makePopupSlider($('#font_slider'), $('#font_size'));
+    setFontSize(options.fontSize);
     return $('#font_size').click(function() {
       setFontSize(100);
       host().setFontSize(100);
@@ -439,7 +459,12 @@
     });
   };
 
+  setTransparencyLevel = function(lvl) {
+    return $trans.attr('title', "Transparency level: " + (roundTo1_100(lvl)) + "%");
+  };
+
   setFontSize = function(size) {
+    $font.attr('title', "Font size: " + (roundTo1_100(size)) + "%");
     try {
       $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: " + size + "% }";
     } catch (e) {

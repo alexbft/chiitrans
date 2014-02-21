@@ -2,14 +2,18 @@
 $history = null
 $content = null
 $current = null
+$trans = null
+$font = null
 separateWords = false
 separateSpeaker = false
+
+roundTo1_100 = (n) ->
+    Math.round(n * 100) / 100
 
 $ ->
     options = host().getOptions()
 
     setTransparentMode(options.transparentMode)
-    setFontSize(options.fontSize)
 
     captionLastClick = 0
     $('#caption').mousedown (ev) ->
@@ -116,25 +120,28 @@ $ ->
         if ev.keyCode == 32
             ev.preventDefault();
 
-    $('#trans_slider').slider
+    $trans = $('#trans_slider').slider
         orientation: 'vertical'
         min: 0
         max: 100
+        step: 0.01
         value: options.transparencyLevel
         slide: (ev, ui) ->
+            setTransparencyLevel ui.value
             host().setTransparencyLevel ui.value
             return
     makePopupSlider $('#trans_slider'), $('#transparent')
+    setTransparencyLevel options.transparencyLevel
 
     fromLg = (v) ->
         v = (-v) / 100
-        100 * Math.pow 4, v
+        roundTo1_100 100 * Math.pow 4, v
 
     toLg = (v) ->
         v = v / 100
         -(100 * (Math.log v) / (Math.log 4))
     
-    $('#font_slider').slider
+    $font = $('#font_slider').slider
         orientation: 'vertical'
         min: -100
         max: 100
@@ -142,9 +149,18 @@ $ ->
         slide: (ev, ui) ->
             v = fromLg ui.value
             setFontSize v
-            host().setFontSize Math.round v
+            host().setFontSize v
+            return
+    .dblclick ->
+        v = prompt "Enter font size: ", fromLg $font.slider('value')
+        if v and not isNaN Number v
+            v = Number v
+            $font.slider 'value', toLg v
+            setFontSize v
+            host().setFontSize v
             return
     makePopupSlider $('#font_slider'), $('#font_size')
+    setFontSize options.fontSize
 
     $('#font_size').click ->
         setFontSize 100
@@ -352,7 +368,11 @@ makePopupSlider = (slider, trig) ->
         , 100
     return
 
+setTransparencyLevel = (lvl) ->
+    $trans.attr 'title', "Transparency level: #{roundTo1_100 lvl}%"
+
 setFontSize = (size) ->
+    $font.attr 'title', "Font size: #{roundTo1_100 size}%"
     try
         $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: #{size}% }"
     catch e

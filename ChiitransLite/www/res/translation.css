@@ -59,7 +59,6 @@
   z-index: 2;
   background: transparent;
 }
-
 .ie11 #sideRightScroll {
   z-index: -1;
 }
@@ -194,13 +193,13 @@
   background-color: #3469DB !important;
 }
 .parse_frame {
-  font: 21px 'MS Gothic';
+  font: 29px 'MS Gothic';
 }
 #parse {
   margin-bottom: 10px;
 }
 .translation_frame {
-  font-size: 17px;
+  font-size: 22px;
 }
 #translation {
   line-height: 150%;

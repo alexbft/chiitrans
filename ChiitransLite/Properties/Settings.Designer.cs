@@ -205,9 +205,9 @@ namespace ChiitransLite.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("70")]
-        public int transparencyLevel {
+        public double transparencyLevel {
             get {
-                return ((int)(this["transparencyLevel"]));
+                return ((double)(this["transparencyLevel"]));
             }
             set {
                 this["transparencyLevel"] = value;
@@ -217,9 +217,9 @@ namespace ChiitransLite.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int fontSize {
+        public double fontSize {
             get {
-                return ((int)(this["fontSize"]));
+                return ((double)(this["fontSize"]));
             }
             set {
                 this["fontSize"] = value;

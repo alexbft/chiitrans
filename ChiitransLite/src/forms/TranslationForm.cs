@@ -123,12 +123,20 @@ namespace ChiitransLite.forms {
                 form.setTransparentMode(isEnabled, false);
             }
 
-            public void setTransparencyLevel(int level) {
+            public void setTransparencyLevel(double level) {
                 form.setTransparencyLevel(level);
             }
 
-            public void setFontSize(int fontSize) {
+            public void setTransparencyLevel(decimal level) {
+                form.setTransparencyLevel((double)level);
+            }
+
+            public void setFontSize(double fontSize) {
                 Settings.app.fontSize = fontSize;
+            }
+
+            public void setFontSize(decimal fontSize) {
+                Settings.app.fontSize = (double)fontSize;
             }
 
             public void showOptionsForm() {
@@ -370,7 +378,7 @@ namespace ChiitransLite.forms {
                     Clipboard.SetText(lastParseResult.asText());
                 }
             } catch {
-                // some weird errors may be possible
+                // some weird errors are possible
             }
         }
 
@@ -470,7 +478,7 @@ namespace ChiitransLite.forms {
                             Settings.session.removeUserName(key);
                         }
                         if (pr != null) {
-                            TranslationService.instance.startParse(pr.id, pr.asText(), true, null);
+                            TranslationService.instance.startParse(pr.id, pr.asText(), Settings.app.isShowTranslation(), null);
                         }
                     }
                 });
@@ -500,7 +508,7 @@ namespace ChiitransLite.forms {
             }
         }
 
-        internal void setTransparencyLevel(int level) {
+        internal void setTransparencyLevel(double level) {
             Settings.app.transparencyLevel = level;
             backgroundForm.Opacity = level * 0.01;
         }

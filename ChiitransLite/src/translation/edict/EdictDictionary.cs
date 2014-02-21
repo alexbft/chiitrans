@@ -386,12 +386,12 @@ namespace ChiitransLite.translation.edict {
         }
 
         private void addToNameIndex(EdictEntryBuilder entry) {
-            string nameType = entry.nameType;
-            if (nameType == "surname" || nameType == "masc" || nameType == "fem" || nameType == "person" || nameType == "given") {
+            /*string nameType = entry.nameType;
+            if (nameType == "surname" || nameType == "masc" || nameType == "fem" || nameType == "person" || nameType == "given") {*/
                 foreach (DictionaryKeyBuilder key in entry.kanji) {
                     addToIndex(mainIndex, key.text, 0.85, entry);
                 }
-            }
+            /*}*/
         }
 
         private string fromEntity(XmlReader xr) {

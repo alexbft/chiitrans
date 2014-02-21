@@ -255,7 +255,7 @@ namespace ChiitransLite.settings {
             }
         }
 
-        public int transparencyLevel {
+        public double transparencyLevel {
             get {
                 return Properties.Settings.Default.transparencyLevel;
             }
@@ -264,7 +264,7 @@ namespace ChiitransLite.settings {
             }
         }
 
-        public int fontSize {
+        public double fontSize {
             get {
                 return Properties.Settings.Default.fontSize;
             }
@@ -321,5 +321,9 @@ namespace ChiitransLite.settings {
             }
         }
 
+
+        internal bool isShowTranslation() {
+            return translationDisplay == TranslationDisplay.TRANSLATION || translationDisplay == TranslationDisplay.BOTH;
+        }
     }
 }

@@ -79,11 +79,15 @@ $ ->
             $(this).prop 'checked', true
             host().setContextEnabledOnly ctx.id
 
-    $('#contexts').on 'click', '.text_s', ->
+    $('#contexts').on 'click', '.name_s', ->
         $this = $(this)
         ofs = $this.offset()
         ctxId = Number $this.data 'id'
         host().showLog ctxId
+        return
+    .on 'click', '.text_s', ->
+        host().translate $(this).text()
+        return
 
     $('#newContexts').change ->
         host().setNewContextsBehavior $('#newContexts').val()
@@ -160,8 +164,8 @@ newContext = window.newContext = (id, name, addr, sub, enabled) ->
     ctx.tr = $ """<tr>
         <td class="check"><input type=checkbox title="Double click to select only this context" data-id="#{id}" #{if enabled then 'checked' else ''} /></td>
         <td class="addr">[#{formatAddr(addr, sub)}]</td>
-        <td class="name"><span class="name_s">#{nameStr}</span></td>
-        <td class="text"><div class="text_s" data-id="#{id}"></div></td>
+        <td class="name"><span class="name_s" data-id="#{id}" title="Click to open context log">#{nameStr}</span></td>
+        <td class="text"><div class="text_s" title="Click to translate last sentence"></div></td>
     </tr>"""
     contexts[id] = ctx
     $('#contexts').append ctx.tr
@@ -180,6 +184,13 @@ newSentence = window.newSentence = (id, text) ->
         ctx.tr.find('.text_s').html _.escape text
         if ctx.enabled
             $('#contexts').prepend ctx.tr
+        else
+            lastEnabled = $('.check :checked:last').closest 'tr'
+            if not lastEnabled.length
+                $('#contexts').prepend ctx.tr
+            else
+                lastEnabled.after ctx.tr
+            
     return
 
 disableContexts = window.disableContexts = (idsJson) ->

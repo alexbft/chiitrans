@@ -79,12 +79,14 @@
         return host().setContextEnabledOnly(ctx.id);
       }
     });
-    $('#contexts').on('click', '.text_s', function() {
+    $('#contexts').on('click', '.name_s', function() {
       var $this, ctxId, ofs;
       $this = $(this);
       ofs = $this.offset();
       ctxId = Number($this.data('id'));
-      return host().showLog(ctxId);
+      host().showLog(ctxId);
+    }).on('click', '.text_s', function() {
+      host().translate($(this).text());
     });
     return $('#newContexts').change(function() {
       return host().setNewContextsBehavior($('#newContexts').val());
@@ -182,13 +184,13 @@
     if (sub) {
       nameStr += " (" + sub + ")";
     }
-    ctx.tr = $("<tr>\n    <td class=\"check\"><input type=checkbox title=\"Double click to select only this context\" data-id=\"" + id + "\" " + (enabled ? 'checked' : '') + " /></td>\n    <td class=\"addr\">[" + (formatAddr(addr, sub)) + "]</td>\n    <td class=\"name\"><span class=\"name_s\">" + nameStr + "</span></td>\n    <td class=\"text\"><div class=\"text_s\" data-id=\"" + id + "\"></div></td>\n</tr>");
+    ctx.tr = $("<tr>\n    <td class=\"check\"><input type=checkbox title=\"Double click to select only this context\" data-id=\"" + id + "\" " + (enabled ? 'checked' : '') + " /></td>\n    <td class=\"addr\">[" + (formatAddr(addr, sub)) + "]</td>\n    <td class=\"name\"><span class=\"name_s\" data-id=\"" + id + "\" title=\"Click to open context log\">" + nameStr + "</span></td>\n    <td class=\"text\"><div class=\"text_s\" title=\"Click to translate last sentence\"></div></td>\n</tr>");
     contexts[id] = ctx;
     $('#contexts').append(ctx.tr);
   };
 
   newSentence = window.newSentence = function(id, text) {
-    var addr, ctx, ctxData, enabled, name, sub;
+    var addr, ctx, ctxData, enabled, lastEnabled, name, sub;
     ctx = contexts[id];
     if (!(ctx != null)) {
       ctxData = host().getContext(id);
@@ -202,6 +204,13 @@
       ctx.tr.find('.text_s').html(_.escape(text));
       if (ctx.enabled) {
         $('#contexts').prepend(ctx.tr);
+      } else {
+        lastEnabled = $('.check :checked:last').closest('tr');
+        if (!lastEnabled.length) {
+          $('#contexts').prepend(ctx.tr);
+        } else {
+          lastEnabled.after(ctx.tr);
+        }
       }
     }
   };

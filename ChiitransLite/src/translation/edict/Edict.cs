@@ -29,6 +29,10 @@ namespace ChiitransLite.translation.edict {
             dict.load(inflect);
         }
 
+        private bool isAcceptableChar(char c) {
+            return char.IsLetterOrDigit(c) || c == '－';
+        }
+
         public ParseResult parse(string text, ParseOptions parseOptions) {
             if (state != State.WORKING) {
                 return null;
@@ -37,17 +41,17 @@ namespace ChiitransLite.translation.edict {
             int i = 0;
             while (i < text.Length) {
                 StringBuilder part = new StringBuilder();
-                if (!char.IsLetter(text[i])) {
+                if (!isAcceptableChar(text[i])) {
                     do {
                         part.Append(text[i]);
                         i += 1;
-                    } while (i < text.Length && !char.IsLetterOrDigit(text[i]));
+                    } while (i < text.Length && !isAcceptableChar(text[i]));
                     results.Add(ParseResult.unparsed(part.ToString()));
                 } else {
                     do {
                         part.Append(text[i]);
                         i += 1;
-                    } while (i < text.Length && char.IsLetterOrDigit(text[i]));
+                    } while (i < text.Length && isAcceptableChar(text[i]));
                     results.Add(parseTextPart(part.ToString(), parseOptions));
                 }
             }
@@ -65,7 +69,7 @@ namespace ChiitransLite.translation.edict {
                 scoreTable[i] = new DynamicParseResult { score = i * (-10000), parsed = null };
             }
             for (int i = 0; i < text.Length; ++i) {
-                double skipScore = scoreTable[i].score - 10000;
+                double skipScore = scoreTable[i].score - (text[i] == 'っ' ? -1 : 10000); // ignore lower ~tsu
                 DynamicParseResult oldSkipScore = scoreTable[i + 1];
                 if (oldSkipScore.score < skipScore) {
                     oldSkipScore.score = skipScore;
@@ -142,6 +146,7 @@ namespace ChiitransLite.translation.edict {
             { "さん", "-san" },
             { "はん", "-han" },
             { "様", "-sama" },
+            { "公", "-kou" },
             { "君", "-kun" },
             { "ちゃん", "-chan" },
             { "ちん", "-chin" },
@@ -158,6 +163,7 @@ namespace ChiitransLite.translation.edict {
             { "姫", "-hime" },
             { "兄", "-nii" }, 
             { "姉", "-nee" },
+            { "ねぇ", "-nee" },
             { "卿", "-kyo" }
         };
 
@@ -194,7 +200,13 @@ namespace ChiitransLite.translation.edict {
                         }
                     } else if (prevName) {
                         foreach (EdictEntry entry in wp.getEntries()) {
-                            if (nameSuffixes.ContainsKey(entry.getText())) {
+                            if (nameSuffixes.ContainsKey(part.asText())) {
+                                string reading = nameSuffixes[part.asText()];
+                                sb.Append(reading);
+                                found = true;
+                                break;
+                            }
+                            else if (nameSuffixes.ContainsKey(entry.getText())) {
                                 string reading = nameSuffixes[entry.getText()];
                                 sb.Append(reading);
                                 found = true;

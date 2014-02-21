@@ -47,10 +47,10 @@
     <Setting Name="transparentMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="transparencyLevel" Type="System.Int32" Scope="User">
+    <Setting Name="transparencyLevel" Type="System.Double" Scope="User">
       <Value Profile="(Default)">70</Value>
     </Setting>
-    <Setting Name="fontSize" Type="System.Int32" Scope="User">
+    <Setting Name="fontSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="atlasAsk" Type="System.Boolean" Scope="User">

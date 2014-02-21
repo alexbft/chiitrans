@@ -107,6 +107,10 @@ namespace ChiitransLite.forms {
                 form.showLog(ctxId);
             }
 
+            public void translate(string text) {
+                form.translate(text);
+            }
+
             public object getContext(int ctxId) {
                 var ctx = (MyContext)TextHook.instance.getContext(ctxId);
                 if (ctx != null) {
@@ -286,6 +290,10 @@ namespace ChiitransLite.forms {
 
         internal void showOptions() {
             HookOptionsForm.instance.updateAndShow();
+        }
+
+        internal void translate(string text) {
+            TranslationService.instance.update(TextHookContext.cleanText(text), false);
         }
     }
 }
