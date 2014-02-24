@@ -37,9 +37,6 @@ $ ->
         $('html').toggleClass('transparent')
         host().setTransparentMode $('html').hasClass('transparent')
 
-    $('#options').click ->
-        host().showOptionsForm()
-
     makeResizer = (ctl, dx, dy) ->
         $('#' + ctl).mousedown (ev) ->
             ev.preventDefault()

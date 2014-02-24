@@ -289,7 +289,7 @@ namespace ChiitransLite.forms {
         }
 
         internal void showOptions() {
-            HookOptionsForm.instance.updateAndShow();
+            OptionsForm.instance.updateAndShow();
         }
 
         internal void translate(string text) {

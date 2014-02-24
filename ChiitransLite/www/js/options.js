@@ -1,10 +1,12 @@
 ﻿(function() {
-  var getRadioValue, isDirty, resetOptions, resetOptionsInt, saveOptions, setDirty, setRadioValue;
+  var getRadioValue, isClipboardTranslation, isDirty, resetOptions, resetOptionsInt, saveOptions, selectTab, setClipboardTranslation, setDirty, setRadioValue;
 
   isDirty = false;
 
+  isClipboardTranslation = false;
+
   $(function() {
-    $('input[type=radio], input[type=checkbox]').change(function() {
+    $('input[type=radio], input[type=checkbox], input[type=text]').change(function() {
       return setDirty(true);
     });
     $('#ok').click(function() {
@@ -17,13 +19,27 @@
     $('#cancel').click(function() {
       return host().close();
     });
+    $('#clipboard').click(function() {
+      setClipboardTranslation(!isClipboardTranslation);
+      return setDirty(true);
+    });
+    $('#showHooks').click(function() {
+      return host().showHookForm();
+    });
+    $('#showPoFiles').click(function() {
+      return host().showPoFiles(function() {});
+    });
     $('#theme').change(function() {
       return setDirty(true);
     });
     $('#reset').click(function() {
       return host().resetParsePreferences();
     });
-    return resetOptionsInt(host().getOptions());
+    resetOptionsInt(host().getOptions());
+    $('.menu>li').click(function() {
+      return selectTab($(this));
+    });
+    return selectTab($('.menu li:first'));
   });
 
   resetOptions = window.resetOptions = function(opJson) {
@@ -39,6 +55,15 @@
     $('#apply').prop('disabled', !isDirty);
   };
 
+  setClipboardTranslation = function(isEnabled) {
+    isClipboardTranslation = isEnabled;
+    if (isEnabled) {
+      $('#clipboard').addClass('pressed').attr('title', 'Disable Capture text from Clipboard');
+    } else {
+      $('#clipboard').removeClass('pressed').attr('title', 'Enable Capture text from Clipboard');
+    }
+  };
+
   setRadioValue = function(name, value) {
     return $("input[type=radio][name=\"" + name + "\"][value=\"" + value + "\"]").prop('checked', true);
   };
@@ -49,6 +74,17 @@
 
   resetOptionsInt = function(op) {
     var $theme, theme, _i, _len, _ref, _ref1;
+    setClipboardTranslation(op.clipboard);
+    $('#sentenceDelay').val(op.sentenceDelay);
+    $('.btn').addClass('enabled');
+    $('#showHooks').prop('disabled', !op.enableHooks);
+    if (!op.enableHooks) {
+      $('#showHooks').removeClass('enabled');
+    }
+    $('#sentenceDelay').prop('disabled', !op.enableSentenceDelay);
+    if (!op.enableSentenceDelay) {
+      $('#sentenceDelay').removeClass('enabled');
+    }
     setRadioValue("display", op.display);
     setRadioValue("okuri", op.okuri);
     $theme = $('#theme');
@@ -61,7 +97,6 @@
     $theme.val((_ref1 = op.theme) != null ? _ref1 : "");
     $('#separateWords').prop('checked', op.separateWords);
     $('#separateSpeaker').prop('checked', op.separateSpeaker);
-    $('#reset').blur();
     $('#ok').focus();
     return setDirty(false);
   };
@@ -70,6 +105,8 @@
     var op;
     if (isDirty) {
       op = {
+        clipboard: isClipboardTranslation,
+        sentenceDelay: parseInt($('#sentenceDelay').val(), 10),
         display: getRadioValue("display"),
         okuri: getRadioValue("okuri"),
         theme: $('#theme').val(),
@@ -79,6 +116,15 @@
       host().saveOptions(op);
       return setDirty(false);
     }
+  };
+
+  selectTab = function(li) {
+    var tabId;
+    $('.menu>li').removeClass('active');
+    $('.tab').removeClass('active');
+    li.addClass('active');
+    tabId = li.data('target');
+    $("#" + tabId).addClass('active');
   };
 
 }).call(this);

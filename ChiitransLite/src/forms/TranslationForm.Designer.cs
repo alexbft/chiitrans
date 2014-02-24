@@ -34,7 +34,6 @@
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.transparentModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clipboardMonitor1 = new ChiitransLite.forms.ClipboardMonitor();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.contextMenuStrip1.SuspendLayout();
@@ -52,8 +51,7 @@
             this.copyToolStripMenuItem,
             this.pasteToolStripMenuItem,
             this.toolStripSeparator1,
-            this.transparentModeToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+            this.transparentModeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(207, 192);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
@@ -123,14 +121,6 @@
             this.transparentModeToolStripMenuItem.Text = "Transparent Mode";
             this.transparentModeToolStripMenuItem.Click += new System.EventHandler(this.transparentModeToolStripMenuItem_Click);
             // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.ShortcutKeyDisplayString = "O";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.optionsToolStripMenuItem.Text = "Options...";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
             // clipboardMonitor1
             // 
             this.clipboardMonitor1.BackColor = System.Drawing.Color.Red;
@@ -192,7 +182,6 @@
         private System.Windows.Forms.ToolStripMenuItem addNewNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem transparentModeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem banWordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateSelectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

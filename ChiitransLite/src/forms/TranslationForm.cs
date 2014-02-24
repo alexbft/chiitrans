@@ -139,10 +139,6 @@ namespace ChiitransLite.forms {
                 Settings.app.fontSize = (double)fontSize;
             }
 
-            public void showOptionsForm() {
-                form.showOptionsForm();
-            }
-
             public object getOptions() {
                 return new {
                     transparentMode = Settings.app.transparentMode,
@@ -181,20 +177,10 @@ namespace ChiitransLite.forms {
                 lastParseOptions = null;
                 submitParseResult(parse);
             };
-            if (TextOptionsForm.instance.Visible) {
+            if (OptionsForm.instance.Visible) {
                 this.SuspendTopMostBegin();
             }
-            TextOptionsForm.instance.VisibleChanged += (sender, e) => {
-                if ((sender as Form).Visible) {
-                    this.SuspendTopMostBegin();
-                } else {
-                    this.SuspendTopMostEnd();
-                }
-            };
-            if (HookOptionsForm.instance.Visible) {
-                this.SuspendTopMostBegin();
-            }
-            HookOptionsForm.instance.VisibleChanged += (sender, e) => {
+            OptionsForm.instance.VisibleChanged += (sender, e) => {
                 if ((sender as Form).Visible) {
                     this.SuspendTopMostBegin();
                 } else {
@@ -298,8 +284,8 @@ namespace ChiitransLite.forms {
             } else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.V ||
                   e.Modifiers == Keys.Shift && e.KeyCode == Keys.Insert) {
                 pasteToolStripMenuItem_Click(null, null);
-            /*} else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F5) {
-                webBrowser1.Refresh();*/
+            } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F5) {
+                webBrowser1.Refresh();
             } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space) {
                 updateLastSelection();
                 parseSelectionToolStripMenuItem_Click(null, null);
@@ -311,8 +297,6 @@ namespace ChiitransLite.forms {
                 addNewNameToolStripMenuItem_Click(null, null);
             } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.T) {
                 transparentModeToolStripMenuItem_Click(null, null);
-            } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.O) {
-                optionsToolStripMenuItem_Click(null, null);
             }
         }
 
@@ -521,14 +505,6 @@ namespace ChiitransLite.forms {
 
         private void transparentModeToolStripMenuItem_Click(object sender, EventArgs e) {
             setTransparentMode(!Settings.app.transparentMode);
-        }
-
-        private void showOptionsForm() {
-            TextOptionsForm.instance.updateAndShow();
-        }
-
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e) {
-            showOptionsForm();
         }
 
         private void TranslationForm_VisibleChanged(object sender, EventArgs e) {

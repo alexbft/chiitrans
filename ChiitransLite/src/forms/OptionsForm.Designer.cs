@@ -1,5 +1,5 @@
 ﻿namespace ChiitransLite.forms {
-    partial class HookOptionsForm {
+    partial class OptionsForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -36,21 +36,20 @@
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(334, 183);
+            this.webBrowser1.Size = new System.Drawing.Size(509, 356);
             this.webBrowser1.TabIndex = 0;
-            this.webBrowser1.WebBrowserShortcutsEnabled = false;
             // 
-            // HookOptionsForm
+            // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 183);
+            this.ClientSize = new System.Drawing.Size(509, 356);
             this.Controls.Add(this.webBrowser1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = global::ChiitransLite.Properties.Resources.ohayo_small;
-            this.Name = "HookOptionsForm";
+            this.Name = "OptionsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Text Capture Options";
+            this.Text = "Options";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HookOptionsForm_FormClosing);
             this.Move += new System.EventHandler(this.HookOptionsForm_Move);
             this.Resize += new System.EventHandler(this.HookOptionsForm_Resize);

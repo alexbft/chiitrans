@@ -81,11 +81,11 @@
     <Compile Include="src\forms\ContextLogForm.Designer.cs">
       <DependentUpon>ContextLogForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\forms\HookOptionsForm.cs">
+    <Compile Include="src\forms\OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\forms\HookOptionsForm.Designer.cs">
-      <DependentUpon>HookOptionsForm.cs</DependentUpon>
+    <Compile Include="src\forms\OptionsForm.Designer.cs">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\forms\POFilesForm.cs">
       <SubType>Form</SubType>
@@ -117,12 +117,6 @@
     </Compile>
     <Compile Include="src\forms\NonJapaneseLocaleForm.Designer.cs">
       <DependentUpon>NonJapaneseLocaleForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\forms\TextOptionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\forms\TextOptionsForm.Designer.cs">
-      <DependentUpon>TextOptionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\forms\TranslationForm.cs">
       <SubType>Form</SubType>
@@ -209,8 +203,8 @@
     <EmbeddedResource Include="src\forms\ContextLogForm.resx">
       <DependentUpon>ContextLogForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\forms\HookOptionsForm.resx">
-      <DependentUpon>HookOptionsForm.cs</DependentUpon>
+    <EmbeddedResource Include="src\forms\OptionsForm.resx">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\forms\POFilesForm.resx">
       <DependentUpon>POFilesForm.cs</DependentUpon>
@@ -237,9 +231,6 @@
     <EmbeddedResource Include="src\forms\NonJapaneseLocaleForm.resx">
       <DependentUpon>NonJapaneseLocaleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\forms\TextOptionsForm.resx">
-      <DependentUpon>TextOptionsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="src\forms\TranslationForm.resx">
       <DependentUpon>TranslationForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -258,13 +249,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="www\js\hook-options.coffee" />
+    <None Include="www\js\options.coffee" />
     <None Include="www\js\textform-options.coffee" />
     <None Include="www\js\hint.coffee" />
     <None Include="www\js\host.coffee" />
     <None Include="www\js\index.coffee" />
     <None Include="www\js\translation.coffee" />
-    <None Include="www\res\hook-options.less" />
+    <None Include="www\res\options.less" />
     <None Include="www\res\textform-options.less" />
     <None Include="www\res\index.less" />
     <None Include="www\res\hint.less" />
@@ -278,18 +269,18 @@
     <Content Include="ohayo.ico" />
     <None Include="src\ohayo_small.ico" />
     <Content Include="src\todo.txt" />
-    <Content Include="www\hook-options.html" />
-    <Content Include="www\js\hook-options.js">
-      <DependentUpon>hook-options.coffee</DependentUpon>
+    <Content Include="www\js\options.js">
+      <DependentUpon>options.coffee</DependentUpon>
     </Content>
+    <Content Include="www\options.html" />
     <Content Include="www\js\textform-options.js">
       <DependentUpon>textform-options.coffee</DependentUpon>
     </Content>
-    <Content Include="www\res\hook-options.css">
-      <DependentUpon>hook-options.less</DependentUpon>
+    <Content Include="www\res\options.css">
+      <DependentUpon>options.less</DependentUpon>
     </Content>
-    <Content Include="www\res\hook-options.min.css">
-      <DependentUpon>hook-options.less</DependentUpon>
+    <Content Include="www\res\options.min.css">
+      <DependentUpon>options.less</DependentUpon>
     </Content>
     <Content Include="www\res\textform-options.css">
       <DependentUpon>textform-options.less</DependentUpon>

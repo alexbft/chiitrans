@@ -20,9 +20,6 @@
     <Setting Name="okuriganaType" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="location_TextOptionsForm" Type="System.Drawing.Rectangle" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="translationDisplay" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -65,10 +62,13 @@
     <Setting Name="separateSpeaker" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="location_HookOptionsForm" Type="System.Drawing.Rectangle" Scope="User">
+    <Setting Name="location_OptionsForm" Type="System.Drawing.Rectangle" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="selectedReadings" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="atlasEnv" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

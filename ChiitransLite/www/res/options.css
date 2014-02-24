@@ -5,20 +5,58 @@
   line-height: 150%;
 }
 .content {
-  padding: 5px 25px 5px 15px;
   position: relative;
+}
+table.tabsview {
+  border-collapse: collapse;
+  width: 100%;
+}
+.tabsview td {
+  vertical-align: top;
+}
+.tabsview .tabs {
+  width: 150px;
+}
+.separator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 152px;
+  border-right: 1px solid silver;
+}
+.tabsview .view {
+  padding: 5px 20px 5px 15px;
+}
+ul.menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ul.menu > li {
+  padding: 2px 10px;
+  cursor: pointer;
+}
+.menu > li.active {
+  background-color: #666;
+  color: #fff;
+}
+.menu > li:hover {
+  color: Highlight !important;
+}
+.tab {
+  display: none;
+}
+.tab.active {
+  display: block;
 }
 .groupbox {
   display: inline-block;
-  margin: 10px 10px 10px 0;
+  margin: 10px 0;
   padding: 10px;
   position: relative;
   border: 1px solid silver;
   vertical-align: top;
-  height: 110px;
-}
-.groupbox:last-child {
-  margin-right: 0;
 }
 .groupbox > .caption {
   position: absolute;
@@ -63,4 +101,7 @@
 }
 .btn.pressed {
   color: #f90;
+}
+#theme {
+  width: 100%;
 }

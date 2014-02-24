@@ -49,9 +49,6 @@
       $('html').toggleClass('transparent');
       return host().setTransparentMode($('html').hasClass('transparent'));
     });
-    $('#options').click(function() {
-      return host().showOptionsForm();
-    });
     makeResizer = function(ctl, dx, dy) {
       return $('#' + ctl).mousedown(function(ev) {
         ev.preventDefault();

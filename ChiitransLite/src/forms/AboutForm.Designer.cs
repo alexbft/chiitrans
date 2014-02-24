@@ -66,9 +66,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(117, 45);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(138, 16);
+            this.label2.Size = new System.Drawing.Size(176, 16);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Copyright 2013 alexbft";
+            this.label2.Text = "Copyright 2013 - 2014 alexbft";
             // 
             // linkLabel1
             // 

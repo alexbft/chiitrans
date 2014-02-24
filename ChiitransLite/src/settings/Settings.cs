@@ -321,6 +321,14 @@ namespace ChiitransLite.settings {
             }
         }
 
+        public string atlasEnv {
+            get {
+                return Properties.Settings.Default.atlasEnv ?? "General";
+            }
+            set {
+                Properties.Settings.Default.atlasEnv = value;
+            }
+        }
 
         internal bool isShowTranslation() {
             return translationDisplay == TranslationDisplay.TRANSLATION || translationDisplay == TranslationDisplay.BOTH;

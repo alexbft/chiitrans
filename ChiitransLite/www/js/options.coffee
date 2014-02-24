@@ -1,7 +1,8 @@
 ﻿isDirty = false
+isClipboardTranslation = false
 
 $ ->
-    $('input[type=radio], input[type=checkbox]').change ->
+    $('input[type=radio], input[type=checkbox], input[type=text]').change ->
         setDirty true
 
     $('#ok').click ->
@@ -14,13 +15,26 @@ $ ->
     $('#cancel').click ->
         host().close()
 
+    $('#clipboard').click ->
+        setClipboardTranslation !isClipboardTranslation
+        setDirty true
+
+    $('#showHooks').click ->
+        host().showHookForm()
+
+    $('#showPoFiles').click ->
+        host().showPoFiles ->
+        
     $('#theme').change ->
         setDirty true
 
     $('#reset').click ->
-        host().resetParsePreferences()
-    
+        host().resetParsePreferences()        
+
     resetOptionsInt host().getOptions()
+    $('.menu>li').click ->
+        selectTab $ this
+    selectTab $('.menu li:first')
 
 resetOptions = window.resetOptions = (opJson) ->
     op = JSON.parse opJson
@@ -32,14 +46,31 @@ setDirty = (_isDirty) ->
     isDirty = _isDirty
     $('#apply').prop('disabled', !isDirty)
     return
-    
+
+setClipboardTranslation = (isEnabled) ->
+    isClipboardTranslation = isEnabled
+    if isEnabled
+        $('#clipboard').addClass('pressed').attr('title', 'Disable Capture text from Clipboard')
+    else
+        $('#clipboard').removeClass('pressed').attr('title', 'Enable Capture text from Clipboard')
+    return
+
 setRadioValue = (name, value) ->
     $("""input[type=radio][name="#{name}"][value="#{value}"]""").prop('checked', true)
 
 getRadioValue = (name) ->
     $("""input[type=radio][name="#{name}"]:checked""").val()
-
+    
 resetOptionsInt = (op) ->
+    setClipboardTranslation op.clipboard
+    $('#sentenceDelay').val op.sentenceDelay
+    $('.btn').addClass('enabled')
+    $('#showHooks').prop('disabled', !op.enableHooks)
+    if !op.enableHooks
+        $('#showHooks').removeClass('enabled')
+    $('#sentenceDelay').prop('disabled', !op.enableSentenceDelay)
+    if !op.enableSentenceDelay
+        $('#sentenceDelay').removeClass('enabled')
     setRadioValue "display", op.display
     setRadioValue "okuri", op.okuri
     $theme = $('#theme')
@@ -49,13 +80,14 @@ resetOptionsInt = (op) ->
     $theme.val(op.theme ? "")
     $('#separateWords').prop 'checked', op.separateWords
     $('#separateSpeaker').prop 'checked', op.separateSpeaker
-    $('#reset').blur();
-    $('#ok').focus();
+    $('#ok').focus()
     setDirty false
 
 saveOptions = ->
     if isDirty
         op =
+            clipboard: isClipboardTranslation
+            sentenceDelay: parseInt($('#sentenceDelay').val(), 10)
             display: getRadioValue "display"
             okuri: getRadioValue "okuri"
             theme: $('#theme').val()
@@ -63,3 +95,11 @@ saveOptions = ->
             separateSpeaker: $('#separateSpeaker').prop('checked')
         host().saveOptions op
         setDirty false
+
+selectTab = (li) ->
+    $('.menu>li').removeClass 'active'
+    $('.tab').removeClass 'active'
+    li.addClass 'active'
+    tabId = li.data 'target'
+    $("##{tabId}").addClass 'active'
+    return
