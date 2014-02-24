@@ -29,13 +29,13 @@ Visit http://alexbft.github.io/chiitrans/ for more info.
 * Windows XP or later
 * .NET Framework 4
 * Internet Explorer 8+
-* 500 MB of free memory
+* 250 MB of free memory
 
 ## Recommended
 * Windows 7 or later
 * .NET Framework 4
 * Internet Explorer 10+
-* 500 MB of free memory
+* 600 MB of free memory
 * [ATLAS V14](http://www.fujitsu.com/global/services/software/translation/atlas/index.html) installed
 
 # Other project mentions
