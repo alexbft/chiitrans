@@ -35,8 +35,8 @@
                         </div>
                     </div>
                     <div class="tab" id="parsing">
-                        <div class="groupbox">
-                            <div class="caption">Ruby text</div>
+                        <div class="groupbox" style="margin-right: 5px">
+                            <div class="caption">Ruby Text</div>
                             <label>
                                 <input type="radio" name="okuri" value="NONE" />
                                 None
@@ -54,6 +54,21 @@
                                 Cyrillic
                             </label>
                         </div>
+                        <div class="groupbox" style="padding-top:2.5em">
+                            <div class="caption">Name Dictionary<br />(requires restart)</div>
+                            <label>
+                                <input type="radio" name="nameDict" value="NONE" />
+                                Do not load
+                            </label>
+                            <label>
+                                <input type="radio" name="nameDict" value="NAMES" />
+                                Load names only
+                            </label>
+                            <label>
+                                <input type="radio" name="nameDict" value="ALL" />
+                                Load names and places
+                            </label>
+                        </div>
                         <div class="opgroup">
                             <input id="separateWords" type="checkbox" />
                             <label for="separateWords">Separate words by spaces</label>
@@ -62,7 +77,7 @@
                             <label for="separateSpeaker">Separate speaker name by line break</label>
                         </div>
                         <div>
-                            <button id="reset" tabindex="-1">Reset Parse Preferences</button>
+                            <button id="reset">Reset Parse Preferences</button>
                         </div>
                     </div>
                     <div class="tab" id="translation">
@@ -80,6 +95,12 @@
                                 <input type="radio" name="display" value="BOTH" />
                                 Display both
                             </label>
+                        </div>
+                        <div class="opgroup">
+                            <label for="atlasEnv">ATLAS Environment</label><br />
+                            <select id="atlasEnv">
+                                <option value="General">General</option>
+                            </select>
                         </div>
                         <button id="showPoFiles" class="btn"><i class="icon-language"></i> Use .po files for translation</button>
                     </div>

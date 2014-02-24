@@ -81,17 +81,19 @@ namespace ChiitransLite.translation.edict {
                 entities = new Dictionary<string, string>();
 
                 Task.Factory.StartNew(() => {
-                    using (XmlTextReader xml = new XmlTextReader(Settings.app.JMnedictPath)) {
-                        xml.DtdProcessing = DtdProcessing.Parse;
-                        xml.WhitespaceHandling = WhitespaceHandling.None;
-                        xml.EntityHandling = EntityHandling.ExpandCharEntities;
-                        while (xml.Read()) {
-                            switch (xml.NodeType) {
-                                case XmlNodeType.Element:
-                                    if (xml.Name == "entry") {
-                                        readNameEntry(xml);
-                                    }
-                                    break;
+                    if (Settings.app.nameDict != NameDictLoading.NONE) {
+                        using (XmlTextReader xml = new XmlTextReader(Settings.app.JMnedictPath)) {
+                            xml.DtdProcessing = DtdProcessing.Parse;
+                            xml.WhitespaceHandling = WhitespaceHandling.None;
+                            xml.EntityHandling = EntityHandling.ExpandCharEntities;
+                            while (xml.Read()) {
+                                switch (xml.NodeType) {
+                                    case XmlNodeType.Element:
+                                        if (xml.Name == "entry") {
+                                            readNameEntry(xml);
+                                        }
+                                        break;
+                                }
                             }
                         }
                     }
@@ -386,12 +388,16 @@ namespace ChiitransLite.translation.edict {
         }
 
         private void addToNameIndex(EdictEntryBuilder entry) {
-            /*string nameType = entry.nameType;
-            if (nameType == "surname" || nameType == "masc" || nameType == "fem" || nameType == "person" || nameType == "given") {*/
+            bool proceed = true;
+            if (Settings.app.nameDict == NameDictLoading.NAMES) {
+                string nameType = entry.nameType;
+                proceed = nameType == "surname" || nameType == "masc" || nameType == "fem" || nameType == "person" || nameType == "given";
+            }
+            if (proceed) {
                 foreach (DictionaryKeyBuilder key in entry.kanji) {
                     addToIndex(mainIndex, key.text, 0.85, entry);
                 }
-            /*}*/
+            }
         }
 
         private string fromEntity(XmlReader xr) {

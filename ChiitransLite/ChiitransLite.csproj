@@ -150,6 +150,7 @@
     <Compile Include="src\misc\WithInitialization.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\settings\NameDictLoading.cs" />
     <Compile Include="src\settings\OkuriganaType.cs" />
     <Compile Include="src\settings\SessionSettings.cs" />
     <Compile Include="src\settings\Settings.cs" />
@@ -250,13 +251,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="www\js\options.coffee" />
-    <None Include="www\js\textform-options.coffee" />
     <None Include="www\js\hint.coffee" />
     <None Include="www\js\host.coffee" />
     <None Include="www\js\index.coffee" />
     <None Include="www\js\translation.coffee" />
     <None Include="www\res\options.less" />
-    <None Include="www\res\textform-options.less" />
     <None Include="www\res\index.less" />
     <None Include="www\res\hint.less" />
     <None Include="www\res\style.less" />
@@ -273,22 +272,12 @@
       <DependentUpon>options.coffee</DependentUpon>
     </Content>
     <Content Include="www\options.html" />
-    <Content Include="www\js\textform-options.js">
-      <DependentUpon>textform-options.coffee</DependentUpon>
-    </Content>
     <Content Include="www\res\options.css">
       <DependentUpon>options.less</DependentUpon>
     </Content>
     <Content Include="www\res\options.min.css">
       <DependentUpon>options.less</DependentUpon>
     </Content>
-    <Content Include="www\res\textform-options.css">
-      <DependentUpon>textform-options.less</DependentUpon>
-    </Content>
-    <Content Include="www\res\textform-options.min.css">
-      <DependentUpon>textform-options.less</DependentUpon>
-    </Content>
-    <Content Include="www\textform-options.html" />
     <Content Include="www\hint.html" />
     <Content Include="www\index.html" />
     <Content Include="www\js\hint.js">

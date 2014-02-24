@@ -2,7 +2,7 @@
 isClipboardTranslation = false
 
 $ ->
-    $('input[type=radio], input[type=checkbox], input[type=text]').change ->
+    $('input[type=radio], input[type=checkbox], input[type=text], select').change ->
         setDirty true
 
     $('#ok').click ->
@@ -25,9 +25,6 @@ $ ->
     $('#showPoFiles').click ->
         host().showPoFiles ->
         
-    $('#theme').change ->
-        setDirty true
-
     $('#reset').click ->
         host().resetParsePreferences()        
 
@@ -73,11 +70,17 @@ resetOptionsInt = (op) ->
         $('#sentenceDelay').removeClass('enabled')
     setRadioValue "display", op.display
     setRadioValue "okuri", op.okuri
+    setRadioValue "nameDict", op.nameDict
     $theme = $('#theme')
     $theme.html("""<option value="">Default</option>""")
     for theme in op.themes
-        $theme.append("""<option value="#{_.escape theme}">#{_.escape theme}</option>""")
+        $theme.append """<option value="#{_.escape theme}">#{_.escape theme}</option>"""
     $theme.val(op.theme ? "")
+    $atlasEnv = $('#atlasEnv')
+    $atlasEnv.empty()
+    for env in op.atlasEnvList
+        $atlasEnv.append """<option value="#{_.escape env}">#{_.escape env}</option>"""
+    $atlasEnv.val op.atlasEnv
     $('#separateWords').prop 'checked', op.separateWords
     $('#separateSpeaker').prop 'checked', op.separateSpeaker
     $('#ok').focus()
@@ -90,9 +93,11 @@ saveOptions = ->
             sentenceDelay: parseInt($('#sentenceDelay').val(), 10)
             display: getRadioValue "display"
             okuri: getRadioValue "okuri"
+            nameDict: getRadioValue "nameDict"
             theme: $('#theme').val()
             separateWords: $('#separateWords').prop('checked')
             separateSpeaker: $('#separateSpeaker').prop('checked')
+            atlasEnv: $('#atlasEnv').val()
         host().saveOptions op
         setDirty false
 

@@ -2,11 +2,13 @@
 using ChiitransLite.settings;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ChiitransLite.translation.atlas {
     class Atlas : WithInitialization {
@@ -27,26 +29,29 @@ namespace ChiitransLite.translation.atlas {
         private AtlasInterop interop;
         private IntPtr buf1;
         private IntPtr buf2;
-        private byte[] generalStr;
+        private byte[] envStr;
         private readonly Encoding encoding932 = Encoding.GetEncoding(932);
 
         protected override void doInitialize() {
             interop = new AtlasInterop();
             try {
                 interop.initialize();
-                buf1 = Marshal.AllocHGlobal(30000);
-                buf2 = Marshal.AllocHGlobal(30000);
-                if (interop.atlInitEngineData(0, 2, buf1, 0, buf2, 0, 0, 0, 0) != 0)
-                    throw new MyException("ATLAS AtlInitEngineData failed");
-                generalStr = encoding932.GetBytes("General");
-                if (interop.createEngine(1, 1, 0, generalStr) != 1)
-                    throw new MyException("ATLAS CreateEngine failed");
+                createEngine();
             } catch {
                 interop.close();
                 throw;
             }
         }
 
+        private void createEngine() {
+            buf1 = Marshal.AllocHGlobal(30000);
+            buf2 = Marshal.AllocHGlobal(30000);
+            if (interop.atlInitEngineData(0, 2, buf1, 0, buf2, 0, 0, 0, 0) != 0)
+                throw new MyException("ATLAS AtlInitEngineData failed");
+            envStr = encoding932.GetBytes(Settings.app.atlasEnv);
+            if (interop.createEngine(1, 1, 0, envStr) != 1)
+                throw new MyException("ATLAS CreateEngine failed");
+        }
 
         private static char normalizeStopChar(char c) {
             switch (c) {
@@ -191,6 +196,41 @@ namespace ChiitransLite.translation.atlas {
         }
 
         protected override void onInitializationError(Exception ex) {
+        }
+
+        internal void reinitialize() {
+            if (state == State.WORKING) {
+                Task.Factory.StartNew(() => {
+                    deinitialize();
+                    try {
+                        state = State.INITIALIZING;
+                        interop.destroyEngine();
+                        createEngine();
+                        state = State.WORKING;
+                    } catch (Exception ex) {
+                        Logger.logException(ex);
+                        state = State.ERROR;
+                    }
+                    initialized.Set();
+                });
+            }
+        }
+
+        internal IEnumerable<string> getEnvList() {
+            try {
+                if (interop == null || interop.atlasNotFound) {
+                    return Enumerable.Repeat("General", 1);
+                } else {
+                    string envFileName = Path.Combine(interop.installPath, "transenv.ini");
+                    var sectionNames = Regex.Matches(File.ReadAllText(envFileName, encoding932), @"^\[(.+?)\]\s*$", RegexOptions.Multiline);
+                    var res = (from match in sectionNames.Cast<Match>()
+                            select match.Groups[1].Value).ToList();
+                    return res;
+                }
+            } catch (Exception ex) {
+                Logger.logException(ex);
+                return Enumerable.Repeat("General", 1);
+            }
         }
     }
 }

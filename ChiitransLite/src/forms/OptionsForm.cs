@@ -1,5 +1,6 @@
 ﻿using ChiitransLite.misc;
 using ChiitransLite.settings;
+using ChiitransLite.translation.atlas;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,7 +96,10 @@ namespace ChiitransLite.forms {
                 theme = Settings.app.cssTheme,
                 themes = getThemes(),
                 separateWords = Settings.app.separateWords,
-                separateSpeaker = Settings.app.separateSpeaker
+                separateSpeaker = Settings.app.separateSpeaker,
+                nameDict = Settings.app.nameDict.ToString(),
+                atlasEnv = Settings.app.atlasEnv,
+                atlasEnvList = getAtlasEnvList()
             };
         }
 
@@ -107,6 +111,8 @@ namespace ChiitransLite.forms {
             string theme = (string)op["theme"];
             bool separateWords = (bool)op["separateWords"];
             bool separateSpeaker = (bool)op["separateSpeaker"];
+            string nameDictStr = (string)op["nameDict"];
+            string atlasEnv = (string)op["atlasEnv"];
 
             TranslationForm.instance.setClipboardTranslation(clipboard);
             if (sentenceDelay >= 10) {
@@ -114,11 +120,19 @@ namespace ChiitransLite.forms {
             }
             TranslationDisplay display;
             OkuriganaType okuri;
+            NameDictLoading nameDict;
             if (Enum.TryParse(displayStr, out display)) {
                 Settings.app.translationDisplay = display;
             }
             if (Enum.TryParse(okuriStr, out okuri)) {
                 Settings.app.okuriganaType = okuri;
+            }
+            if (Enum.TryParse(nameDictStr, out nameDict)) {
+                Settings.app.nameDict = nameDict;
+            }
+            if (atlasEnv != Settings.app.atlasEnv) {
+                Settings.app.atlasEnv = atlasEnv;
+                Atlas.instance.reinitialize();
             }
             Settings.app.cssTheme = theme;
             Settings.app.separateWords = separateWords;
@@ -146,8 +160,16 @@ namespace ChiitransLite.forms {
             UserHookForm.instance.Activate();
         }
 
-        private IEnumerable<String> getThemes() {
+        private IEnumerable<string> getThemes() {
             return Directory.GetFiles(Path.Combine(Utils.getRootPath(), "www\\themes"), "*.css").Select(Path.GetFileNameWithoutExtension);
+        }
+
+        private IEnumerable<string> getAtlasEnvList() {
+            var res = Atlas.instance.getEnvList().ToList();
+            if (!res.Contains(Settings.app.atlasEnv)) {
+                res.Add(Settings.app.atlasEnv);
+            }
+            return res;
         }
 
         internal void resetParsePreferences() {

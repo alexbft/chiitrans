@@ -173,6 +173,20 @@ namespace ChiitransLite.settings {
             }
         }
 
+        public NameDictLoading nameDict {
+            get {
+                NameDictLoading res;
+                if (Enum.TryParse(Properties.Settings.Default.nameDict, out res)) {
+                    return res;
+                } else {
+                    return NameDictLoading.NAMES;
+                }
+            }
+            set {
+                Properties.Settings.Default.nameDict = value.ToString();
+            }
+        }
+
         public TranslationDisplay translationDisplay {
             get {
                 TranslationDisplay res;
@@ -323,7 +337,12 @@ namespace ChiitransLite.settings {
 
         public string atlasEnv {
             get {
-                return Properties.Settings.Default.atlasEnv ?? "General";
+                string res = Properties.Settings.Default.atlasEnv;
+                if (string.IsNullOrEmpty(res)) {
+                    return "General";
+                } else {
+                    return res;
+                }
             }
             set {
                 Properties.Settings.Default.atlasEnv = value;

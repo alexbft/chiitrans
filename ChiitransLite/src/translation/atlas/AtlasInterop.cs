@@ -11,7 +11,7 @@ namespace ChiitransLite.translation.atlas {
     class AtlasInterop {
 
         private IntPtr atlecont;
-        private string installPath;
+        public string installPath { get; private set; }
 
         public AtlasInterop() {
         }

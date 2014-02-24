@@ -16,7 +16,7 @@ namespace ChiitransLite.misc {
         }
 
         protected volatile State state = State.IDLE;
-        private ManualResetEventSlim initialized = new ManualResetEventSlim();
+        protected ManualResetEventSlim initialized = new ManualResetEventSlim();
 
         protected void tryWaitForInitialization() {
             if (state == State.INITIALIZING) {
@@ -39,6 +39,14 @@ namespace ChiitransLite.misc {
                         initialized.Set();
                     }
                 }
+            }
+        }
+
+        public void deinitialize() {
+            tryWaitForInitialization();
+            lock (this) {
+                state = State.IDLE;
+                initialized.Reset();
             }
         }
 

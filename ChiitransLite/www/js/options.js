@@ -6,7 +6,7 @@
   isClipboardTranslation = false;
 
   $(function() {
-    $('input[type=radio], input[type=checkbox], input[type=text]').change(function() {
+    $('input[type=radio], input[type=checkbox], input[type=text], select').change(function() {
       return setDirty(true);
     });
     $('#ok').click(function() {
@@ -28,9 +28,6 @@
     });
     $('#showPoFiles').click(function() {
       return host().showPoFiles(function() {});
-    });
-    $('#theme').change(function() {
-      return setDirty(true);
     });
     $('#reset').click(function() {
       return host().resetParsePreferences();
@@ -73,7 +70,7 @@
   };
 
   resetOptionsInt = function(op) {
-    var $theme, theme, _i, _len, _ref, _ref1;
+    var $atlasEnv, $theme, env, theme, _i, _j, _len, _len1, _ref, _ref1, _ref2;
     setClipboardTranslation(op.clipboard);
     $('#sentenceDelay').val(op.sentenceDelay);
     $('.btn').addClass('enabled');
@@ -87,6 +84,7 @@
     }
     setRadioValue("display", op.display);
     setRadioValue("okuri", op.okuri);
+    setRadioValue("nameDict", op.nameDict);
     $theme = $('#theme');
     $theme.html("<option value=\"\">Default</option>");
     _ref = op.themes;
@@ -95,6 +93,14 @@
       $theme.append("<option value=\"" + (_.escape(theme)) + "\">" + (_.escape(theme)) + "</option>");
     }
     $theme.val((_ref1 = op.theme) != null ? _ref1 : "");
+    $atlasEnv = $('#atlasEnv');
+    $atlasEnv.empty();
+    _ref2 = op.atlasEnvList;
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      env = _ref2[_j];
+      $atlasEnv.append("<option value=\"" + (_.escape(env)) + "\">" + (_.escape(env)) + "</option>");
+    }
+    $atlasEnv.val(op.atlasEnv);
     $('#separateWords').prop('checked', op.separateWords);
     $('#separateSpeaker').prop('checked', op.separateSpeaker);
     $('#ok').focus();
@@ -109,9 +115,11 @@
         sentenceDelay: parseInt($('#sentenceDelay').val(), 10),
         display: getRadioValue("display"),
         okuri: getRadioValue("okuri"),
+        nameDict: getRadioValue("nameDict"),
         theme: $('#theme').val(),
         separateWords: $('#separateWords').prop('checked'),
-        separateSpeaker: $('#separateSpeaker').prop('checked')
+        separateSpeaker: $('#separateSpeaker').prop('checked'),
+        atlasEnv: $('#atlasEnv').val()
       };
       host().saveOptions(op);
       return setDirty(false);

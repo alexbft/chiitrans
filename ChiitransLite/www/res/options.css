@@ -80,7 +80,7 @@ ul.menu > li {
 .opgroup {
   margin-bottom: 10px;
 }
-.opgroup button {
+.opgroup .btn {
   display: block;
   text-align: left;
   width: 100%;
@@ -102,6 +102,6 @@ ul.menu > li {
 .btn.pressed {
   color: #f90;
 }
-#theme {
+select {
   width: 100%;
 }

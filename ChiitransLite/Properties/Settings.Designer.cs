@@ -297,5 +297,17 @@ namespace ChiitransLite.Properties {
                 this["atlasEnv"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string nameDict {
+            get {
+                return ((string)(this["nameDict"]));
+            }
+            set {
+                this["nameDict"] = value;
+            }
+        }
     }
 }
