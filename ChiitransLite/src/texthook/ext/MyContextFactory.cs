@@ -57,6 +57,10 @@ namespace ChiitransLite.texthook.ext {
                 } else {
                     isEnabled = newContextsBehavior != NewContextsBehavior.IGNORE;
                 }
+            } else {
+                if (!hasSpecialContexts && isContextSpecial(name)) {
+                    hasSpecialContexts = true;
+                }
             }
             return new MyContext(id, name, hook, context, subcontext, status, isEnabled);
         }
