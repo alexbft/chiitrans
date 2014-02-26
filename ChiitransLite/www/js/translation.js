@@ -1,5 +1,5 @@
 ﻿(function() {
-  var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, renderParseResult, renderTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, updateReading;
+  var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, http, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, registerTranslators, renderMultiTranslationResult, renderOldTranslationResult, renderParseResult, renderSimpleTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, translate, translators, updateMultiTranslationResult, updateReading, updateTranslationResult;
 
   MAX_LOG = 20;
 
@@ -196,6 +196,10 @@
   $currentEntry = null;
 
   newTranslationResult = window.newTranslationResult = function(id, translationResult) {
+    return updateTranslationResult(id, renderOldTranslationResult(translationResult));
+  };
+
+  updateTranslationResult = function(id, translationResultHtml) {
     var entry;
     if (id < lastEntryId) {
       entry = $history.find(".entry[data-id=\"" + id + "\"]");
@@ -206,7 +210,7 @@
       entry = $currentEntry;
     }
     if (entry.length) {
-      $('#translation', entry).html(renderTranslationResult(translationResult));
+      $('#translation', entry).html(translationResultHtml);
     }
   };
 
@@ -403,7 +407,7 @@
     return res;
   };
 
-  renderTranslationResult = function(tr) {
+  renderOldTranslationResult = function(tr) {
     var $res;
     tr = JSON.parse(tr);
     $res = $('<span>');
@@ -414,6 +418,27 @@
     }
     $res.html(_.escape(tr.text).replace(/\n/g, '<br>'));
     return $res;
+  };
+
+  renderSimpleTranslationResult = function(text) {
+    var $res;
+    $res = $('<span>');
+    $res.html(_.escape(text).replace(/\n/g, '<br>'));
+    return $res;
+  };
+
+  renderMultiTranslationResult = function(translators) {
+    var $res, t, _i, _len;
+    $res = $('<table class="multiTranslation">');
+    for (_i = 0, _len = translators.length; _i < _len; _i++) {
+      t = translators[_i];
+      $res.append("<tr>\n    <td class=\"translator\">" + t + "</td>\n    <td class=\"result\" data-trans=\"" + t + "\"></td>\n</tr>");
+    }
+    return $res;
+  };
+
+  updateMultiTranslationResult = function(el, trans, text) {
+    return $(".result[data-trans=\"" + trans + "\"]", el).html(_.escape(text).replace(/\n/g, '<br>'));
   };
 
   log = function(s) {
@@ -466,6 +491,64 @@
       $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: " + size + "% }";
     } catch (e) {
       $('#fontSizeStyle').html(".font_zoom { font-size: " + size + "% }");
+    }
+  };
+
+  translators = {};
+
+  registerTranslators = window.registerTranslators = function(trans) {
+    translators = trans;
+    return host().registerTranslators(_.keys(trans));
+  };
+
+  translate = window.translate = function(id, raw, src, translatorsListJson) {
+    var container, ex, t, translatorsList, _fn, _i, _j, _len, _len1,
+      _this = this;
+    translatorsList = JSON.parse(translatorsListJson);
+    ex = {
+      id: id,
+      rawText: raw
+    };
+    if (translatorsList.length <= 1) {
+      for (_i = 0, _len = translatorsList.length; _i < _len; _i++) {
+        t = translatorsList[_i];
+        translators[t](src, function(res) {
+          return updateTranslationResult(id, renderSimpleTranslationResult(res));
+        }, ex);
+      }
+    } else {
+      container = renderMultiTranslationResult(translatorsList);
+      updateTranslationResult(id, container);
+      _fn = function(t) {
+        return translators[t](src, function(res) {
+          return updateMultiTranslationResult(container, t, res);
+        }, ex);
+      };
+      for (_j = 0, _len1 = translatorsList.length; _j < _len1; _j++) {
+        t = translatorsList[_j];
+        _fn(t);
+      }
+    }
+  };
+
+  http = window.http = {
+    request: function(options, cb) {
+      var _ref;
+      if (typeof options === "string") {
+        options = {
+          url: options
+        };
+      }
+      _.defaults(options, {
+        useShiftJis: false,
+        method: "get"
+      });
+      if (options.method.toLowerCase() !== "get" && !(options.query != null)) {
+        _ref = options.url.split('?'), options.url = _ref[0], options.query = _ref[1];
+      }
+      return host().httpRequest(options.url, options.useShiftJis, options.method, options.query, function(res) {
+        return cb(res.res, res.error);
+      });
     }
   };
 

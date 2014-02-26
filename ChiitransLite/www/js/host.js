@@ -1,5 +1,5 @@
 ﻿(function() {
-  var applyTheme, callbacks, createMethod, host, hostCallback, initHost, qid, query, _host,
+  var applyTheme, callbacks, createMethod, host, hostCallback, initHost, qid, query, translators, _host,
     __slice = [].slice;
 
   qid = new Date().getTime();
@@ -7,6 +7,8 @@
   _host = null;
 
   callbacks = {};
+
+  translators = {};
 
   initHost = function() {
     var m, methods, _i, _len, _results;

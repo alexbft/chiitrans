@@ -81,6 +81,12 @@
     <Compile Include="src\forms\ContextLogForm.Designer.cs">
       <DependentUpon>ContextLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\forms\ExtraTranslatorsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\forms\ExtraTranslatorsForm.Designer.cs">
+      <DependentUpon>ExtraTranslatorsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\forms\OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,6 +210,9 @@
     <EmbeddedResource Include="src\forms\ContextLogForm.resx">
       <DependentUpon>ContextLogForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\forms\ExtraTranslatorsForm.resx">
+      <DependentUpon>ExtraTranslatorsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\forms\OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -255,6 +264,7 @@
     <None Include="www\js\host.coffee" />
     <None Include="www\js\index.coffee" />
     <None Include="www\js\translation.coffee" />
+    <None Include="www\js\translators.coffee" />
     <None Include="www\res\options.less" />
     <None Include="www\res\index.less" />
     <None Include="www\res\hint.less" />
@@ -270,6 +280,9 @@
     <Content Include="src\todo.txt" />
     <Content Include="www\js\options.js">
       <DependentUpon>options.coffee</DependentUpon>
+    </Content>
+    <Content Include="www\js\translators.js">
+      <DependentUpon>translators.coffee</DependentUpon>
     </Content>
     <Content Include="www\options.html" />
     <Content Include="www\res\options.css">

@@ -32,6 +32,9 @@
     $('#reset').click(function() {
       return host().resetParsePreferences();
     });
+    $('#showExtraTranslators').click(function() {
+      return host().showExtraTranslators(function() {});
+    });
     resetOptionsInt(host().getOptions());
     $('.menu>li').click(function() {
       return selectTab($(this));

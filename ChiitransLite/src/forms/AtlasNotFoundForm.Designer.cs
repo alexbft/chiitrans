@@ -35,8 +35,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(349, 32);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Chiitrans Lite was unable to find an ATLAS v14 installation.\r\nJapanese-English tr" +
-    "anslation will not be available.";
+            this.label1.Text = "Chiitrans Lite was unable to find an ATLAS v14 installation.\r\nGoogle Translate wi" +
+    "ll be used as default translator.";
             // 
             // checkBox1
             // 
@@ -61,7 +61,6 @@
             // 
             // AtlasNotFoundForm
             // 
-            this.Icon = ChiitransLite.Properties.Resources.ohayo_small;
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -71,6 +70,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = global::ChiitransLite.Properties.Resources.ohayo_small;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -12,11 +12,11 @@ Visit http://alexbft.github.io/chiitrans/ for more info.
 * Japanese proper names dictionary ([JMnedict](http://www.csse.monash.edu.au/~jwb/enamdict_doc.html)) support
 * Improved parsing algorithm
 * PO files support
+* ATLAS Environment setting
 * Lots of usability improvements
 
 ## Removed features
-* All online translation services removed. ATLAS is the only supported translation software.
-* That means no more horrible Jp->En->Ru PROMT translations, too
+* Translation to languages other than English.
 * Parsing: MeCab support
 * Parsing: WWWJDIC support
 * No arbitrary text replacements

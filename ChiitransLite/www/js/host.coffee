@@ -1,6 +1,7 @@
 ﻿qid = new Date().getTime()
 _host = null
 callbacks = {}
+translators = {}
 
 initHost = ->
     methods = JSON.parse external.getMethods()

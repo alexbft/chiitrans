@@ -259,3 +259,11 @@ ruby.normal rt {
 .transparent .no_atlas {
   color: inherit;
 }
+.multiTranslation .translator {
+  vertical-align: top;
+  color: silver;
+  font-size: 80%;
+}
+.multiTranslation .result {
+  vertical-align: top;
+}

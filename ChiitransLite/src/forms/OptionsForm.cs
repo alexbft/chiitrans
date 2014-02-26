@@ -51,6 +51,12 @@ namespace ChiitransLite.forms {
                 }));
             }
 
+            public void showExtraTranslators() {
+                form.Invoke(new Action(() => {
+                    new ExtraTranslatorsForm().ShowDialog();
+                }));
+            }
+
             public void showHookForm() {
                 form.showHookForm();
             }

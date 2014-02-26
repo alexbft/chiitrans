@@ -169,6 +169,9 @@ lastParseResult = null
 $currentEntry = null
 
 newTranslationResult = window.newTranslationResult = (id, translationResult) ->
+    updateTranslationResult id, renderOldTranslationResult translationResult
+
+updateTranslationResult = (id, translationResultHtml) ->
     if id < lastEntryId
         entry = $history.find(""".entry[data-id="#{id}"]""")
     else
@@ -176,8 +179,9 @@ newTranslationResult = window.newTranslationResult = (id, translationResult) ->
             onNewEntry id
         entry = $currentEntry
     if entry.length
-        $('#translation', entry).html renderTranslationResult translationResult
+        $('#translation', entry).html translationResultHtml
     return
+    
 
 newParseResult = window.newParseResult = (id, parseResult) ->
     if id < lastEntryId
@@ -318,15 +322,34 @@ renderParseResult = (p) ->
         i += 1
     res
 
-renderTranslationResult = (tr) ->
+renderOldTranslationResult = (tr) ->
     tr = JSON.parse tr
     $res = $('<span>')
     if not tr.isAtlas
         $res.addClass 'no_atlas'
     else
         $res.addClass 'atlas'
-     $res.html _.escape(tr.text).replace(/\n/g, '<br>')
-     $res
+    $res.html _.escape(tr.text).replace(/\n/g, '<br>')
+    $res
+
+renderSimpleTranslationResult = (text) ->
+    $res = $('<span>')
+    $res.html _.escape(text).replace(/\n/g, '<br>')
+    $res
+
+renderMultiTranslationResult = (translators) ->
+    $res = $('<table class="multiTranslation">')
+    for t in translators
+        $res.append """
+            <tr>
+                <td class="translator">#{t}</td>
+                <td class="result" data-trans="#{t}"></td>
+            </tr>"""
+    $res
+
+updateMultiTranslationResult = (el, trans, text) ->
+    $(""".result[data-trans="#{trans}"]""", el)
+        .html _.escape(text).replace(/\n/g, '<br>') 
 
 log = (s) ->
     $('<div>').text(s).appendTo $('#log')
@@ -375,3 +398,40 @@ setFontSize = (size) ->
     catch e
         $('#fontSizeStyle').html ".font_zoom { font-size: #{size}% }"
     return
+
+
+translators = {}
+
+registerTranslators = window.registerTranslators = (trans) ->
+    translators = trans
+    host().registerTranslators _.keys trans
+
+translate = window.translate = (id, raw, src, translatorsListJson) ->
+    translatorsList = JSON.parse translatorsListJson
+    ex = { id: id, rawText: raw }
+    if translatorsList.length <= 1
+        for t in translatorsList
+            translators[t] src, (res) -> 
+                updateTranslationResult id, renderSimpleTranslationResult res
+            , ex
+    else
+        container = renderMultiTranslationResult translatorsList
+        updateTranslationResult id, container
+        for t in translatorsList 
+            do (t) =>
+                translators[t] src, (res) ->
+                    updateMultiTranslationResult container, t, res
+                , ex
+    return
+
+http = window.http =
+    request: (options, cb) ->
+        if typeof options == "string"
+            options = url : options
+        _.defaults options,
+            useShiftJis: false
+            method: "get"
+        if options.method.toLowerCase() != "get" and not options.query?
+            [options.url, options.query] = options.url.split '?'
+        host().httpRequest options.url, options.useShiftJis, options.method, options.query, (res) ->
+            cb(res.res, res.error)

@@ -44,25 +44,30 @@ namespace ChiitransLite.translation {
             }
             if (!checkDifferent || text != prevText) {
                 prevText = text;
-                text = preParseReplacements(text);
                 var curId = Interlocked.Increment(ref textId);
-                bool doTranslation = Settings.app.translationDisplay == TranslationDisplay.TRANSLATION || Settings.app.translationDisplay == TranslationDisplay.BOTH;
-                if (doTranslation) {
-                    if (Settings.session.po != null) {
-                        var poTrans = PoManager.instance.getTranslation(text);
-                        if (!string.IsNullOrEmpty(poTrans)) {
-                            if (onAtlasDone != null) {
-                                onAtlasDone(curId, new TranslationResult(poTrans, false));
-                            }
-                            doTranslation = false;
+                updateId(curId, text, null);
+            }
+        }
+
+        public Task<ParseResult> updateId(int curId, string text, ParseOptions options) {
+            text = preParseReplacements(text);
+            /*if (Settings.app.translationDisplay == TranslationDisplay.TRANSLATION) {
+
+            }
+            if (doTranslation) {
+                startTranslationRequest(
+                if (Settings.session.po != null) {
+                    var poTrans = PoManager.instance.getTranslation(text);
+                    if (!string.IsNullOrEmpty(poTrans)) {
+                        if (onTranslationRequest != null) {
+                            onTranslationRequest(curId, new TranslationResult(poTrans, false));
                         }
+                        doTranslation = false;
                     }
                 }
-                bool doParse = Settings.app.translationDisplay == TranslationDisplay.PARSE || Settings.app.translationDisplay == TranslationDisplay.BOTH || doTranslation;
-                if (doParse) {
-                    startParse(curId, text, doTranslation, null);
-                }
-            }
+            }*/
+            bool doTranslation = Settings.app.translationDisplay == TranslationDisplay.TRANSLATION || Settings.app.translationDisplay == TranslationDisplay.BOTH;
+            return startParse(curId, text, doTranslation, options);
         }
 
         private string preParseReplacements(string text) {
@@ -73,14 +78,14 @@ namespace ChiitransLite.translation {
             return text;
         }
 
-        public Task<ParseResult> startParse(int curId, string text, bool doTranslation, ParseOptions parseOptions) {
+        private Task<ParseResult> startParse(int curId, string text, bool doTranslation, ParseOptions parseOptions) {
             return Task.Factory.StartNew(() => {
                 try {
                     var parseData = Edict.instance.parse(text, parseOptions);
                     if (parseData != null) {
                         parseData.id = curId;
                         if (doTranslation) {
-                            startTranslation(curId, parseData);
+                            sendTranslationRequest(curId, parseData);
                         }
                         parseCacheEntries.Enqueue(curId);
                         if (parseCacheEntries.Count > MAX_CACHE) {
@@ -103,15 +108,23 @@ namespace ChiitransLite.translation {
             });
         }
 
-        public void startTranslation(int curId, ParseResult parseData) {
+        private void sendTranslationRequest(int curId, ParseResult parseData) {
+            if (onTranslationRequest != null) {
+                var raw = parseData.asText();
+                var src = Edict.instance.replaceNames(parseData);
+                onTranslationRequest(curId, raw, src);
+            }
+        }
+
+        /*public void startTranslation(int curId, ParseResult parseData) {
             Task.Factory.StartNew(() => {
                 try {
                     var text2 = Edict.instance.replaceNames(parseData);
                     string translatedText = Atlas.instance.translate(text2);
                     if (translatedText != null) {
                         var tres = new TranslationResult(translatedText, true);
-                        if (onAtlasDone != null) {
-                            onAtlasDone(curId, tres);
+                        if (onTranslationRequest != null) {
+                            onTranslationRequest(curId, tres);
                         }
                         return tres;
                     } else {
@@ -122,7 +135,7 @@ namespace ChiitransLite.translation {
                     return null;
                 }
             });
-        }
+        }*/
 
         public ParseResult getParseResult(int id) {
             return parseCache.GetOrDefault(id);
@@ -152,8 +165,8 @@ namespace ChiitransLite.translation {
             }
         }
 
-        public delegate void AtlasDoneHandler(int id, TranslationResult translationResult);
-        public event AtlasDoneHandler onAtlasDone;
+        public delegate void TranslationRequestHandler(int id, string raw, string src);
+        public event TranslationRequestHandler onTranslationRequest;
 
         public delegate void EdictDoneHandler(int id, ParseResult parseResult);
         public event EdictDoneHandler onEdictDone;

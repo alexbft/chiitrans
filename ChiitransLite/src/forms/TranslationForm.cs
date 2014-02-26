@@ -2,8 +2,10 @@
 using ChiitransLite.settings;
 using ChiitransLite.texthook;
 using ChiitransLite.translation;
+using ChiitransLite.translation.atlas;
 using ChiitransLite.translation.edict;
 using ChiitransLite.translation.edict.parseresult;
+using ChiitransLite.translation.po;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -154,6 +156,27 @@ namespace ChiitransLite.forms {
             public void showContextMenu(string selection, bool isRealSelection, int selectedParseResultId) {
                 form.showContextMenu(selection, isRealSelection, selectedParseResultId);
             }
+
+            public void registerTranslators(object[] trans) {
+                Settings.app.registerTranslators(trans.Cast<string>().ToList());
+            }
+
+            public string translateAtlas(string src) {
+                return Atlas.instance.translate(src);
+            }
+
+            public string translateCustom(string src) {
+                return PoManager.instance.getTranslation(src);
+            }
+
+            public object httpRequest(string url, bool useShiftJis, string method, string query) {
+                try {
+                    return new { res = Utils.httpRequest(url, useShiftJis, method, query) };
+                } catch (Exception ex) {
+                    return new { error = ex.Message };
+                }
+            }
+
         }
 
         public TranslationForm() {
@@ -165,8 +188,17 @@ namespace ChiitransLite.forms {
             FormUtil.restoreLocation(this);
             webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
             webBrowser1.Url = Utils.getUriForBrowser("translation.html");
-            TranslationService.instance.onAtlasDone += (id, tr) => {
-                webBrowser1.callScript("newTranslationResult", id, Utils.toJson(tr));
+            TranslationService.instance.onTranslationRequest += (id, raw, src) => {
+                var translators = Settings.app.getSelectedTranslators(!Atlas.instance.isNotFound);
+                if (translators.Count == 1 && Settings.session.po != null) {
+                    // trying .po translation
+                    var poTrans = PoManager.instance.getTranslation(raw);
+                    if (!string.IsNullOrEmpty(poTrans)) {
+                        webBrowser1.callScript("newTranslationResult", id, Utils.toJson(new TranslationResult(poTrans, false)));
+                        return;
+                    }
+                }
+                webBrowser1.callScript("translate", id, raw, src, Utils.toJson(translators));
             };
             TranslationService.instance.onEdictDone += (id, parse) => {
                 lastParseResult = parse;
@@ -384,7 +416,7 @@ namespace ChiitransLite.forms {
                     }
                     lastParseOptions.addUserWord(sel);
                     waitingForId = pr.id;
-                    TranslationService.instance.startParse(pr.id, pr.asText(), false, lastParseOptions).ContinueWith((res) => {
+                    TranslationService.instance.updateId(pr.id, pr.asText(), lastParseOptions).ContinueWith((res) => {
                         ParseResult newRes = res.Result;
                         if (newRes != null && !newRes.getParts().Any((p) => p.asText() == sel)) {
                             webBrowser1.callScript("flash", "No match found");
@@ -462,7 +494,7 @@ namespace ChiitransLite.forms {
                             Settings.session.removeUserName(key);
                         }
                         if (pr != null) {
-                            TranslationService.instance.startParse(pr.id, pr.asText(), Settings.app.isShowTranslation(), null);
+                            TranslationService.instance.updateId(pr.id, pr.asText(), null);
                         }
                     }
                 });
@@ -546,7 +578,7 @@ namespace ChiitransLite.forms {
                     EdictMatchType? matchType = lastSelectedParseResult.getMatchTypeOf(lastSelection);
                     if (matchType.HasValue) {
                         Settings.app.addBannedWord(lastSelection, matchType.Value);
-                        TranslationService.instance.startParse(pr.id, pr.asText(), false, null);
+                        TranslationService.instance.updateId(pr.id, pr.asText(), null);
                     }
                 }
             }

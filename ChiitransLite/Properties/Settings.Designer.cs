@@ -309,5 +309,17 @@ namespace ChiitransLite.Properties {
                 this["nameDict"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string selectedTranslators {
+            get {
+                return ((string)(this["selectedTranslators"]));
+            }
+            set {
+                this["selectedTranslators"] = value;
+            }
+        }
     }
 }

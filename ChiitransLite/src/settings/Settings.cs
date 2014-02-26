@@ -23,6 +23,7 @@ namespace ChiitransLite.settings {
             initSelectedPages();
             initBannedWords();
             initSelectedReadings();
+            initSelectedTranslators();
         }
 
         private static volatile SessionSettings cachedSessionSettings = null;
@@ -46,6 +47,9 @@ namespace ChiitransLite.settings {
         private bool isBannedWordsDirty = false;
         private ConcurrentDictionary<string, string> selectedReadings;
         private bool isSelectedReadingsDirty = false;
+
+        private List<string> translators = new List<string> { };
+        private List<string> selectedTranslators;
 
         public T getProperty<T>(string prop) {
             T res;
@@ -88,6 +92,7 @@ namespace ChiitransLite.settings {
                 Properties.Settings.Default.selectedReadings = Utils.getJsonSerializer().Serialize(selectedReadings);
                 isSelectedReadingsDirty = false;
             }
+            Properties.Settings.Default.selectedTranslators = Utils.getJsonSerializer().Serialize(selectedTranslators);
             Properties.Settings.Default.Save();
             SessionSettings.saveAll();
         }
@@ -132,7 +137,16 @@ namespace ChiitransLite.settings {
             }
             bannedWordsKana = new ConcurrentDictionary<string, bool>(words.ToDictionary((w) => w, (w) => true));
         }
-        
+
+        private void initSelectedTranslators() {
+            string selectedTranslatorsJson = Properties.Settings.Default.selectedTranslators;
+            try {
+                selectedTranslators = Utils.getJsonSerializer().Deserialize<List<string>>(selectedTranslatorsJson);
+            } catch {
+                selectedTranslators = null;
+            }
+        }
+
         internal int getSelectedPage(string stem) {
             return selectedPages.GetOrDefault(stem, -1);
         }
@@ -351,6 +365,29 @@ namespace ChiitransLite.settings {
 
         internal bool isShowTranslation() {
             return translationDisplay == TranslationDisplay.TRANSLATION || translationDisplay == TranslationDisplay.BOTH;
+        }
+
+        public void registerTranslators(List<string> translators) {
+            this.translators = translators;
+        }
+
+        public List<string> getTranslators() {
+            return translators;
+        }
+
+        public List<string> getSelectedTranslators(bool isAtlasPresent) {
+            if (selectedTranslators == null) {
+                if (isAtlasPresent) {
+                    selectedTranslators = new List<string> { "ATLAS" };
+                } else {
+                    selectedTranslators = new List<string> { "Google" };
+                }
+            }
+            return selectedTranslators.Intersect(translators).ToList();
+        }
+
+        public void setSelectedTranslators(List<string> selectedTranslators) {
+            this.selectedTranslators = selectedTranslators;
         }
     }
 }

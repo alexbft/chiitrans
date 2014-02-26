@@ -26,7 +26,10 @@ $ ->
         host().showPoFiles ->
         
     $('#reset').click ->
-        host().resetParsePreferences()        
+        host().resetParsePreferences()
+
+    $('#showExtraTranslators').click ->
+        host().showExtraTranslators ->
 
     resetOptionsInt host().getOptions()
     $('.menu>li').click ->

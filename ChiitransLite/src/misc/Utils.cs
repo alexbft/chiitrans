@@ -14,6 +14,7 @@ using ChiitransLite.forms;
 using ChiitransLite.settings;
 using System.Management;
 using System.Drawing;
+using System.Net;
 
 namespace ChiitransLite.misc {
     static class Utils {
@@ -175,5 +176,30 @@ namespace ChiitransLite.misc {
             }
             return false;
         }
+
+        internal static string httpRequest(string url, bool useShiftJis, string method, string query) {
+            WebRequest req;
+            if (method.ToUpper() == "GET") {
+                req = WebRequest.Create(url);
+                req.Proxy = null;
+                (req as HttpWebRequest).UserAgent = "Mozilla/5.0 (compatible; Windows NT 6.1; WOW64)";
+            } else {
+                req = WebRequest.Create(url);
+                req.Method = method.ToUpper();
+                req.ContentType = "application/x-www-form-urlencoded";
+                req.Proxy = null;
+                (req as HttpWebRequest).UserAgent = "Mozilla/5.0 (compatible; Windows NT 6.1; WOW64)";
+                var content = Encoding.UTF8.GetBytes(query);
+                req.ContentLength = content.Length;
+                Stream os = req.GetRequestStream();
+                os.Write(content, 0, content.Length);
+                os.Close();
+            }
+            WebResponse resp = req.GetResponse();
+            StreamReader sr = new StreamReader(resp.GetResponseStream(), useShiftJis ? Encoding.GetEncoding(932) : Encoding.UTF8);
+            var res = sr.ReadToEnd().Trim();
+            return res;
+        }
+
     }
 }
