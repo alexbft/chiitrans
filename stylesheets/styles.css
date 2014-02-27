@@ -253,3 +253,9 @@ footer {
     color:#444;
   }
 }
+
+.gallery img {
+  width: 100px;
+  margin: 10px;
+  border: 0 none;
+}
