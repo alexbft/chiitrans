@@ -1,0 +1,30 @@
+﻿html,
+body {
+  padding: 0;
+  margin: 0;
+  font: 14px Verdana;
+  color: black;
+}
+button,
+input[type=button],
+input[type=submit],
+select {
+  font: 13px Verdana;
+}
+
+#map {
+    display:inline-block; width: 600px; height: 400px; overflow: auto; font: 20px Consolas; letter-spacing: 4px;
+    position: relative;
+}
+
+.glyph {
+    position: absolute;
+    background-color: white;
+    font: 20px Consolas; 
+    letter-spacing: 4px;
+    z-index: 1;
+}
+
+.glyph.front {
+    z-index: 2;
+}
