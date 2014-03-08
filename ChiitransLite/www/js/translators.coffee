@@ -20,7 +20,7 @@ html2text = (html) ->
 # Wrapper to check for pattern <name>「text」
 wrap = (fn) ->
     (src, callback, ex) ->
-        q = /(.*?)([「『][^]*[」』])\s*$/.exec src
+        q = /(.*?)([「『（][\s\S]*[」』）])\s*$/.exec src
         if q
             fixedSrc = q[2].substr 1, q[2].length - 2
             fixedCallback = (res) ->
@@ -62,14 +62,14 @@ registerTranslators
         src = encodeURIComponent src
         url = "http://www.excite.co.jp/world/english/?wb_lp=JAEN&before=#{src}"
         get { url: url, method: 'post' }, callback, (res) -> 
-            res = /\<textarea id="after".*?\>([^]*?)\<\/textarea\>/.exec res
+            res = /\<textarea id="after".*?\>([\s\S]*?)\<\/textarea\>/.exec res
             html2text res[1]
 
     "Honyaku": wrap (src, callback) ->
         src = encodeURIComponent src
         url = "http://honyaku.yahoo.co.jp/transtext?both=TH&eid=CR-JE&text=#{src}"
         get { url: url, method: 'post' }, callback, (res) ->
-            res = /id="trn_textText".*?\>([^]*?)\<\/textarea\>/.exec res
+            res = /id="trn_textText".*?\>([\s\S]*?)\<\/textarea\>/.exec res
             res[1]
 
     "Microsoft": wrap (src, callback) ->

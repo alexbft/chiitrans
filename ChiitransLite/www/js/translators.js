@@ -32,7 +32,7 @@
   wrap = function(fn) {
     return function(src, callback, ex) {
       var fixedCallback, fixedSrc, q;
-      q = /(.*?)([「『][^]*[」』])\s*$/.exec(src);
+      q = /(.*?)([「『（][\s\S]*[」』）])\s*$/.exec(src);
       if (q) {
         fixedSrc = q[2].substr(1, q[2].length - 2);
         fixedCallback = function(res) {
@@ -102,7 +102,7 @@
         url: url,
         method: 'post'
       }, callback, function(res) {
-        res = /\<textarea id="after".*?\>([^]*?)\<\/textarea\>/.exec(res);
+        res = /\<textarea id="after".*?\>([\s\S]*?)\<\/textarea\>/.exec(res);
         return html2text(res[1]);
       });
     }),
@@ -114,7 +114,7 @@
         url: url,
         method: 'post'
       }, callback, function(res) {
-        res = /id="trn_textText".*?\>([^]*?)\<\/textarea\>/.exec(res);
+        res = /id="trn_textText".*?\>([\s\S]*?)\<\/textarea\>/.exec(res);
         return res[1];
       });
     }),

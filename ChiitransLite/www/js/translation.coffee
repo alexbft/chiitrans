@@ -282,8 +282,11 @@ renderParseResult = (p) ->
         lastPart = parseResult.parts[parseResult.parts.length - 1]
         if not _.isArray(lastPart)
             lastChar = lastPart.charAt lastPart.length - 1
-            if lastChar in ["』", "」"]
-                if lastChar == "』" then firstChar = "『" else firstChar = "「"
+            if lastChar in ["』", "」", "）"]
+                firstChar = switch lastChar
+                    when "』" then "『"
+                    when "」" then "「"
+                    else "（"
                 for j in [0 ... parseResult.parts.length]
                     part = parseResult.parts[j]
                     if not _.isArray(part)

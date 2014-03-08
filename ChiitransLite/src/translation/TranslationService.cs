@@ -71,7 +71,7 @@ namespace ChiitransLite.translation {
         }
 
         private string preParseReplacements(string text) {
-            var match = Regex.Match(text, "^(「.*」)([^「」]+)$");
+            var match = Regex.Match(text, "^([「『（].*[」』）])([^「『（」』）]+)$");
             if (match.Success) {
                 return match.Groups[2].Value + match.Groups[1].Value;
             }

@@ -348,12 +348,17 @@
       lastPart = parseResult.parts[parseResult.parts.length - 1];
       if (!_.isArray(lastPart)) {
         lastChar = lastPart.charAt(lastPart.length - 1);
-        if (lastChar === "』" || lastChar === "」") {
-          if (lastChar === "』") {
-            firstChar = "『";
-          } else {
-            firstChar = "「";
-          }
+        if (lastChar === "』" || lastChar === "」" || lastChar === "）") {
+          firstChar = (function() {
+            switch (lastChar) {
+              case "』":
+                return "『";
+              case "」":
+                return "「";
+              default:
+                return "（";
+            }
+          })();
           for (j = _i = 0, _ref = parseResult.parts.length; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
             part = parseResult.parts[j];
             if (!_.isArray(part)) {

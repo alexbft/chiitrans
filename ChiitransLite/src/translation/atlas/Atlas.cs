@@ -77,12 +77,14 @@ namespace ChiitransLite.translation.atlas {
                 return src;
             }
             if (Settings.app.separateSpeaker) {
-                if (src.EndsWith("』") || src.EndsWith("」")) {
+                if (src.EndsWith("』") || src.EndsWith("」") || src.EndsWith("）")) {
                     char openBr;
                     if (src.EndsWith("』")) {
                         openBr = '『';
-                    } else {
+                    } else if (src.EndsWith("」")) {
                         openBr = '「';
+                    } else {
+                        openBr = '（';
                     }
                     int start = src.IndexOf(openBr);
                     if (start != -1) {
