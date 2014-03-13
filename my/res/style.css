@@ -13,18 +13,27 @@ select {
 }
 
 #map {
-    display:inline-block; width: 600px; height: 400px; overflow: auto; font: 20px Consolas; letter-spacing: 4px;
+    display:inline-block; font: 16px Consolas; letter-spacing: 4px;
     position: relative;
 }
 
 .glyph {
     position: absolute;
     background-color: white;
-    font: 20px Consolas; 
+    font: 16px Consolas; 
     letter-spacing: 4px;
     z-index: 1;
 }
 
 .glyph.front {
     z-index: 2;
+}
+
+.fog {
+    background-color: #ddd;
+    color: #444;
+}
+
+.unseen {
+    background-color: #888;
 }
