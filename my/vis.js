@@ -514,7 +514,7 @@ Stage = (function(_super) {
   };
 
   Stage.prototype.updateVisibility = function(_arg, radius) {
-    var ctr, fx, fy, go, ox, oy, queue, seen, sx, sy, time, xx, yy, _ref;
+    var ctr, go, ox, oy, queue, seen, sx, sy, time, xx, yy;
     ox = _arg.x, oy = _arg.y;
     go = function(pt) {
       if (seen.add(pt)) {
@@ -531,40 +531,43 @@ Stage = (function(_super) {
     seen = new PointSet();
     queue = [];
     queue.push(point(sx + 1, sy));
-    while (queue.length > 0) {
-      if (ctr++ > 1000) {
-        throw new Error("infloop!");
-        break;
-      }
-      _ref = queue.pop(), fx = _ref.x, fy = _ref.y;
-      raycast(sx, sy, fx, fy, radius, (function(_this) {
-        return function(_arg1) {
-          var cell, x, y;
-          x = _arg1.x, y = _arg1.y;
-          xx = x;
-          yy = y;
-          cell = _this.at(x, y);
-          if (cell == null) {
-            console.log("BAD: " + x + " " + y);
-            return false;
+    return profile("test", (function(_this) {
+      return function() {
+        var fx, fy, _ref;
+        while (queue.length > 0) {
+          if (ctr++ > 1000) {
+            throw new Error("infloop!");
+            break;
           }
-          cell.lastVisibleTime = time;
-          return !cell.isOpaque();
-        };
-      })(this));
-      if (xx > ox && yy <= oy || xx <= ox && yy > oy) {
-        go(point(xx, yy));
-      }
-      if (xx < ox && yy <= oy || xx >= ox && yy > oy) {
-        go(point(xx + 1, yy));
-      }
-      if (xx <= ox && yy < oy || xx > ox && yy >= oy) {
-        go(point(xx, yy + 1));
-      }
-      if (xx >= ox && yy < oy || xx < ox && yy >= oy) {
-        go(point(xx + 1, yy + 1));
-      }
-    }
+          _ref = queue.pop(), fx = _ref.x, fy = _ref.y;
+          raycast(sx, sy, fx, fy, radius, function(_arg1) {
+            var cell, x, y;
+            x = _arg1.x, y = _arg1.y;
+            xx = x;
+            yy = y;
+            cell = _this.at(x, y);
+            if (cell == null) {
+              console.log("BAD: " + x + " " + y);
+              return false;
+            }
+            cell.lastVisibleTime = time;
+            return !cell.isOpaque();
+          });
+          if (xx > ox && yy <= oy || xx <= ox && yy > oy) {
+            go(point(xx, yy));
+          }
+          if (xx < ox && yy <= oy || xx >= ox && yy > oy) {
+            go(point(xx + 1, yy));
+          }
+          if (xx <= ox && yy < oy || xx > ox && yy >= oy) {
+            go(point(xx, yy + 1));
+          }
+          if (xx >= ox && yy < oy || xx < ox && yy >= oy) {
+            go(point(xx + 1, yy + 1));
+          }
+        }
+      };
+    })(this));
   };
 
   Stage.prototype.getBorderCells = function(_arg, radius) {
@@ -832,21 +835,14 @@ makeRandomRoom = function(region, maxWidth, maxHeight) {
 p = null;
 
 setup = function() {
-  var halfx, halfy, i, inside, map, startPoint, x, xx, y, yy, _i, _j, _k;
+  var inside, map, startPoint;
   map = new Stage(80, 35);
   inside = map.insideArea(1);
-  halfx = inside.mx / 2 | 0;
-  halfy = inside.my / 2 | 0;
-  for (xx = _i = 0; _i <= 1; xx = ++_i) {
-    for (yy = _j = 0; _j <= 1; yy = ++_j) {
-      x = randomIn(halfx * xx, halfx * (xx + 1));
-      y = randomIn(halfy * yy, halfy * (yy + 1));
-      makeTrail(inside, x, y, 12, 100);
-    }
-  }
-  for (i = _k = 1; _k <= 15; i = ++_k) {
-    makeRandomRoom(inside, 10, 7);
-  }
+  inside.iterate((function(_this) {
+    return function(c) {
+      return c.terrain = Terrain.FLOOR;
+    };
+  })(this));
   p = new Mob("@");
   p.speed = 100;
   startPoint = inside.randomPointWhere((function(_this) {
@@ -859,7 +855,7 @@ setup = function() {
 };
 
 updateMap = function() {
-  p.stage.updateVisibility(p, 10);
+  p.stage.updateVisibility(p, 15);
   return showMap($('#map'), p.stage);
 };
 
