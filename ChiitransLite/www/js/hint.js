@@ -1,5 +1,5 @@
 ﻿(function() {
-  var $hint, $infType, $kana, $kanji, $nameType, $page, $pageNum, $pageNumFrame, $sense, $tense, data, defs, makeDictKey, makeMisc, makeMiscSingle, makeReading, makeSense, nameDefs, pageNext, pageNum, pagePrev, setDefinitions, setNameDefinitions, show, showPage, showSense;
+  var $body, $hint, $html, $infType, $kana, $kanji, $nameType, $page, $pageNum, $pageNumFrame, $sense, $tense, data, defs, makeDictKey, makeMisc, makeMiscSingle, makeReading, makeSense, nameDefs, pageNext, pageNum, pagePrev, setDefinitions, setNameDefinitions, show, showPage, showSense;
 
   data = null;
 
@@ -10,6 +10,8 @@
   nameDefs = {};
 
   $page = $pageNum = $pageNumFrame = $kanji = $kana = $sense = $nameType = $infType = $tense = $hint = null;
+
+  $html = $body = null;
 
   $(function() {
     $(document).mousedown(function(ev) {
@@ -28,6 +30,8 @@
     $('#nextPage').click(function() {
       pageNext();
     });
+    $html = $('html');
+    $body = $('body');
     $page = $('#page');
     $pageNum = $('#pageNum');
     $pageNumFrame = $('#pageNumFrame');
@@ -43,7 +47,7 @@
     });
   });
 
-  show = window.show = function(json, _pageNum, isTransparent) {
+  show = window.show = function(json, _pageNum, isTransparent, fontSize) {
     var found, i, _i, _ref;
     data = JSON.parse(json);
     found = false;
@@ -60,10 +64,11 @@
       pageNum = 0;
     }
     if (isTransparent) {
-      $('html').addClass('transparent');
+      $html.addClass('transparent');
     } else {
-      $('html').removeClass('transparent');
+      $html.removeClass('transparent');
     }
+    $body.css('fontSize', fontSize + "%");
     return showPage(data, pageNum);
   };
 

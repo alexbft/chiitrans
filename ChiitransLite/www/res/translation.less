@@ -209,20 +209,32 @@ body {
     background-color: transparent;
 }
 
-.transparent .parsed0 .basetext {
+.transparent .parsed0  {
     color: #bfcae8;
 }
 
-.transparent .parsed1 .basetext {
+.transparent .parsed1  {
     color: #c5ebab;
 }
 
-.transparent .parsed_name .basetext {
+.transparent .parsed_name  {
     color: #E0BCBC;
 }
 
-.transparent .parsed:hover .basetext {
-    color: white;
+/*ie11 bug - have to change text color */
+
+.transparent .parsed0:hover .basetext {
+    color: #bfcae9;
+    background-color: #3469DB !important;
+}
+
+.transparent .parsed1:hover .basetext {
+    color: #c5ebac;
+    background-color: #3469DB !important;
+}
+
+.transparent .parsed_name:hover .basetext {
+    color: #E0BCBd;
     background-color: #3469DB !important;
 }
 

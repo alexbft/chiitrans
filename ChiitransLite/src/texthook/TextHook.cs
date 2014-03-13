@@ -86,7 +86,8 @@ namespace ChiitransLite.texthook {
         private ContextFactory factory = new DefaultContextFactory();
         private IDictionary<int, TextHookContext> contexts = new ConcurrentDictionary<int, TextHookContext>();
         public String currentProcessTitle { get; private set; }
-        private volatile bool isConnected = false;
+        public volatile bool isConnected = false;
+        public Process currentProcess { get; private set; }
 
         private int handleCreateThread(int id, string name, int hook, int context, int subcontext, int status) {
             contexts[id] = factory.create(id, name, hook, context, subcontext, status);
@@ -173,7 +174,6 @@ namespace ChiitransLite.texthook {
                         throw new MyException("Failed to start process.");
                     }
                 }
-                Process currentProcess;
                 try {
                     currentProcess = Process.GetProcessById(pid);
                 } catch {

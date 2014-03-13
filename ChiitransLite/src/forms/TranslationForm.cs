@@ -593,6 +593,23 @@ namespace ChiitransLite.forms {
 
         private void TranslationForm_Activated(object sender, EventArgs e) {
             moveBackgroundForm();
+            //oppan window style
+            if (TextHook.instance.isConnected) {
+                try {
+                    IntPtr gameWindow = TextHook.instance.currentProcess.MainWindowHandle;
+                    if (gameWindow != Winapi.INVALID_HANDLE_VALUE) {
+                        int wstyle = Winapi.GetWindowLong(gameWindow, Winapi.GWL_EXSTYLE);
+                        if ((wstyle & Winapi.WS_EX_TOPMOST) != 0) {
+                            Winapi.SetWindowPos(gameWindow, Winapi.HWND_NOTOPMOST, 0, 0, 0, 0, Winapi.SWP_NOACTIVATE | Winapi.SWP_NOMOVE | Winapi.SWP_NOSIZE);
+                            /*wstyle = wstyle & ~Winapi.WS_EX_TOPMOST;
+                            Logger.log("Unsetting TOPMOST style");
+                            Winapi.SetWindowLong(gameWindow, Winapi.GWL_EXSTYLE, wstyle);*/
+                        }
+                    }
+                } catch (Exception ex) {
+                    Logger.logException(ex);
+                }
+            }
         }
 
         public void setClipboardTranslation(bool isEnabled) {

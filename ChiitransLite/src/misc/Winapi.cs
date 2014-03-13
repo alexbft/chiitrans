@@ -63,6 +63,7 @@ namespace ChiitransLite.misc {
         public const int WS_EX_LAYERED = 0x00080000;
         public const int WS_EX_NOACTIVATE = 0x08000000;
         public const int WS_EX_TRANSPARENT = 0x00000020;
+        public const int WS_EX_TOPMOST = 0x00000008;
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
@@ -92,6 +93,13 @@ namespace ChiitransLite.misc {
             public int Right;
             public int Bottom;
         }
+
+        public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+        public static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        public const int SWP_NOACTIVATE = 0x0010;
+        public const int SWP_NOMOVE = 0x0002;
+        public const int SWP_NOSIZE = 0x0001;
+
 
     }
 }

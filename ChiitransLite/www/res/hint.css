@@ -1,4 +1,7 @@
-﻿body {
+﻿html {
+  font: 14px Verdana;
+}
+body {
   position: absolute;
   left: 0;
   top: 0;
@@ -8,11 +11,10 @@
   background-color: InfoBackground;
   color: InfoText;
   overflow: hidden;
-  font: 13px Verdana;
 }
 .transparent body {
   background-color: #333;
-  color: white;
+  color: #eee;
 }
 a,
 a:visited {
@@ -24,8 +26,8 @@ a {
 #pageNumFrame {
   /*text-align: center;*/
 
-  padding-left: 15px;
-  font: 13px Segoe UI;
+  padding-left: 0.8em;
+  font-family: Segoe UI;
   color: gray;
 }
 .transparent #pageNumFrame {
@@ -34,20 +36,19 @@ a {
 .misc_set {
   font-style: italic;
   color: #33b;
-  font-size: 11px !important;
+  font-size: 85%;
 }
 .transparent .misc_set {
   color: lightblue;
 }
 .page {
-  padding: 0 10px 5px 10px;
+  padding: 0 0.67em 0.33em 0.67em;
 }
 #kanji,
 #kana {
   font-family: 'MS Gothic';
 }
 #kanji {
-  font-size: 13px;
   color: gray;
   margin-bottom: 5px;
 }
@@ -55,29 +56,31 @@ a {
   color: silver;
 }
 #kana {
-  font-size: 13px;
   color: gray;
 }
 .transparent #kana {
   color: silver;
 }
 #sense ul {
-  padding-left: 20px;
+  padding-left: 1.25em;
   margin-top: 5px;
   margin-bottom: 5px;
 }
 .sense {
-  margin-bottom: 3px;
+  margin-bottom: 0.3em;
 }
-#tense,
+#tense {
+  color: #66b;
+  font-size: 85%;
+}
 #tense .misc_set {
   color: #66b;
-  font-size: 11px;
+  font-size: 100%;
 }
 #nameType,
 #infType {
   color: #b66;
-  font-size: 11px;
+  font-size: 85%;
 }
 .btcf:after {
   content: "";

@@ -103,7 +103,8 @@ namespace ChiitransLite.forms {
                 }
             }
             lastData = part;
-            webBrowser1.callScript("show", part.asJsonFull(), Settings.app.getSelectedPage(part.getMatchStem()), Settings.app.transparentMode);
+            webBrowser1.callScript("show", part.asJsonFull(), Settings.app.getSelectedPage(part.getMatchStem()), Settings.app.transparentMode, Settings.app.fontSize);
+            this.Width = (int)(350 * Settings.app.fontSize / 100);
             Location = getRealPos(where.X, where.Y, anchorHeight);
             showNoActivate();
         }

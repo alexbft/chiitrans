@@ -4,6 +4,7 @@ defs = {}
 nameDefs = {}
 
 $page = $pageNum = $pageNumFrame = $kanji = $kana = $sense = $nameType = $infType = $tense = $hint = null
+$html = $body = null
 
 $ ->
     $(document)
@@ -25,6 +26,9 @@ $ ->
         pageNext()
         return
 
+    $html = $('html')
+    $body = $('body')
+
     $page = $('#page')
     $pageNum = $('#pageNum')
     $pageNumFrame = $('#pageNumFrame')
@@ -40,7 +44,7 @@ $ ->
         host().setReading data.stem, $(this).data('text')
         return
 
-show = window.show = (json, _pageNum, isTransparent) ->
+show = window.show = (json, _pageNum, isTransparent, fontSize) ->
     data = JSON.parse json
     found = false
     if _pageNum != -1
@@ -52,9 +56,10 @@ show = window.show = (json, _pageNum, isTransparent) ->
     if not found
         pageNum = 0
     if isTransparent
-        $('html').addClass('transparent')
+        $html.addClass('transparent')
     else
-        $('html').removeClass('transparent')
+        $html.removeClass('transparent')
+    $body.css 'fontSize', fontSize + "%"
     showPage(data, pageNum)
 
 pagePrev = window.pagePrev = ->
