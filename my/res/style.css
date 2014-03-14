@@ -17,6 +17,11 @@ select {
     position: relative;
 }
 
+#info {
+  display: inline-block;
+  vertical-align: top;
+}
+
 .glyph {
     position: absolute;
     background-color: white;
@@ -36,4 +41,8 @@ select {
 
 .unseen {
     background-color: #888;
+}
+
+.bloody {
+  color: red;
 }
