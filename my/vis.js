@@ -1071,7 +1071,7 @@ animateMap = function(pdx, pdy) {
   completed = $.Deferred();
   props = {
     duration: ANIM_DURATION,
-    ease: ANIM_TRANSITION,
+    easing: ANIM_TRANSITION,
     complete: function() {
       $c0.css({
         x: 0,
@@ -1189,7 +1189,7 @@ MobGlyph = (function() {
       x: (x - x0) * tw,
       y: (y - y0) * th,
       duration: ANIM_DURATION,
-      ease: ANIM_TRANSITION
+      easing: ANIM_TRANSITION
     };
     switch (effect) {
       case 'fadeIn':
