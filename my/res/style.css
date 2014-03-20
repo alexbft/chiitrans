@@ -17,21 +17,21 @@ select {
     position: relative;
 }
 
+#gmap {
+  display: inline-block;
+}
+
 #info {
   display: inline-block;
   vertical-align: top;
 }
 
-.glyph {
-    position: absolute;
-    background-color: white;
-    font: 16px Consolas; 
-    letter-spacing: 4px;
-    z-index: 1;
-}
-
-.glyph.front {
-    z-index: 2;
+#c {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 1024;
 }
 
 .fog {
@@ -45,4 +45,31 @@ select {
 
 .bloody {
   color: red;
+}
+
+.graphics {
+  position: relative;
+  overflow: hidden;
+}
+
+.graphics canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.glyph {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.glyph.player {
+  background-image: url('tiles/player.png')
+}
+
+.glyph.mob {
+  background-image: url('tiles/mob.png')
 }
