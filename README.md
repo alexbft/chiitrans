@@ -47,7 +47,7 @@ Visit http://alexbft.github.io/chiitrans/ for more info.
 * [Locale Emulator](https://github.com/xupefei/Locale-Emulator) - An AppLocale alternative
 
 # License
-    Copyright 2013 alexbft
+    Copyright 2013-2014 alexbft
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this software except in compliance with the License.

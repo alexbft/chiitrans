@@ -76,24 +76,27 @@ namespace ChiitransLite.translation.atlas {
             if (src == "") {
                 return src;
             }
-            if (Settings.app.separateSpeaker) {
-                if (src.EndsWith("』") || src.EndsWith("」") || src.EndsWith("）")) {
-                    char openBr;
-                    if (src.EndsWith("』")) {
-                        openBr = '『';
-                    } else if (src.EndsWith("」")) {
-                        openBr = '「';
+            if (src.EndsWith("』") || src.EndsWith("」") || src.EndsWith("）")) {
+                char openBr;
+                if (src.EndsWith("』")) {
+                    openBr = '『';
+                } else if (src.EndsWith("」")) {
+                    openBr = '「';
+                } else {
+                    openBr = '（';
+                }
+                int start = src.IndexOf(openBr);
+                if (start != -1) {
+                    string first = src.Substring(0, start);
+                    string second = src.Substring(start + 1, src.Length - start - 2);
+                    string firstTr;
+                    if (first != "") {
+                        firstTr = translate(first) + (Settings.app.separateSpeaker ? "\n" : " ");
                     } else {
-                        openBr = '（';
+                        firstTr = "";
                     }
-                    int start = src.IndexOf(openBr);
-                    if (start != -1) {
-                        string first = src.Substring(0, start);
-                        string second = src.Substring(start + 1, src.Length - start - 2);
-                        string firstTr = (first != "" ? translate(first) + "\n" : "");
-                        string secondTr = translate(second);
-                        return firstTr + openBr + secondTr + src[src.Length - 1];
-                    }
+                    string secondTr = translate(second);
+                    return firstTr + openBr + secondTr + src[src.Length - 1];
                 }
             }
             src = Regex.Replace(src, @"(?<=[\u3040-\u309F])ー", "");

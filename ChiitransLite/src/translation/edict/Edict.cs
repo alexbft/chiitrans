@@ -127,7 +127,7 @@ namespace ChiitransLite.translation.edict {
         }
 
         private double getLengthMultiplier(int len) {
-            return len * len;
+            return Math.Pow(len, 2.1);
         }
 
         internal EdictMatch lookup(string p) {

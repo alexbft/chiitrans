@@ -82,7 +82,7 @@ namespace ChiitransLite.texthook.ext {
         };
 
         public static bool isContextSpecial(string contextName) {
-            return !genericContexts.Contains(contextName);
+            return !(genericContexts.Contains(contextName) || contextName.Contains("strlen"));
         }
 
         private bool getSmartEnabled(string name) {
