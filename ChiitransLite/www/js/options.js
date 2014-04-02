@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   var getRadioValue, isClipboardTranslation, isDirty, resetOptions, resetOptionsInt, saveOptions, selectTab, setClipboardTranslation, setDirty, setRadioValue;
 
   isDirty = false;
@@ -106,6 +106,7 @@
     $atlasEnv.val(op.atlasEnv);
     $('#separateWords').prop('checked', op.separateWords);
     $('#separateSpeaker').prop('checked', op.separateSpeaker);
+    $('#stayOnTop').prop('checked', op.stayOnTop);
     $('#ok').focus();
     return setDirty(false);
   };
@@ -122,7 +123,8 @@
         theme: $('#theme').val(),
         separateWords: $('#separateWords').prop('checked'),
         separateSpeaker: $('#separateSpeaker').prop('checked'),
-        atlasEnv: $('#atlasEnv').val()
+        atlasEnv: $('#atlasEnv').val(),
+        stayOnTop: $('#stayOnTop').prop('checked')
       };
       host().saveOptions(op);
       return setDirty(false);

@@ -68,7 +68,7 @@ namespace ChiitransLite.translation.edict {
                 var go = mainIndex["御"].entries[0].entry;
                 addToIndex(kanaIndex, "ご", 2.0, go);
                 addToIndex(kanaIndex, "お", 2.0, go);
-                //kanaIndex["って"].entries[0].rate = 2.0F;
+                mainIndex["って"].entries[0].rate = 2.0F;
 
                 zeroStemForms = new Dictionary<string, EdictMatch>();
                 EdictMatch zeroStem = mainIndex[""];

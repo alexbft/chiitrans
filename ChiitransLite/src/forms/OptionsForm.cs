@@ -105,7 +105,8 @@ namespace ChiitransLite.forms {
                 separateSpeaker = Settings.app.separateSpeaker,
                 nameDict = Settings.app.nameDict.ToString(),
                 atlasEnv = Settings.app.atlasEnv,
-                atlasEnvList = getAtlasEnvList()
+                atlasEnvList = getAtlasEnvList(),
+                stayOnTop = Settings.app.stayOnTop
             };
         }
 
@@ -119,6 +120,7 @@ namespace ChiitransLite.forms {
             bool separateSpeaker = (bool)op["separateSpeaker"];
             string nameDictStr = (string)op["nameDict"];
             string atlasEnv = (string)op["atlasEnv"];
+            bool stayOnTop = (bool)op["stayOnTop"];
 
             TranslationForm.instance.setClipboardTranslation(clipboard);
             if (sentenceDelay >= 10) {
@@ -143,6 +145,7 @@ namespace ChiitransLite.forms {
             Settings.app.cssTheme = theme;
             Settings.app.separateWords = separateWords;
             Settings.app.separateSpeaker = separateSpeaker;
+            Settings.app.stayOnTop = stayOnTop;
             TranslationForm.instance.applyCurrentSettings();
         }
 

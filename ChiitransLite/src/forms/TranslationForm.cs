@@ -186,6 +186,7 @@ namespace ChiitransLite.forms {
             backgroundForm = new BackgroundForm();
             backgroundForm.setMainForm(this);
             FormUtil.restoreLocation(this);
+            TopMost = Settings.app.stayOnTop;
             webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
             webBrowser1.Url = Utils.getUriForBrowser("translation.html");
             TranslationService.instance.onTranslationRequest += (id, raw, src) => {
@@ -548,6 +549,8 @@ namespace ChiitransLite.forms {
         }
 
         internal void applyCurrentSettings() {
+            this.SuspendTopMostBegin();
+            this.SuspendTopMostEnd();
             webBrowser1.callScript("applyTheme", Settings.app.cssTheme);
             webBrowser1.callScript("setSeparateWords", Settings.app.separateWords);
             webBrowser1.callScript("setSeparateSpeaker", Settings.app.separateSpeaker);

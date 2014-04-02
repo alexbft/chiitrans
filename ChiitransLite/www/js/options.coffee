@@ -86,6 +86,7 @@ resetOptionsInt = (op) ->
     $atlasEnv.val op.atlasEnv
     $('#separateWords').prop 'checked', op.separateWords
     $('#separateSpeaker').prop 'checked', op.separateSpeaker
+    $('#stayOnTop').prop 'checked', op.stayOnTop
     $('#ok').focus()
     setDirty false
 
@@ -101,6 +102,7 @@ saveOptions = ->
             separateWords: $('#separateWords').prop('checked')
             separateSpeaker: $('#separateSpeaker').prop('checked')
             atlasEnv: $('#atlasEnv').val()
+            stayOnTop: $('#stayOnTop').prop('checked')
         host().saveOptions op
         setDirty false
 

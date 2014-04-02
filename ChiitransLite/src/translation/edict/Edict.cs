@@ -69,7 +69,7 @@ namespace ChiitransLite.translation.edict {
                 scoreTable[i] = new DynamicParseResult { score = i * (-10000), parsed = null };
             }
             for (int i = 0; i < text.Length; ++i) {
-                double skipScore = scoreTable[i].score - (text[i] == 'っ' ? -1 : 10000); // ignore lower ~tsu
+                double skipScore = scoreTable[i].score - (("ぁぃぅぇぉゃゅょっ".IndexOf(text[i]) != -1) ? -1 : 10000); // ignore lower letters
                 DynamicParseResult oldSkipScore = scoreTable[i + 1];
                 if (oldSkipScore.score < skipScore) {
                     oldSkipScore.score = skipScore;

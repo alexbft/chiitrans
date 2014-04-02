@@ -153,8 +153,8 @@ namespace ChiitransLite.texthook {
         }
 
         public void connect(int pid, string exeName) {
-            bool needCompat = Program.arguments.Contains("--compat") ||
-                Path.GetFileName(exeName).ToLower() == "fatefd.exe";
+            bool needCompat = Program.arguments.Contains("--compat");
+                //(Path.GetFileName(exeName).ToLower() == "fatefd.exe" && !Program.arguments.Contains("--nocompat"));
             if (needCompat && !isInitialized) {
                 if (!Utils.confirm("Entering ITH compatible mode. Continue?")) {
                     throw new MyException("Aborted.");

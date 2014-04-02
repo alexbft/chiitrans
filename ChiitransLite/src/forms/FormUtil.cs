@@ -87,9 +87,9 @@ namespace ChiitransLite.forms {
 
         internal static void SuspendTopMostBegin(this Form form) {
             FormData data = getFormData(form);
-            if (!form.TopMost && data.topMostSuspendLevel <= 0) {
+            /*if (!form.TopMost && data.topMostSuspendLevel <= 0) {
                 data.topMostSuspendLevel = 1;
-            }
+            }*/
             data.topMostSuspendLevel += 1;
             form.TopMost = false;
         }
@@ -101,7 +101,7 @@ namespace ChiitransLite.forms {
             }
             data.topMostSuspendLevel -= 1;
             if (data.topMostSuspendLevel <= 0) {
-                form.TopMost = true;
+                form.TopMost = Settings.app.stayOnTop;
             }
         }
     

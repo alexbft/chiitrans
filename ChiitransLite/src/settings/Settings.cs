@@ -349,6 +349,16 @@ namespace ChiitransLite.settings {
             }
         }
 
+
+        public bool stayOnTop {
+            get {
+                return Properties.Settings.Default.stayOnTop;
+            }
+            set {
+                Properties.Settings.Default.stayOnTop = value;
+            }
+        }
+
         public string atlasEnv {
             get {
                 string res = Properties.Settings.Default.atlasEnv;

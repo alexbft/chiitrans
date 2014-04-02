@@ -139,6 +139,7 @@ namespace ChiitransLite.settings {
         }
 
         public void addUserName(string key, string sense, string nameType) {
+            Settings.app.removeBannedWord(key);
             EdictMatch match = new EdictMatch(key);
             EdictEntryBuilder eb = new EdictEntryBuilder();
             eb.addKanji(new DictionaryKeyBuilder(key));
