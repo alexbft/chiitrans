@@ -1,75 +1,40 @@
 ﻿html,
 body {
-  padding: 0;
-  margin: 0;
-  font: 14px Verdana;
-  color: black;
+    padding: 0;
+    margin: 0;
+    font: 14px Verdana;
+    color: black;
 }
 button,
 input[type=button],
 input[type=submit],
 select {
-  font: 13px Verdana;
+    font: 13px Verdana;
 }
 
-#map {
-    display:inline-block; font: 16px Consolas; letter-spacing: 4px;
+#stageView, #info {
+    display: inline-block;
+}
+
+#stageView {
+    margin-right: 20px;
+}
+
+.stageViewContainer {
     position: relative;
 }
 
-#gmap {
-  display: inline-block;
+.stageViewContainer > canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-#info {
-  display: inline-block;
-  vertical-align: top;
+.stage {
+    background-color: black;
+    z-index: 1;
 }
 
-#c {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-  width: 1024;
-}
-
-.fog {
-    background-color: #ddd;
-    color: #444;
-}
-
-.unseen {
-    background-color: #888;
-}
-
-.bloody {
-  color: red;
-}
-
-.graphics {
-  position: relative;
-  overflow: hidden;
-}
-
-.graphics canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.glyph {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 32px;
-  height: 32px;
-}
-
-.glyph.player {
-  background-image: url('tiles/player.png')
-}
-
-.glyph.mob {
-  background-image: url('tiles/mob.png')
+.ui {
+    z-index: 2;
 }
