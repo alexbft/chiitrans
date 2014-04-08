@@ -22,6 +22,13 @@ do ->
             else
                 @substr(0, searchString.length) == searchString
 
+    polyfill Function,
+        include: (mixin) ->
+            if _.isFunction mixin
+                mixin = mixin::
+            _.extend @::, mixin
+            return
+
     globals.random = (x) ->
         Math.floor Math.random() * x
 

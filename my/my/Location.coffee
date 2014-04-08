@@ -13,6 +13,9 @@ require (geom, Region) ->
         mult: (sx, sy) ->
             new Location @stage, @point.mult sx, sy
 
+        floor: ->
+            new Location @stage, @point.floor()
+
         distance: (p) ->
             @point.distance p
 

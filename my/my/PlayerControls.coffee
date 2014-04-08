@@ -1,4 +1,4 @@
-require (geom, Command) ->
+require (geom, Command, Events) ->
     Keys =
         LU: 36
         UP: 38
@@ -75,6 +75,8 @@ require (geom, Command) ->
         _.min targets, (t) -> src.loc.distance2 t.loc
 
     class PlayerControls
+        @include Events
+
         constructor: (@game, @view) ->
             @lastCommand = null
             @setNormalMode()
@@ -86,30 +88,63 @@ require (geom, Command) ->
                 $(document).keyup (e) =>
                     @keyupHandler e.which
 
+                @view.on 'mouseleft', (p) =>
+                    @mouseleftHandler p
+
+                @view.on 'mouseright', (p) =>
+                    @mouserightHandler p
+
+                @view.on 'mousemove', (p) =>
+                    @mousemoveHandler p
+
         setNormalMode: ->
             @keydownHandler = @normalKeydownHandler
             @keyupHandler = @normalKeyupHandler
+            @mouseleftHandler = @normalMouseleftHandler
+            @mouserightHandler = @normalMouserightHandler
+            @mousemoveHandler = @normalMousemoveHandler
 
         normalKeydownHandler: (key) ->
             if key of moveMap
-                [x, y] = moveMap[key]
-                @register Command.MOVE, to: pt x, y
+                if @movingTo?
+                    @movingTo = null
+                else
+                    [x, y] = moveMap[key]
+                    @register Command.MOVE, to: pt x, y
                 false
             else if key of castMap
-                targets = @game.p.targets 8
-                if targets.length
-                    target = nearestTarget @game.p, targets
-                    @lastTarget = target
-                    @view.setTarget target.loc
-                    @setTargetingMode()
+                @movingTo = null
+                if @view.ready
+                    targets = @game.p.targets 8
+                    if targets.length
+                        target = nearestTarget @game.p, targets
+                        @lastTarget = target
+                        @view.setTarget target.loc
+                        @setTargetingMode()
                 false
 
         normalKeyupHandler: (key) ->
             if key of moveMap and @lastCommand?.id == Command.MOVE
                 @lastCommand = null
 
+        normalMouseleftHandler: (p) ->
+            if not p.eq(@game.p.loc)
+                @movingTo = p
+                @hasAutoMoved = false
+                @trigger 'input'
+            return
+
+        normalMouserightHandler: ->
+            return
+
+        normalMousemoveHandler: ->
+            return
+
         setTargetingMode: ->
             @keydownHandler = @targetingKeydownHandler
+            @mouseleftHandler = @targetingMouseleftHandler
+            @mouserightHandler = @targetingMouserightHandler
+            @mousemoveHandler = @targetingMousemoveHandler
 
         targetingKeydownHandler: (key) ->
             switch
@@ -132,21 +167,52 @@ require (geom, Command) ->
                     @setNormalMode()
                     false
 
-        onInput: (cb) ->
-            @onInputCallbacks ?= []
-            @onInputCallbacks.push cb
+        targetingMouseleftHandler: (target) ->
+            if target.cell().mob? and @game.p.canShoot target, 8
+                @lastTarget = target.cell().mob
+            @register Command.CAST, target: @lastTarget
+            @view.clearTarget()
+            @setNormalMode()
             return
 
-        triggerOnInput: ->
-            for cb in @onInputCallbacks
-                cb()
+        targetingMousemoveHandler: (target) ->
+            if target.cell().mob? and @game.p.canShoot target, 8
+                @lastTarget = target.cell().mob
+                @view.setTarget target
             return
+
+        targetingMouserightHandler: ->
+            @view.clearTarget()
+            @setNormalMode()
+
+        onInput: (cb) ->
+            @on 'input', cb
+
+        triggerOnInput: ->
+            @trigger 'input'
 
         register: (commandId, data) ->
             @lastCommand = new Command commandId, data
             @triggerOnInput()
 
         getLastCommand: ->
+            if @movingTo?
+                if (@hasAutoMoved and @game.seeDanger) or @movingTo.eq @game.p.loc
+                    @movingTo = null
+                else
+                    p = null
+                    dist = @game.p.loc.distance2 @movingTo
+                    @game.p.loc.adjacentArea().iter (loc) =>
+                        if loc.eq(@movingTo) or loc.cell().canEnter @game.p
+                            d = loc.distance2 @movingTo
+                            if d <= dist
+                                p = loc
+                                dist = d
+                    if p != null
+                        @hasAutoMoved = true
+                        return new Command Command.MOVE, to: p.minus(@game.p.loc)
+                    else
+                        @movingTo = null
             res = @lastCommand
             if @lastCommand?.id != Command.MOVE
                 @lastCommand = null

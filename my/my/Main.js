@@ -7,12 +7,12 @@ require(function(defines, utils, Game, StageView, PlayerControls) {
     $('#content').html("<div id=\"stageView\"></div>\n<div id=\"info\"></div>");
     g = new Game();
     g.create();
-    v = new StageView($('#stageView'));
+    v = new StageView($('#stageView'), g);
     c = new PlayerControls(g, v);
     g.onAction(function(a) {
       return v.registerAction(a);
     });
-    v.update(g);
+    v.update();
     ready = true;
     handleInput = function() {
       if (ready) {
@@ -23,7 +23,7 @@ require(function(defines, utils, Game, StageView, PlayerControls) {
           cmd = c.getLastCommand();
           if (cmd != null) {
             g.handleInput(cmd);
-            v.update(g);
+            v.update();
             return handleInput();
           }
         });

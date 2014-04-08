@@ -62,7 +62,7 @@ require(function(Stage, Mob, Item, builder, Command, Action, Timeline) {
         };
       })(this));
       this.actionsBuf = [];
-      return this.stage.updateVisibility(this.p.loc, this.p.visibilityRadius);
+      return this.updateVisibility();
     };
 
     Game.prototype.createMob = function(where, mob) {
@@ -94,7 +94,12 @@ require(function(Stage, Mob, Item, builder, Command, Action, Timeline) {
         }
         this.doCommand(next, this.ai(next));
       }
+      this.updateVisibility();
+    };
+
+    Game.prototype.updateVisibility = function() {
       this.stage.updateVisibility(this.p.loc, this.p.visibilityRadius);
+      return this.seeDanger = this.stage.seeDanger;
     };
 
     Game.prototype.ai = function(mob) {

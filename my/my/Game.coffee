@@ -45,7 +45,7 @@ require (Stage, Mob, Item, builder, Command, Action, Timeline) ->
                 @createMob startPoint, @p
                 @stage.region.checkConnectivity()
             @actionsBuf = []
-            @stage.updateVisibility @p.loc, @p.visibilityRadius
+            @updateVisibility()
 
         createMob: (where, mob) ->
             where.cell().mob = mob
@@ -67,8 +67,12 @@ require (Stage, Mob, Item, builder, Command, Action, Timeline) ->
                 if ctr++ > 1000
                     throw new Error "Too many actions in timeline!"
                 @doCommand next, @ai next
-            @stage.updateVisibility @p.loc, @p.visibilityRadius
+            @updateVisibility()
             return
+
+        updateVisibility: ->
+            @stage.updateVisibility @p.loc, @p.visibilityRadius
+            @seeDanger = @stage.seeDanger
 
         ai: (mob) ->
             newLoc = mob.loc.adjacentArea().randomLocationWhere (l) -> 

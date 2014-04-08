@@ -1,11 +1,13 @@
-require (geom, Tiles, Action) ->
+require (geom, Tiles, Action, Events) ->
     class StageView
+        @include Events
+
         tw: 48
         th: 48
         vw: 19
         vh: 15
 
-        constructor: (@el) ->
+        constructor: (@el, @game) ->
             @vw2 = @vw / 2 | 0
             @vh2 = @vh / 2 | 0
             @v2 = pt @vw2, @vh2
@@ -18,12 +20,14 @@ require (geom, Tiles, Action) ->
             @loadTiles()
             w = @tw * @vw
             h = @th * @vh
-            cont = $("""<div class="stageViewContainer"></div>""").css(width: w, height: h).appendTo @el
+            @cont = cont = $("""<div class="stageViewContainer"></div>""").css(width: w, height: h).appendTo @el
             canvas = $("<canvas class=\"stage\" width=#{w} height=#{h}></canvas>").appendTo cont
             @ctx = getCanvasContext canvas
             @ctx.tiles = @tiles
-            uiCanvas = $("<canvas class=\"ui\" width=#{w} height=#{h}></canvas>").appendTo cont
-            @ui = getCanvasContext uiCanvas
+            targetingCanvas = $("<canvas class=\"targeting\" width=#{w} height=#{h}></canvas>").appendTo cont
+            @targetingCtx = getCanvasContext targetingCanvas
+            mouseCanvas = $("<canvas class=\"mouse\" width=#{w} height=#{h}></canvas>").appendTo cont
+            @mouseCtx = getCanvasContext mouseCanvas
             @actionsBuf = []
             @ready = true
             @readyCallbacks = []
@@ -36,7 +40,8 @@ require (geom, Tiles, Action) ->
             @redMask[@tile.mob] = @tiles.colorMask @tile.mob, 'red'
             return
 
-        update: (g) ->
+        update: ->
+            g = @game
             @ready = false
             @tiles.onload =>
                 actions = @actionsBuf
@@ -175,14 +180,22 @@ require (geom, Tiles, Action) ->
                         @ctx.fillStyle = "rgba(0, 0, 0, #{1 - vis})"
                         for xy in coords
                             @ctx.fillRect xy.x, xy.y, @tw, @th
+                    @drawHover()
                 , =>
                     @lastInfo = curInfo
                     #@center = g.p.loc
+                    @initMouseControls()
+                    @updateHover()
                     @triggerReady()
                 return
 
         pointToView: (p) ->
-            p.minus(@center).plus(@v2).mult(@tw, @th)            
+            p.minus(@center).plus(@v2).mult(@tw, @th)
+
+        pointFromView: (p) ->
+            twInv = 1 / @tw
+            thInv = 1 / @th
+            p.mult(twInv, thInv).minus(@v2).plus(@center).floor()
 
         drawCellBackground: (cell, xy, isVisible) ->
             terrain = @getTerrainTile cell.terrain
@@ -203,14 +216,11 @@ require (geom, Tiles, Action) ->
             if @ready
                 cb()
             else
-                @readyCallbacks.push cb
+                @once 'ready', cb
 
         triggerReady: ->
             @ready = true
-            callbacks = @readyCallbacks
-            @readyCallbacks = []
-            for cb in callbacks
-                cb()
+            @trigger 'ready'
             return
 
         getTerrainTile: (terr) ->
@@ -240,17 +250,73 @@ require (geom, Tiles, Action) ->
 
         setTarget: (p) ->
             xy = @pointToView(p).plus(pt @tw/2, @th/2)
-            @ui.clear()
-            @ui.save()
-            @ui.strokeStyle = '#00ff00'
-            @ui.lineWidth = 2
-            @ui.beginPath()
-            @ui.arc xy.x, xy.y, @tw/2, 0, 2*Math.PI
-            @ui.stroke()
-            @ui.restore()
+            @targetingCtx.clear()
+            @targetingCtx.save()
+            @targetingCtx.strokeStyle = '#00ff00'
+            @targetingCtx.lineWidth = 2
+            @targetingCtx.beginPath()
+            @targetingCtx.arc xy.x, xy.y, @tw/2, 0, 2*Math.PI
+            @targetingCtx.stroke()
+            @targetingCtx.restore()
 
         clearTarget: ->
-            @ui.clear()
+            @targetingCtx.clear()
+
+        drawHover: ->
+            if @hoverLoc?
+                xy = @pointToView @hoverLoc
+                @mouseCtx.clear()
+                @mouseCtx.strokeRect xy.x + 2, xy.y + 2, @tw - 3, @th - 3
+            return
+
+        updateHover: (x, y) ->
+            if not x?
+                if not @lastMouseCoords?
+                    return
+                coords = @lastMouseCoords
+            else
+                coords = pt x, y
+                @lastMouseCoords = coords
+            p = @pointFromView coords
+            if not @lastMouseMove? or not p.eq(@lastMouseMove)
+                @lastMouseMove = p
+                loc = @game.p.stage().loc(p)
+                if loc?
+                    @hoverLoc = loc
+                    @drawHover()
+                    @trigger 'mousemove', loc
+                else
+                    @mouseCtx.clear()
+
+        initMouseControls: ->
+            if not @mouseInitialized
+                @mouseInitialized = true
+                lastMouseMove = null
+                @mouseCtx.strokeStyle = '#00ff00'
+                @mouseCtx.lineWidth = 2
+                @cont.on 'contextmenu', (e) ->
+                    e.preventDefault()
+                @cont.mousemove (e) =>
+                    @updateHover e.pageX, e.pageY
+                    return
+                @cont.mousedown (e) =>
+                    p = @pointFromView pt e.pageX, e.pageY
+                    loc = @game.p.stage().loc(p)
+                    if loc?
+                        switch
+                            when e.which == 1 then @trigger 'mouseleft', loc
+                            when e.which == 3 then @trigger 'mouseright', loc
+                    e.preventDefault()
+                    return
+                @cont.mouseout =>
+                    @hoverLoc = null
+                    @lastMouseMove = null
+                    @mouseCtx.clear()
+                    @trigger 'mouseout'
+            return
+
+
+
 
 
 

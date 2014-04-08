@@ -22,6 +22,10 @@ require(function() {
       return new Point(this.x * sx, this.y * sy);
     };
 
+    Point.prototype.floor = function() {
+      return new Point(this.x | 0, this.y | 0);
+    };
+
     Point.prototype.distance = function(p) {
       return distance(this, p);
     };

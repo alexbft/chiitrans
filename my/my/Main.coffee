@@ -8,11 +8,11 @@ require (defines, utils, Game, StageView, PlayerControls) ->
         g = new Game()
         g.create()
         #console.log g.map.toString()
-        v = new StageView $('#stageView')
+        v = new StageView $('#stageView'), g
         c = new PlayerControls g, v
         g.onAction (a) ->
             v.registerAction a
-        v.update g
+        v.update()
         ready = true
         handleInput = ->
             if ready
@@ -22,7 +22,7 @@ require (defines, utils, Game, StageView, PlayerControls) ->
                     cmd = c.getLastCommand()
                     if cmd?
                         g.handleInput cmd
-                        v.update g
+                        v.update()
                         handleInput()
             return
         c.onInput handleInput

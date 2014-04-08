@@ -39,7 +39,7 @@ require(function(Cell, Region, Location, geom) {
     };
 
     Stage.prototype.updateVisibility = function(sourcePoint, radius) {
-      var border, ctr, finish, go, ox, oy, queue, seen, start, xx, yy;
+      var border, ctr, danger, finish, go, ox, oy, queue, seen, start, xx, yy;
       Cell.clearVisibility();
       go = function(pt) {
         if (seen.add(pt)) {
@@ -54,6 +54,7 @@ require(function(Cell, Region, Location, geom) {
       ox = sourcePoint.x, oy = sourcePoint.y;
       queue = [];
       queue.push(start.plus(pt(1, 0)));
+      danger = false;
       while (queue.length > 0) {
         if (ctr++ > 1000) {
           throw new Error("infloop!");
@@ -69,6 +70,9 @@ require(function(Cell, Region, Location, geom) {
               return false;
             } else {
               cell.setVisible();
+              if (cell.mob != null) {
+                danger = true;
+              }
               return !cell.isOpaque();
             }
           };
@@ -87,6 +91,7 @@ require(function(Cell, Region, Location, geom) {
           go(pt(xx + 1, yy + 1));
         }
       }
+      this.seeDanger = danger;
     };
 
     Stage.prototype.checkLOS = function(start, finish, radius, isPassable) {

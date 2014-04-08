@@ -22,6 +22,10 @@ require(function(geom, Region) {
       return new Location(this.stage, this.point.mult(sx, sy));
     };
 
+    Location.prototype.floor = function() {
+      return new Location(this.stage, this.point.floor());
+    };
+
     Location.prototype.distance = function(p) {
       return this.point.distance(p);
     };

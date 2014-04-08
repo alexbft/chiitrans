@@ -31,6 +31,14 @@
       }
     }
   });
+  polyfill(Function, {
+    include: function(mixin) {
+      if (_.isFunction(mixin)) {
+        mixin = mixin.prototype;
+      }
+      _.extend(this.prototype, mixin);
+    }
+  });
   globals.random = function(x) {
     return Math.floor(Math.random() * x);
   };

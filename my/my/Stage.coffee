@@ -33,6 +33,7 @@ require (Cell, Region, Location, geom) ->
             {x:ox, y:oy} = sourcePoint
             queue = []
             queue.push start.plus pt 1, 0
+            danger = false
             while queue.length > 0
                 if ctr++ > 1000
                     throw new Error "infloop!"
@@ -45,6 +46,8 @@ require (Cell, Region, Location, geom) ->
                         false
                     else
                         cell.setVisible()
+                        if cell.mob?
+                            danger = true
                         not cell.isOpaque()
                 {x:xx, y:yy} = border
                 #console.log fx - sx, fy - sy, ':', xx - ox, yy - oy
@@ -56,6 +59,7 @@ require (Cell, Region, Location, geom) ->
                     go pt xx, yy+1
                 if xx >= ox and yy < oy or xx < ox and yy >= oy
                     go pt xx+1, yy+1
+            @seeDanger = danger
             return
 
         checkLOS: (start, finish, radius, isPassable) ->

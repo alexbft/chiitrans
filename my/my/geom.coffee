@@ -11,6 +11,9 @@ require ->
         mult: (sx, sy) ->
             new Point @x * sx, @y * sy
 
+        floor: ->
+            new Point @x | 0, @y | 0
+
         distance: (p) ->
             distance @, p
 
