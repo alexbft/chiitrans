@@ -72,6 +72,11 @@ var __slice = [].slice;
       return this.defaults.find.call(this, name);
     };
 
+    RequireContext.prototype.isQuiet = function() {
+      var _ref;
+      return (_ref = this.quiet) != null ? _ref : this.defaults.quiet;
+    };
+
     RequireContext.prototype.onload = function(fn) {
       if (this.status === Status.LOADING) {
         this.callbacks.push(fn);
@@ -236,7 +241,7 @@ var __slice = [].slice;
       ctx.dependencies = getUniqueNames(ctx.dependencies.concat(depNames));
       for (_i = 0, _len = depNames.length; _i < _len; _i++) {
         depName = depNames[_i];
-        loadModule(depName, ctx.name, function() {
+        loadModule(depName, ctx, function() {
           counter -= 1;
           if (counter <= 0) {
             return doneLoading();
@@ -250,13 +255,15 @@ var __slice = [].slice;
     var ctx, sc;
     ctx = contexts[name];
     if (ctx != null) {
-      if (ctx.dependsOn(parent)) {
+      if (ctx.dependsOn(parent.name)) {
         cb();
       } else {
         ctx.onload(cb);
       }
     } else {
-      console.log("Loading module " + name + " from " + parent);
+      if (!(parent != null ? parent.isQuiet() : void 0)) {
+        console.log("Loading module " + name + " from " + parent.name);
+      }
       ctx = contexts[name] = new RequireContext(name);
       ctx.onload(cb);
       sc = document.createElement("script");

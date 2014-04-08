@@ -115,9 +115,18 @@ require (geom, Command, Events) ->
             else if key of castMap
                 @movingTo = null
                 if @view.ready
-                    targets = @game.p.targets 8
-                    if targets.length
-                        target = nearestTarget @game.p, targets
+                    target = null
+                    if @view.hoverLoc?
+                        loc = @view.hoverLoc
+                        if @isValidTarget loc
+                            target = loc.cell().mob
+                    if not target? and @lastTarget? and @lastTarget.alive and @isValidTarget @lastTarget.loc
+                        target = @lastTarget
+                    if not target?
+                        targets = @game.p.targets 8
+                        if targets.length
+                            target = nearestTarget @game.p, targets
+                    if target?
                         @lastTarget = target
                         @view.setTarget target.loc
                         @setTargetingMode()
@@ -167,8 +176,11 @@ require (geom, Command, Events) ->
                     @setNormalMode()
                     false
 
+        isValidTarget: (loc) ->
+            loc.cell().mob? and @game.p.canShoot loc, 8
+
         targetingMouseleftHandler: (target) ->
-            if target.cell().mob? and @game.p.canShoot target, 8
+            if @isValidTarget target
                 @lastTarget = target.cell().mob
             @register Command.CAST, target: @lastTarget
             @view.clearTarget()
@@ -176,7 +188,7 @@ require (geom, Command, Events) ->
             return
 
         targetingMousemoveHandler: (target) ->
-            if target.cell().mob? and @game.p.canShoot target, 8
+            if @isValidTarget target
                 @lastTarget = target.cell().mob
                 @view.setTarget target
             return
@@ -203,13 +215,15 @@ require (geom, Command, Events) ->
                     p = null
                     dist = @game.p.loc.distance2 @movingTo
                     @game.p.loc.adjacentArea().iter (loc) =>
-                        if loc.eq(@movingTo) or loc.cell().canEnter @game.p
+                        if (not @hasAutoMoved and loc.eq(@movingTo)) or loc.cell().canEnter @game.p
                             d = loc.distance2 @movingTo
                             if d <= dist
                                 p = loc
                                 dist = d
                     if p != null
                         @hasAutoMoved = true
+                        if p.eq(@movingTo)
+                            @movingTo = null # for attacks
                         return new Command Command.MOVE, to: p.minus(@game.p.loc)
                     else
                         @movingTo = null

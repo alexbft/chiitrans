@@ -271,7 +271,7 @@ require (geom, Tiles, Action, Events) ->
 
         updateHover: (x, y) ->
             if not x?
-                if not @lastMouseCoords?
+                if not @lastMouseMove?
                     return
                 coords = @lastMouseCoords
             else
@@ -286,12 +286,16 @@ require (geom, Tiles, Action, Events) ->
                     @drawHover()
                     @trigger 'mousemove', loc
                 else
+                    @lastMouseMove = null
+                    @hoverLoc = null
                     @mouseCtx.clear()
+                    @trigger 'mouseout'
 
         initMouseControls: ->
             if not @mouseInitialized
                 @mouseInitialized = true
-                lastMouseMove = null
+                @lastMouseMove = null
+                @hoverLoc = null
                 @mouseCtx.strokeStyle = '#00ff00'
                 @mouseCtx.lineWidth = 2
                 @cont.on 'contextmenu', (e) ->

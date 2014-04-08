@@ -117,7 +117,7 @@ require(function(geom, Command, Events) {
     };
 
     PlayerControls.prototype.normalKeydownHandler = function(key) {
-      var target, targets, x, y, _ref;
+      var loc, target, targets, x, y, _ref;
       if (key in moveMap) {
         if (this.movingTo != null) {
           this.movingTo = null;
@@ -131,9 +131,23 @@ require(function(geom, Command, Events) {
       } else if (key in castMap) {
         this.movingTo = null;
         if (this.view.ready) {
-          targets = this.game.p.targets(8);
-          if (targets.length) {
-            target = nearestTarget(this.game.p, targets);
+          target = null;
+          if (this.view.hoverLoc != null) {
+            loc = this.view.hoverLoc;
+            if (this.isValidTarget(loc)) {
+              target = loc.cell().mob;
+            }
+          }
+          if ((target == null) && (this.lastTarget != null) && this.lastTarget.alive && this.isValidTarget(this.lastTarget.loc)) {
+            target = this.lastTarget;
+          }
+          if (target == null) {
+            targets = this.game.p.targets(8);
+            if (targets.length) {
+              target = nearestTarget(this.game.p, targets);
+            }
+          }
+          if (target != null) {
             this.lastTarget = target;
             this.view.setTarget(target.loc);
             this.setTargetingMode();
@@ -206,8 +220,12 @@ require(function(geom, Command, Events) {
       }
     };
 
+    PlayerControls.prototype.isValidTarget = function(loc) {
+      return (loc.cell().mob != null) && this.game.p.canShoot(loc, 8);
+    };
+
     PlayerControls.prototype.targetingMouseleftHandler = function(target) {
-      if ((target.cell().mob != null) && this.game.p.canShoot(target, 8)) {
+      if (this.isValidTarget(target)) {
         this.lastTarget = target.cell().mob;
       }
       this.register(Command.CAST, {
@@ -218,7 +236,7 @@ require(function(geom, Command, Events) {
     };
 
     PlayerControls.prototype.targetingMousemoveHandler = function(target) {
-      if ((target.cell().mob != null) && this.game.p.canShoot(target, 8)) {
+      if (this.isValidTarget(target)) {
         this.lastTarget = target.cell().mob;
         this.view.setTarget(target);
       }
@@ -253,7 +271,7 @@ require(function(geom, Command, Events) {
           this.game.p.loc.adjacentArea().iter((function(_this) {
             return function(loc) {
               var d;
-              if (loc.eq(_this.movingTo) || loc.cell().canEnter(_this.game.p)) {
+              if ((!_this.hasAutoMoved && loc.eq(_this.movingTo)) || loc.cell().canEnter(_this.game.p)) {
                 d = loc.distance2(_this.movingTo);
                 if (d <= dist) {
                   p = loc;
@@ -264,6 +282,9 @@ require(function(geom, Command, Events) {
           })(this));
           if (p !== null) {
             this.hasAutoMoved = true;
+            if (p.eq(this.movingTo)) {
+              this.movingTo = null;
+            }
             return new Command(Command.MOVE, {
               to: p.minus(this.game.p.loc)
             });

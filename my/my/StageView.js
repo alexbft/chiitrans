@@ -436,7 +436,7 @@ require(function(geom, Tiles, Action, Events) {
     StageView.prototype.updateHover = function(x, y) {
       var coords, loc, p;
       if (x == null) {
-        if (this.lastMouseCoords == null) {
+        if (this.lastMouseMove == null) {
           return;
         }
         coords = this.lastMouseCoords;
@@ -453,16 +453,19 @@ require(function(geom, Tiles, Action, Events) {
           this.drawHover();
           return this.trigger('mousemove', loc);
         } else {
-          return this.mouseCtx.clear();
+          this.lastMouseMove = null;
+          this.hoverLoc = null;
+          this.mouseCtx.clear();
+          return this.trigger('mouseout');
         }
       }
     };
 
     StageView.prototype.initMouseControls = function() {
-      var lastMouseMove;
       if (!this.mouseInitialized) {
         this.mouseInitialized = true;
-        lastMouseMove = null;
+        this.lastMouseMove = null;
+        this.hoverLoc = null;
         this.mouseCtx.strokeStyle = '#00ff00';
         this.mouseCtx.lineWidth = 2;
         this.cont.on('contextmenu', function(e) {

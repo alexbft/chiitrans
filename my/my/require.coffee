@@ -48,11 +48,15 @@ do ->
             @status = Status.LOADING
             @callbacks = []
             @dependencies = []
-            @path = @defaults.path if @defaults?
+            if @defaults?
+                @path = @defaults.path
             @loadingCounter = 1
 
         find: (name) ->
             @defaults.find.call(this, name)
+
+        isQuiet: ->
+            @quiet ? @defaults.quiet
 
         onload: (fn) ->
             if @status == Status.LOADING
@@ -169,7 +173,7 @@ do ->
         else
             ctx.dependencies = getUniqueNames ctx.dependencies.concat depNames
             for depName in depNames
-                loadModule depName, ctx.name, ->
+                loadModule depName, ctx, ->
                     counter -= 1
                     if counter <= 0
                         doneLoading()
@@ -178,12 +182,13 @@ do ->
     loadModule = (name, parent, cb) ->
         ctx = contexts[name]
         if ctx?
-            if ctx.dependsOn parent
+            if ctx.dependsOn parent.name
                 cb()
             else
                 ctx.onload cb
         else
-            console.log "Loading module #{name} from #{parent}"
+            if not parent?.isQuiet()
+                console.log "Loading module #{name} from #{parent.name}"
             ctx = contexts[name] = new RequireContext name
             ctx.onload cb
             sc = document.createElement "script"
