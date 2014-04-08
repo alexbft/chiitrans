@@ -35,6 +35,10 @@ select {
     z-index: 1;
 }
 
-.ui {
+.targeting {
     z-index: 2;
+}
+
+.mouse {
+    z-index: 3;
 }
