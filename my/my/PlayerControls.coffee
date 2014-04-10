@@ -25,6 +25,8 @@ require (geom, Command, Events) ->
         X: 88
         C: 67
 
+        G: 71
+
         0: 48
         1: 49
         2: 50
@@ -105,32 +107,37 @@ require (geom, Command, Events) ->
             @mousemoveHandler = @normalMousemoveHandler
 
         normalKeydownHandler: (key) ->
-            if key of moveMap
-                if @movingTo?
+            switch
+                when key of moveMap
+                    if @movingTo?
+                        @movingTo = null
+                    else
+                        [x, y] = moveMap[key]
+                        @register Command.MOVE, to: pt x, y
+                    false
+                when key of castMap
                     @movingTo = null
-                else
-                    [x, y] = moveMap[key]
-                    @register Command.MOVE, to: pt x, y
-                false
-            else if key of castMap
-                @movingTo = null
-                if @view.ready
-                    target = null
-                    if @view.hoverLoc?
-                        loc = @view.hoverLoc
-                        if @isValidTarget loc
-                            target = loc.cell().mob
-                    if not target? and @lastTarget? and @lastTarget.alive and @isValidTarget @lastTarget.loc
-                        target = @lastTarget
-                    if not target?
-                        targets = @game.p.targets 8
-                        if targets.length
-                            target = nearestTarget @game.p, targets
-                    if target?
-                        @lastTarget = target
-                        @view.setTarget target.loc
-                        @setTargetingMode()
-                false
+                    if @view.ready
+                        target = null
+                        if @view.hoverLoc?
+                            loc = @view.hoverLoc
+                            if @isValidTarget loc
+                                target = loc.cell().mob
+                        if not target? and @lastTarget? and @lastTarget.alive and @isValidTarget @lastTarget.loc
+                            target = @lastTarget
+                        if not target?
+                            targets = @game.p.targets 8
+                            if targets.length
+                                target = nearestTarget @game.p, targets
+                        if target?
+                            @lastTarget = target
+                            @view.setTarget target.loc
+                            @setTargetingMode()
+                    false
+                when key == Keys.ESC
+                    @movingTo = null
+                when key == Keys.G
+                    @register Command.GRAB
 
         normalKeyupHandler: (key) ->
             if key of moveMap and @lastCommand?.id == Command.MOVE
@@ -139,11 +146,13 @@ require (geom, Command, Events) ->
         normalMouseleftHandler: (p) ->
             if not p.eq(@game.p.loc)
                 @movingTo = p
+                @movingSawDanger = @game.seeDanger
                 @hasAutoMoved = false
                 @trigger 'input'
             return
 
         normalMouserightHandler: ->
+            @movingTo = null
             return
 
         normalMousemoveHandler: ->
@@ -209,7 +218,7 @@ require (geom, Command, Events) ->
 
         getLastCommand: ->
             if @movingTo?
-                if (@hasAutoMoved and @game.seeDanger) or @movingTo.eq @game.p.loc
+                if (@hasAutoMoved and (not @movingSawDanger and @game.seeDanger)) or @movingTo.eq @game.p.loc
                     @movingTo = null
                 else
                     p = null
@@ -217,7 +226,7 @@ require (geom, Command, Events) ->
                     @game.p.loc.adjacentArea().iter (loc) =>
                         if (not @hasAutoMoved and loc.eq(@movingTo)) or loc.cell().canEnter @game.p
                             d = loc.distance2 @movingTo
-                            if d <= dist
+                            if d < dist
                                 p = loc
                                 dist = d
                     if p != null

@@ -8,6 +8,12 @@ require(function() {
 
     Command.CAST = 2;
 
+    Command.GRAB = 3;
+
+    Command.GRABTO = 4;
+
+    Command.USE = 5;
+
     function Command(id, data) {
       var k, v;
       this.id = id;

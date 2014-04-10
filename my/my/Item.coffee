@@ -1,6 +1,6 @@
 require ->
     class Item
-        glyph: '!'
+        glyph: 'item'
 
         constructor: (options) ->
             @id = nextId()
@@ -9,4 +9,4 @@ require ->
                     @[k] = v            
 
         toString: ->
-            @glyph
+            '!'

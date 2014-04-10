@@ -2,7 +2,7 @@
 require(function() {
   var Mob;
   return Mob = (function() {
-    Mob.prototype.glyph = '?';
+    Mob.prototype.glyph = 'mob';
 
     Mob.prototype.alive = true;
 
@@ -71,6 +71,13 @@ require(function() {
       return this.time += 100;
     };
 
+    Mob.prototype.heal = function(hp) {
+      this.hp += hp;
+      if (this.hp > 100) {
+        this.hp = 100;
+      }
+    };
+
     Mob.prototype.wait = function() {
       return this.time += 100 * this.speedFactor();
     };
@@ -116,8 +123,12 @@ require(function() {
       return res;
     };
 
+    Mob.prototype.isPlayer = function() {
+      return this.glyph === 'player';
+    };
+
     Mob.prototype.toString = function() {
-      return this.glyph;
+      return 'A';
     };
 
     return Mob;

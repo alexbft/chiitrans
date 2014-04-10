@@ -33,7 +33,7 @@ require (geom, Tiles, Action, Events) ->
             @readyCallbacks = []
 
         loadTiles: ->
-            for tile in ['floor', 'wall', 'door', 'player', 'mob', 'item', 'blood', 'arrow']
+            for tile in ['floor', 'wall', 'door', 'player', 'mob', 'item', 'blood', 'arrow', 'cursor', 'target', 'apple']
                 @tile[tile] = @tiles.load "#{tile}.png"
             @tile.arrowLeft = @tiles.flipX @tile.arrow
             @redMask[@tile.player] = @tiles.colorMask @tile.player, 'red'
@@ -92,7 +92,7 @@ require (geom, Tiles, Action, Events) ->
                         @lastVisibleMobIds[mob.id] = true
                         if not (mob.id of mobAnim)
                             mobAnim[mob.id] = mob: mob, moves: [t: 0, p: mob.loc], colors: []
-                n = 1
+                n = 0
                 for mobId, acts of mobActions
                     start = 0
                     for act in acts
@@ -232,15 +232,11 @@ require (geom, Tiles, Action, Events) ->
                 else
                     @tile.floor
 
-        getItemTile: ->
-            @tile.item
+        getItemTile: (it) ->
+            @tile[it.glyph]
 
         getMobTile: (mob) ->
-            switch mob.glyph
-                when '@'
-                    @tile.player
-                else
-                    @tile.mob
+            @tile[mob.glyph]
 
         getFeatureTile: ->
             @tile.blood
@@ -249,15 +245,9 @@ require (geom, Tiles, Action, Events) ->
             @actionsBuf.push action
 
         setTarget: (p) ->
-            xy = @pointToView(p).plus(pt @tw/2, @th/2)
+            xy = @pointToView(p)
             @targetingCtx.clear()
-            @targetingCtx.save()
-            @targetingCtx.strokeStyle = '#00ff00'
-            @targetingCtx.lineWidth = 2
-            @targetingCtx.beginPath()
-            @targetingCtx.arc xy.x, xy.y, @tw/2, 0, 2*Math.PI
-            @targetingCtx.stroke()
-            @targetingCtx.restore()
+            @tiles.drawTile @targetingCtx, @tile.target, xy.x, xy.y
 
         clearTarget: ->
             @targetingCtx.clear()
@@ -266,7 +256,7 @@ require (geom, Tiles, Action, Events) ->
             if @hoverLoc?
                 xy = @pointToView @hoverLoc
                 @mouseCtx.clear()
-                @mouseCtx.strokeRect xy.x + 2, xy.y + 2, @tw - 3, @th - 3
+                @tiles.drawTile @mouseCtx, @tile.cursor, xy.x, xy.y
             return
 
         updateHover: (x, y) ->
@@ -296,8 +286,8 @@ require (geom, Tiles, Action, Events) ->
                 @mouseInitialized = true
                 @lastMouseMove = null
                 @hoverLoc = null
-                @mouseCtx.strokeStyle = '#00ff00'
-                @mouseCtx.lineWidth = 2
+                #@mouseCtx.strokeStyle = '#00ff00'
+                #@mouseCtx.lineWidth = 2
                 @cont.on 'contextmenu', (e) ->
                     e.preventDefault()
                 @cont.mousemove (e) =>

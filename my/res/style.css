@@ -3,7 +3,8 @@ body {
     padding: 0;
     margin: 0;
     font: 14px Verdana;
-    color: black;
+    color: white;
+    background-color: #222;
 }
 button,
 input[type=button],
@@ -14,6 +15,11 @@ select {
 
 #stageView, #info {
     display: inline-block;
+    vertical-align: top;
+}
+
+#info > * {
+    margin-bottom: 10px;
 }
 
 #stageView {
@@ -41,4 +47,36 @@ select {
 
 .mouse {
     z-index: 3;
+}
+
+.inventoryView > * {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.equip {
+    background-image: url("equipment_background.png");
+    margin-right: 10px;
+}
+
+.backpack {
+    background-image: url("backpack_background.png");
+    background-repeat: repeat;
+    margin-right: 10px;
+}
+
+.invFloor {
+    background-image: url("inv_floor_background.png");
+    margin-bottom: 32px;
+}
+
+.invTrash {
+    background-image: url("inv_trash_background.png");
+}
+
+.dragProxy {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:1000;
 }

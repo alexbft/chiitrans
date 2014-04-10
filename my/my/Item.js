@@ -2,7 +2,7 @@
 require(function() {
   var Item;
   return Item = (function() {
-    Item.prototype.glyph = '!';
+    Item.prototype.glyph = 'item';
 
     function Item(options) {
       var k, v;
@@ -16,7 +16,7 @@ require(function() {
     }
 
     Item.prototype.toString = function() {
-      return this.glyph;
+      return '!';
     };
 
     return Item;

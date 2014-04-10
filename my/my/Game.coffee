@@ -1,10 +1,20 @@
-require (Stage, Mob, Item, builder, Command, Action, Timeline) ->
+require (Stage, Mob, Item, builder, Command, Action, Timeline, Inventory) ->
     randomMob = ->
         new Mob 
-            glyph: 'A'
             speed: randomBetween 25, 200
             hp: randomBetween 5, 25
             visibilityRadius: 4
+
+    potion = ->
+        new Item
+            glyph: 'item'
+            use: ({mob}) ->
+                mob.heal(25)
+                mob.inventory.remove @
+
+    apple = ->
+        new Item
+            glyph: 'apple'
 
     class Game
         constructor: ->
@@ -13,7 +23,7 @@ require (Stage, Mob, Item, builder, Command, Action, Timeline) ->
         create: ->
             @timeline = new Timeline
             attempt 10, =>
-                @stage = new Stage 80, 35
+                @stage = new Stage 60, 45
                 inside = @stage.region.insideArea(1)
                 # inside.iterate (c) =>
                 #     c.terrain = Terrain.FLOOR
@@ -31,15 +41,18 @@ require (Stage, Mob, Item, builder, Command, Action, Timeline) ->
                     loc = inside.randomLocationWhere (l) => 
                         l.cell().canEnter mob
                     @createMob loc, mob
-                for i in [1..20]
+                for i in [1..40]
                     loc = inside.randomLocationWhere (l) =>
                         l.cell().terrain == Terrain.FLOOR and not l.cell().item?
-                    loc.cell().item = new Item glyph:'$'
+                    loc.cell().item = if coinflip() then potion() else apple()
                 @p = new Mob
-                    glyph: '@'
+                    glyph: 'player'
                     speed: 100
                     hp: 100
                     visibilityRadius: 10
+                    inventory: new Inventory()
+                @p.inventory.add potion()
+                @p.inventory.add apple()
                 startPoint = inside.randomLocationWhere (l) =>
                     l.cell().canEnter @p
                 @createMob startPoint, @p
@@ -104,6 +117,19 @@ require (Stage, Mob, Item, builder, Command, Action, Timeline) ->
                     mob.attack cmd.target
                 when Command.WAIT
                     mob.wait()
+                when Command.GRAB
+                    if mob.cell().item? and not mob.inventory.isFull()
+                        mob.inventory.add mob.cell().item
+                        mob.cell().item = null
+                        mob.time += 50
+                when Command.GRABTO
+                    it = mob.inventory.swapItem mob.cell().item, cmd.slot
+                    mob.cell().item = it
+                    mob.time += 50
+                when Command.USE
+                    if cmd.it.use?
+                        cmd.it.use(game: @, mob: mob, target: cmd.target)
+                        mob.time += 50
             return
 
         onAction: (cb) ->

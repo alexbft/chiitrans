@@ -47,7 +47,7 @@ require(function(geom, Tiles, Action, Events) {
 
     StageView.prototype.loadTiles = function() {
       var tile, _i, _len, _ref;
-      _ref = ['floor', 'wall', 'door', 'player', 'mob', 'item', 'blood', 'arrow'];
+      _ref = ['floor', 'wall', 'door', 'player', 'mob', 'item', 'blood', 'arrow', 'cursor', 'target', 'apple'];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tile = _ref[_i];
         this.tile[tile] = this.tiles.load("" + tile + ".png");
@@ -155,7 +155,7 @@ require(function(geom, Tiles, Action, Events) {
               }
             }
           });
-          n = 1;
+          n = 0;
           for (mobId in mobActions) {
             acts = mobActions[mobId];
             start = 0;
@@ -386,17 +386,12 @@ require(function(geom, Tiles, Action, Events) {
       }
     };
 
-    StageView.prototype.getItemTile = function() {
-      return this.tile.item;
+    StageView.prototype.getItemTile = function(it) {
+      return this.tile[it.glyph];
     };
 
     StageView.prototype.getMobTile = function(mob) {
-      switch (mob.glyph) {
-        case '@':
-          return this.tile.player;
-        default:
-          return this.tile.mob;
-      }
+      return this.tile[mob.glyph];
     };
 
     StageView.prototype.getFeatureTile = function() {
@@ -409,15 +404,9 @@ require(function(geom, Tiles, Action, Events) {
 
     StageView.prototype.setTarget = function(p) {
       var xy;
-      xy = this.pointToView(p).plus(pt(this.tw / 2, this.th / 2));
+      xy = this.pointToView(p);
       this.targetingCtx.clear();
-      this.targetingCtx.save();
-      this.targetingCtx.strokeStyle = '#00ff00';
-      this.targetingCtx.lineWidth = 2;
-      this.targetingCtx.beginPath();
-      this.targetingCtx.arc(xy.x, xy.y, this.tw / 2, 0, 2 * Math.PI);
-      this.targetingCtx.stroke();
-      return this.targetingCtx.restore();
+      return this.tiles.drawTile(this.targetingCtx, this.tile.target, xy.x, xy.y);
     };
 
     StageView.prototype.clearTarget = function() {
@@ -429,7 +418,7 @@ require(function(geom, Tiles, Action, Events) {
       if (this.hoverLoc != null) {
         xy = this.pointToView(this.hoverLoc);
         this.mouseCtx.clear();
-        this.mouseCtx.strokeRect(xy.x + 2, xy.y + 2, this.tw - 3, this.th - 3);
+        this.tiles.drawTile(this.mouseCtx, this.tile.cursor, xy.x, xy.y);
       }
     };
 
@@ -466,8 +455,6 @@ require(function(geom, Tiles, Action, Events) {
         this.mouseInitialized = true;
         this.lastMouseMove = null;
         this.hoverLoc = null;
-        this.mouseCtx.strokeStyle = '#00ff00';
-        this.mouseCtx.lineWidth = 2;
         this.cont.on('contextmenu', function(e) {
           return e.preventDefault();
         });

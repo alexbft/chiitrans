@@ -25,6 +25,7 @@ require(function(geom, Command, Events) {
     Z: 90,
     X: 88,
     C: 67,
+    G: 71,
     0: 48,
     1: 49,
     2: 50,
@@ -118,42 +119,47 @@ require(function(geom, Command, Events) {
 
     PlayerControls.prototype.normalKeydownHandler = function(key) {
       var loc, target, targets, x, y, _ref;
-      if (key in moveMap) {
-        if (this.movingTo != null) {
+      switch (false) {
+        case !(key in moveMap):
+          if (this.movingTo != null) {
+            this.movingTo = null;
+          } else {
+            _ref = moveMap[key], x = _ref[0], y = _ref[1];
+            this.register(Command.MOVE, {
+              to: pt(x, y)
+            });
+          }
+          return false;
+        case !(key in castMap):
           this.movingTo = null;
-        } else {
-          _ref = moveMap[key], x = _ref[0], y = _ref[1];
-          this.register(Command.MOVE, {
-            to: pt(x, y)
-          });
-        }
-        return false;
-      } else if (key in castMap) {
-        this.movingTo = null;
-        if (this.view.ready) {
-          target = null;
-          if (this.view.hoverLoc != null) {
-            loc = this.view.hoverLoc;
-            if (this.isValidTarget(loc)) {
-              target = loc.cell().mob;
+          if (this.view.ready) {
+            target = null;
+            if (this.view.hoverLoc != null) {
+              loc = this.view.hoverLoc;
+              if (this.isValidTarget(loc)) {
+                target = loc.cell().mob;
+              }
+            }
+            if ((target == null) && (this.lastTarget != null) && this.lastTarget.alive && this.isValidTarget(this.lastTarget.loc)) {
+              target = this.lastTarget;
+            }
+            if (target == null) {
+              targets = this.game.p.targets(8);
+              if (targets.length) {
+                target = nearestTarget(this.game.p, targets);
+              }
+            }
+            if (target != null) {
+              this.lastTarget = target;
+              this.view.setTarget(target.loc);
+              this.setTargetingMode();
             }
           }
-          if ((target == null) && (this.lastTarget != null) && this.lastTarget.alive && this.isValidTarget(this.lastTarget.loc)) {
-            target = this.lastTarget;
-          }
-          if (target == null) {
-            targets = this.game.p.targets(8);
-            if (targets.length) {
-              target = nearestTarget(this.game.p, targets);
-            }
-          }
-          if (target != null) {
-            this.lastTarget = target;
-            this.view.setTarget(target.loc);
-            this.setTargetingMode();
-          }
-        }
-        return false;
+          return false;
+        case key !== Keys.ESC:
+          return this.movingTo = null;
+        case key !== Keys.G:
+          return this.register(Command.GRAB);
       }
     };
 
@@ -167,12 +173,15 @@ require(function(geom, Command, Events) {
     PlayerControls.prototype.normalMouseleftHandler = function(p) {
       if (!p.eq(this.game.p.loc)) {
         this.movingTo = p;
+        this.movingSawDanger = this.game.seeDanger;
         this.hasAutoMoved = false;
         this.trigger('input');
       }
     };
 
-    PlayerControls.prototype.normalMouserightHandler = function() {};
+    PlayerControls.prototype.normalMouserightHandler = function() {
+      this.movingTo = null;
+    };
 
     PlayerControls.prototype.normalMousemoveHandler = function() {};
 
@@ -263,7 +272,7 @@ require(function(geom, Command, Events) {
     PlayerControls.prototype.getLastCommand = function() {
       var dist, p, res, _ref;
       if (this.movingTo != null) {
-        if ((this.hasAutoMoved && this.game.seeDanger) || this.movingTo.eq(this.game.p.loc)) {
+        if ((this.hasAutoMoved && (!this.movingSawDanger && this.game.seeDanger)) || this.movingTo.eq(this.game.p.loc)) {
           this.movingTo = null;
         } else {
           p = null;
@@ -273,7 +282,7 @@ require(function(geom, Command, Events) {
               var d;
               if ((!_this.hasAutoMoved && loc.eq(_this.movingTo)) || loc.cell().canEnter(_this.game.p)) {
                 d = loc.distance2(_this.movingTo);
-                if (d <= dist) {
+                if (d < dist) {
                   p = loc;
                   return dist = d;
                 }

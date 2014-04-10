@@ -1,6 +1,6 @@
 require () ->
     class Mob
-        glyph: '?'
+        glyph: 'mob'
         alive: true
         kills: 0
         visibilityRadius: 4
@@ -46,6 +46,12 @@ require () ->
                 @kills += 1
             @time += 100
 
+        heal: (hp) ->
+            @hp += hp
+            if @hp > 100
+                @hp = 100
+            return
+
         wait: ->
             @time += 100 * @speedFactor()
 
@@ -73,5 +79,8 @@ require () ->
                     res.push mob
             res
 
+        isPlayer: ->
+            @glyph == 'player'
+
         toString: ->
-            @glyph
+            'A'
