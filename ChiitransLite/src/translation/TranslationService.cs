@@ -70,10 +70,16 @@ namespace ChiitransLite.translation {
             return startParse(curId, text, doTranslation, options);
         }
 
+        private readonly Dictionary<char, char> openAndClose = new Dictionary<char, char> { { '『', '』' }, { '「', '」' }, { '【', '】' }, { '（', '）' } };
+
         private string preParseReplacements(string text) {
-            var match = Regex.Match(text, "^([「『（].*[」』）])([^「『（」』）]+)$");
+            var match = Regex.Match(text, "^([「『（].*[」』）])([^「『（」』）]{1,10})$");
             if (match.Success) {
-                return match.Groups[2].Value + match.Groups[1].Value;
+                string speaker = match.Groups[2].Value;
+                string speech = match.Groups[1].Value;
+                if (speech.Length >= 2 && openAndClose[speech[0]] == speech[speech.Length - 1]) { // opening bracket matches closing bracket
+                    return speaker + speech;
+                }
             }
             return text;
         }

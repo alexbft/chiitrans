@@ -12,6 +12,24 @@
     ]
   },
   {
+    "Name": "pn",
+    "Part of Speech" : "Pronoun",
+    "Tenses" : [
+      {
+        "Formal" : false,
+        "Negative" : false,
+        "Suffix" : "",
+        "Tense" : ""
+      },
+      {
+        "Formal" : false,
+        "Negative" : false,
+        "Suffix" : "ら",
+        "Tense" : ""
+      }
+    ]
+  },
+  {
     "Name" : "copula", 
     "Part of Speech" : "Adj", 
     "Tenses" : [
@@ -4176,12 +4194,6 @@
       {
         "Formal" : false, 
         "Negative" : false, 
-        "Suffix" : "", 
-        "Tense" : "Remove"
-      },
-      {
-        "Formal" : false, 
-        "Negative" : false, 
         "Next Type" : "vs-i", 
         "Suffix" : "する", 
         "Tense" : "Stem"
@@ -4349,25 +4361,6 @@
         "Next Type" : "v5u", 
         "Suffix" : "しちまう", 
         "Tense" : "(Accidentally\/Finish Completely)"
-      }
-    ]
-  },
-  {
-    "Name" : "vs", 
-    "Part of Speech" : "Verb", 
-    "Tenses" : [
-      {
-        "Formal" : false, 
-        "Negative" : false, 
-        "Suffix" : "", 
-        "Tense" : "Remove"
-      },
-      {
-        "Formal" : false, 
-        "Negative" : false, 
-        "Next Type" : "vs-i", 
-        "Suffix" : "する", 
-        "Tense" : "Stem"
       },
       {
         "Formal" : false, 

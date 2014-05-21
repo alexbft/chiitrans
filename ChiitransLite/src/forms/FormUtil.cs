@@ -18,7 +18,7 @@ namespace ChiitransLite.forms {
             Rectangle loc;
             form.VisibleChanged += form_VisibleChanged;
             if (Settings.app.getProperty("location_" + form.Name, out loc)) {
-                if (Screen.GetWorkingArea(loc).Contains(loc)) {
+                if (Screen.GetWorkingArea(loc).IntersectsWith(loc)) {
                     form.DesktopBounds = loc;
                     return;
                 }
