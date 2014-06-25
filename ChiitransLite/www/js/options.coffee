@@ -21,6 +21,9 @@ $ ->
 
     $('#showHooks').click ->
         host().showHookForm()
+        
+    $('#showNames').click ->
+        host().showNamesForm ->
 
     $('#showPoFiles').click ->
         host().showPoFiles ->

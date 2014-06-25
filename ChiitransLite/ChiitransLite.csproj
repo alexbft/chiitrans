@@ -37,6 +37,7 @@
     <ApplicationIcon>ohayo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -86,6 +87,12 @@
     </Compile>
     <Compile Include="src\forms\ExtraTranslatorsForm.Designer.cs">
       <DependentUpon>ExtraTranslatorsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\forms\NamesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\forms\NamesForm.Designer.cs">
+      <DependentUpon>NamesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\forms\OptionsForm.cs">
       <SubType>Form</SubType>
@@ -212,6 +219,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\forms\ExtraTranslatorsForm.resx">
       <DependentUpon>ExtraTranslatorsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\forms\NamesForm.resx">
+      <DependentUpon>NamesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\forms\OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>

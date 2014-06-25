@@ -34,6 +34,7 @@
             this.radioMale = new System.Windows.Forms.RadioButton();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOk = new System.Windows.Forms.Button();
+            this.radioNotName = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,13 +78,14 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.radioNotName);
             this.groupBox1.Controls.Add(this.radioOther);
             this.groupBox1.Controls.Add(this.radioSurname);
             this.groupBox1.Controls.Add(this.radioFemale);
             this.groupBox1.Controls.Add(this.radioMale);
             this.groupBox1.Location = new System.Drawing.Point(15, 104);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(181, 74);
+            this.groupBox1.Size = new System.Drawing.Size(181, 98);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Name Type";
@@ -134,7 +136,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(121, 189);
+            this.buttonCancel.Location = new System.Drawing.Point(121, 208);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -145,21 +147,31 @@
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(40, 189);
+            this.buttonOk.Location = new System.Drawing.Point(40, 208);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 3;
             this.buttonOk.Text = "OK";
             this.buttonOk.UseVisualStyleBackColor = true;
             // 
+            // radioNotName
+            // 
+            this.radioNotName.AutoSize = true;
+            this.radioNotName.Location = new System.Drawing.Point(8, 66);
+            this.radioNotName.Name = "radioNotName";
+            this.radioNotName.Size = new System.Drawing.Size(145, 17);
+            this.radioNotName.TabIndex = 4;
+            this.radioNotName.TabStop = true;
+            this.radioNotName.Text = "Not a name (no red color)";
+            this.radioNotName.UseVisualStyleBackColor = true;
+            // 
             // UserNameForm
             // 
-            this.Icon = ChiitransLite.Properties.Resources.ohayo_small;
             this.AcceptButton = this.buttonOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(208, 217);
+            this.ClientSize = new System.Drawing.Size(208, 236);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBox1);
@@ -168,6 +180,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxKey);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Icon = global::ChiitransLite.Properties.Resources.ohayo_small;
             this.Name = "UserNameForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -192,5 +205,6 @@
         private System.Windows.Forms.RadioButton radioMale;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOk;
+        private System.Windows.Forms.RadioButton radioNotName;
     }
 }

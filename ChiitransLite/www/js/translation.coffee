@@ -218,6 +218,7 @@ getTextSelection = window.getTextSelection = ->
     if document.selection?
         document.selection.createRange().text
     else
+        #alert window.getSelection().toString().indexOf('\u200B')
         window.getSelection().toString()
 
 getSelectedEntryId = window.getSelectedEntryId = ->

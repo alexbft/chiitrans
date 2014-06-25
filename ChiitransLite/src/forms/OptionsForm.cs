@@ -65,6 +65,10 @@ namespace ChiitransLite.forms {
                 form.resetParsePreferences();
             }
 
+            public void showNamesForm() {
+                form.showNamesForm();
+            }
+
         }
 
         public OptionsForm() {
@@ -167,6 +171,17 @@ namespace ChiitransLite.forms {
                 UserHookForm.instance.WindowState = FormWindowState.Normal;
             }
             UserHookForm.instance.Activate();
+        }
+
+        internal void showNamesForm() {
+            Invoke(new Action(() => {
+                var namesForms = Application.OpenForms.OfType<NamesForm>().ToList();
+                if (namesForms.Count > 0) {
+                    namesForms[0].Activate();
+                } else {
+                    new NamesForm().Show();
+                }
+            }));
         }
 
         private IEnumerable<string> getThemes() {

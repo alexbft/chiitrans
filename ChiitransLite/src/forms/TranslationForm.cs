@@ -558,7 +558,7 @@ namespace ChiitransLite.forms {
         }
 
         internal void showContextMenu(string selection, bool isRealSelection, int selectedParseResultId) {
-            lastSelection = selection;
+            lastSelection = cleanTextSelection(selection);
             lastIsRealSelection = isRealSelection;
             if (selectedParseResultId != 0) {
                 lastSelectedParseResult = TranslationService.instance.getParseResult(selectedParseResultId);

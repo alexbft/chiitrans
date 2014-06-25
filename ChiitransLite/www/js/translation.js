@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, http, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, registerTranslators, renderMultiTranslationResult, renderOldTranslationResult, renderParseResult, renderSimpleTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, translate, translators, updateMultiTranslationResult, updateReading, updateTranslationResult;
 
   MAX_LOG = 20;

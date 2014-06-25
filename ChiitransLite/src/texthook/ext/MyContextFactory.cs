@@ -9,11 +9,10 @@ using System.Text;
 namespace ChiitransLite.texthook.ext {
     class MyContextFactory : ContextFactory {
 
-        private static MyContextFactory _instance = new MyContextFactory();
+        private readonly TextHook textHook;
 
-        public static MyContextFactory instance { get { return _instance; } }
-
-        protected MyContextFactory() {
+        public MyContextFactory(TextHook textHook) {
+            this.textHook = textHook;
         }
 
         public enum NewContextsBehavior {
@@ -34,11 +33,12 @@ namespace ChiitransLite.texthook.ext {
             }
         }
 
-        private bool hasSpecialContexts = false;
+        private bool hasSpecialContexts() {
+            return textHook.getContexts().Any((c) => isContextSpecial(c.name));
+        }
 
         public void onConnected() {
             _newContextsBehavior = Settings.session.newContextsBehavior;
-            hasSpecialContexts = false;
             PoManager.instance.loadFrom(Settings.session.po).ContinueWith((t) => {
                 var ex = t.Exception.InnerException;
                 if (ex is MyException) {
@@ -56,10 +56,6 @@ namespace ChiitransLite.texthook.ext {
                     isEnabled = getSmartEnabled(name);
                 } else {
                     isEnabled = newContextsBehavior != NewContextsBehavior.IGNORE;
-                }
-            } else {
-                if (!hasSpecialContexts && isContextSpecial(name)) {
-                    hasSpecialContexts = true;
                 }
             }
             return new MyContext(id, name, hook, context, subcontext, status, isEnabled);
@@ -87,8 +83,7 @@ namespace ChiitransLite.texthook.ext {
 
         private bool getSmartEnabled(string name) {
             bool isSpecial = isContextSpecial(name);
-            hasSpecialContexts = hasSpecialContexts || isSpecial;
-            return isSpecial || !hasSpecialContexts;
+            return isSpecial || !hasSpecialContexts();
         }
 
         public void setNewContextsBehavior(string behavior) {
@@ -123,7 +118,7 @@ namespace ChiitransLite.texthook.ext {
             }
         }
 
-        internal List<int> disableContextsIfNeeded(TextHook textHook, TextHookContext ctx) {
+        internal List<int> disableContextsIfNeeded(TextHookContext ctx) {
             List<int> disabledContexts = null;
             switch (newContextsBehavior) {
                 case NewContextsBehavior.SWITCH_TO_NEW:

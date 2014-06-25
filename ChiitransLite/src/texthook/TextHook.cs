@@ -196,6 +196,10 @@ namespace ChiitransLite.texthook {
             this.factory = f;
         }
 
+        public ContextFactory getContextFactory() {
+            return factory;
+        }
+
         public TextHookContext getContext(int ctxId) {
             TextHookContext res;
             if (contexts.TryGetValue(ctxId, out res)) {

@@ -100,7 +100,7 @@ namespace ChiitransLite.forms {
             }
 
             public void setNewContextsBehavior(string b) {
-                MyContextFactory.instance.setNewContextsBehavior(b);
+                (TextHook.instance.getContextFactory() as MyContextFactory).setNewContextsBehavior(b);
             }
 
             public void showLog(int ctxId) {
@@ -149,7 +149,7 @@ namespace ChiitransLite.forms {
             FormUtil.restoreLocation(this);
             webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
             webBrowser1.Url = Utils.getUriForBrowser("index.html");
-            TextHook.instance.setContextFactory(MyContextFactory.instance);
+            TextHook.instance.setContextFactory(new MyContextFactory(TextHook.instance));
             /*Logger.onLog += (text) => {
                 webBrowser1.callScript("log", "DEBUG: " + text);
             };*/
@@ -215,11 +215,12 @@ namespace ChiitransLite.forms {
         }
 
         private void connectSuccess() {
-            webBrowser1.callScript("connectSuccess", MyContextFactory.instance.getNewContextsBehaviorAsString());
+            MyContextFactory fac = TextHook.instance.getContextFactory() as MyContextFactory;
+            webBrowser1.callScript("connectSuccess", fac.getNewContextsBehaviorAsString());
             TextHook.instance.onNewContext += (ctx) => {
                 webBrowser1.callScript("newContext", ctx.id, ctx.name, ctx.context, ctx.subcontext, (ctx as MyContext).enabled);
                 ctx.onSentence += ctx_onSentence;
-                List<int> disabledContexts = MyContextFactory.instance.disableContextsIfNeeded(TextHook.instance, ctx);
+                List<int> disabledContexts = fac.disableContextsIfNeeded(ctx);
                 if (disabledContexts != null && disabledContexts.Count > 0) {
                     webBrowser1.callScript("disableContexts", Utils.toJson(disabledContexts));
                 }

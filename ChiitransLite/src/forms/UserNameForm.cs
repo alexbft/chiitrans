@@ -26,6 +26,9 @@ namespace ChiitransLite.forms {
                 case "surname":
                     radioSurname.Checked = true;
                     break;
+                case "notname":
+                    radioNotName.Checked = true;
+                    break;
                 default:
                     radioOther.Checked = true;
                     break;
@@ -45,6 +48,7 @@ namespace ChiitransLite.forms {
             if (radioMale.Checked) return "masc";
             else if (radioFemale.Checked) return "fem";
             else if (radioSurname.Checked) return "surname";
+            else if (radioNotName.Checked) return "notname";
             else return null;
         }
     }

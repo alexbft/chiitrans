@@ -16,7 +16,7 @@ namespace ChiitransLite.settings {
 
         private static Dictionary<string, SessionSettings> cache = new Dictionary<string, SessionSettings>();
 
-        private readonly string key;
+        internal readonly string key;
         private readonly string fileName;
         public readonly string processExe;
         public Dictionary<string, EdictMatch> userNames { get; private set; }
@@ -138,6 +138,14 @@ namespace ChiitransLite.settings {
             isDirty = false;
         }
 
+        public void loadNames(IEnumerable<object> names) {
+            userNames.Clear();
+            foreach (dynamic name in names) {
+                addUserName(name.key, name.sense, name.type);
+            }
+            this.isDirty = true;
+        }
+
         public void addUserName(string key, string sense, string nameType) {
             Settings.app.removeBannedWord(key);
             EdictMatch match = new EdictMatch(key);
@@ -147,7 +155,11 @@ namespace ChiitransLite.settings {
             DictionarySense ds = new DictionarySense();
             ds.addGloss(null, sense);
             eb.addSense(ds);
-            eb.addPOS("name");
+            if (nameType != "notname") {
+                eb.addPOS("name");
+            } else {
+                eb.addPOS("n");
+            }
             eb.nameType = nameType;
             match.addEntry(new RatedEntry { entry = eb.build(), rate = 5.0F });
             userNames[key] = match;
@@ -173,13 +185,18 @@ namespace ChiitransLite.settings {
             }
         }
 
+        internal IEnumerable<object> serializeNames() {
+            return (from kv in userNames
+                    select new {
+                        key = kv.Key,
+                        sense = kv.Value.entries[0].entry.kana[0].text,
+                        type = kv.Value.entries[0].entry.nameType
+                    });
+        }
+
         private object serialize() {
             return new {
-                names = (from kv in userNames select new {
-                    key = kv.Key,
-                    sense = kv.Value.entries[0].entry.kana[0].text,
-                    type = kv.Value.entries[0].entry.nameType
-                }),
+                names = serializeNames(),
                 contexts = contextsEnabled.ToDictionary((kv) => kv.Key.ToString(), (kv) => kv.Value),
                 newContexts = newContextsBehavior.ToString(),
                 hooks = (from h in userHooks select h.code),

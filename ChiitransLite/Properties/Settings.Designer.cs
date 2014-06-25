@@ -360,5 +360,16 @@ namespace ChiitransLite.Properties {
                 this["stayOnTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Rectangle location_NamesForm {
+            get {
+                return ((global::System.Drawing.Rectangle)(this["location_NamesForm"]));
+            }
+            set {
+                this["location_NamesForm"] = value;
+            }
+        }
     }
 }

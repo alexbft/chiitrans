@@ -26,6 +26,9 @@
     $('#showHooks').click(function() {
       return host().showHookForm();
     });
+    $('#showNames').click(function() {
+      return host().showNamesForm(function() {});
+    });
     $('#showPoFiles').click(function() {
       return host().showPoFiles(function() {});
     });
