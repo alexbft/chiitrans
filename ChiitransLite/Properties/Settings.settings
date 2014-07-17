@@ -83,5 +83,8 @@
     <Setting Name="location_NamesForm" Type="System.Drawing.Rectangle" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="clipboardOnlyJapanese" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -233,7 +233,13 @@ namespace ChiitransLite.translation.edict.parseresult {
             return entry.POS.Contains("name");
         }
 
-        internal EdictEntry findAnyName() {
+        internal bool isReplacement() {
+            var entry = getSelectedEntry();
+            if (entry == null) return false;
+            return entry.POS.Contains("name") || entry.nameType == "notname";
+        }
+
+        /*internal EdictEntry findAnyName() {
             EdictEntry entry = getSelectedEntry();
             if (entry == null) return null;
             if (entry.POS.Contains("name")) {
@@ -245,7 +251,7 @@ namespace ChiitransLite.translation.edict.parseresult {
                 }
             }
             return null;
-        }
+        }*/
 
         internal override EdictMatchType? getMatchTypeOf(string text) {
             if (this.originalText == text) {
@@ -258,5 +264,6 @@ namespace ChiitransLite.translation.edict.parseresult {
         internal IEnumerable<EdictEntry> getEntries() {
             return from t in getRatedEntries() select t.Item2.entry;
         }
+
     }
 }

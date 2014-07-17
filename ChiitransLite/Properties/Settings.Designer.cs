@@ -371,5 +371,17 @@ namespace ChiitransLite.Properties {
                 this["location_NamesForm"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool clipboardOnlyJapanese {
+            get {
+                return ((bool)(this["clipboardOnlyJapanese"]));
+            }
+            set {
+                this["clipboardOnlyJapanese"] = value;
+            }
+        }
     }
 }

@@ -184,7 +184,8 @@ namespace ChiitransLite.translation.edict {
                     WordParseResult wp = part as WordParseResult;
                     bool found = false;
                     bool isName = wp.isName();
-                    if (isName) {
+                    bool isReplacement = wp.isReplacement();
+                    if (isName || isReplacement) {
                         var entry = wp.getSelectedEntry();
                         DictionarySense sense = entry.sense.FirstOrDefault();
                         if (sense != null && sense.glossary.Count > 0) {
@@ -215,7 +216,7 @@ namespace ChiitransLite.translation.edict {
                         }
                     }
                     if (found) {
-                        prevName = true;
+                        prevName = isName || prevName;
                     } else {
                         prevName = false;
                         sb.Append(part.asText());
