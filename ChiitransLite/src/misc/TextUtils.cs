@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ChiitransLite.misc {
-    static class TextUtils {
+    public static class TextUtils {
 
         public static bool isKatakana(char ch) {
             return (ch >= '\u30A0' && ch <= '\u30FF');
@@ -28,11 +28,54 @@ namespace ChiitransLite.misc {
             return true;
         }
 
-        internal static string katakanaToHiragana(string katakanaStr) {
+        internal static bool isAllKatakanaOrHasLongVowel(string s) {
+            bool isAllKatakana = true;
+            bool hasLong = false;
+            bool hasKatakanaExceptLong = false;
+            foreach (char c in s) {
+                if (c == 'ー') {
+                    hasLong = true;
+                } else if (isKatakana(c)) {
+                    hasKatakanaExceptLong = true;
+                } else {
+                    isAllKatakana = false;
+                }
+            }
+            return isAllKatakana || (hasLong && !hasKatakanaExceptLong);
+        }
+
+        internal static bool isAnyKatakana(string s) {
+            foreach (char c in s) {
+                if (isKatakana(c)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static string katakanaToHiragana(string katakanaStr) {
             StringBuilder res = new StringBuilder(katakanaStr.Length);
+            char prev = '\0';
             foreach (char ch in katakanaStr)
             {
-                res.Append(katakanaToHiraganaChar(ch));
+                if (ch == 'ー') {
+                    string prevRomaji = HiraganaConvertor.instance.ConvertLetter(prev);
+                    prev = '゜';
+                    if (prevRomaji != null) {
+                        if (prevRomaji.EndsWith("a")) {
+                            prev = 'あ';
+                        } else if (prevRomaji.EndsWith("e")) {
+                            prev = 'え';
+                        } else if (prevRomaji.EndsWith("i")) {
+                            prev = 'い';
+                        } else if (prevRomaji.EndsWith("o") || prevRomaji.EndsWith("u")) {
+                            prev = 'う';
+                        }
+                    }
+                } else {
+                    prev = katakanaToHiraganaChar(ch);
+                }
+                res.Append(prev);
             }
             return res.ToString();
         }
@@ -63,6 +106,7 @@ namespace ChiitransLite.misc {
         internal static bool isKana(char c) {
             return isKatakana(c) || isHiragana(c);
         }
+
     }
 }
 

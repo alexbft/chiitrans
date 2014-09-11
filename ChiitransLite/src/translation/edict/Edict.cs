@@ -164,6 +164,7 @@ namespace ChiitransLite.translation.edict {
             { "兄", "-nii" }, 
             { "姉", "-nee" },
             { "ねぇ", "-nee" },
+            { "姉ぇ", "-nee" },
             { "卿", "-kyo" }
         };
 

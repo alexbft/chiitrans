@@ -131,9 +131,10 @@ connectSuccess = window.connectSuccess = (newContextsValue) ->
 
 disconnect = window.disconnect = ->
     $('#working').hide()
-    connectError('Disconnected.');
+    connectError('Disconnected.')
     $('body').removeClass('working').addClass('startup')
     $('#startup').show()
+    clearContexts()
     return
 
 log = window.log = (s) ->

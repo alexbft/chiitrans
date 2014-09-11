@@ -99,7 +99,23 @@ namespace ChiitransLite.translation.atlas {
                     return firstTr + openBr + secondTr + src[src.Length - 1];
                 }
             }
-            src = Regex.Replace(src, @"(?<=[\u3040-\u309F])ー", "");
+            src = Regex.Replace(src, @"([\u3040-\u309F])ー", (m) => {
+                char prev = m.Groups[1].Value[0];
+                char cur = 'ー';
+                string roma = HiraganaConvertor.instance.ConvertLetter(prev);
+                if (roma != null) {
+                    if (roma.EndsWith("a")) {
+                        cur = 'あ';
+                    } else if (roma.EndsWith("e")) {
+                        cur = 'え';
+                    } else if (roma.EndsWith("i")) {
+                        cur = 'い';
+                    } else if (roma.EndsWith("o") || roma.EndsWith("u")) {
+                        cur = 'う';
+                    }
+                }
+                return "" + prev + cur;
+            });
             string newSrc = Regex.Replace(src, "…+", "、");
             if (!(newSrc == "、" && newSrc != src)) {
                 src = newSrc;

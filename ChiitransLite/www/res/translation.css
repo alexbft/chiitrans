@@ -13,11 +13,21 @@ body {
   background-color: #000001;
   color: #FFF;
 }
-/*.transparent {
-    .basetext, #translation {
-        text-shadow: 2px 2px 1px #000;
-    }
-}*/
+.transparent #parse, .transparent #translation{
+   text-shadow:
+     -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000;
+}
+.transparent ruby rt {
+   text-shadow:
+     -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000;
+}
+
 .sides div {
   z-index: 3;
   background: #666;

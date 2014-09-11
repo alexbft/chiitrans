@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   var clearContexts, connectError, connectSuccess, contexts, disableContexts, disconnect, formatAddr, formatProcessName, isSelectWindow, log, logParse, longToHex, newContext, newSentence, selectWindowEnd, setDefaultProcess;
 
   isSelectWindow = false;
@@ -140,6 +140,7 @@
     connectError('Disconnected.');
     $('body').removeClass('working').addClass('startup');
     $('#startup').show();
+    clearContexts();
   };
 
   log = window.log = function(s) {

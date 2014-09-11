@@ -446,7 +446,7 @@ namespace ChiitransLite.translation.edict {
                 if (kanaIndex.TryGetValue(key, out match)) {
                     yield return new EdictMatchWithType(match, EdictMatchType.READING);
                 }
-                if (TextUtils.isAllKatakana(key)) {
+                if (TextUtils.isAllKatakanaOrHasLongVowel(key)) {
                     string hira = TextUtils.katakanaToHiragana(key);
                     if (mainIndex.TryGetValue(hira, out match)) {
                         yield return new EdictMatchWithType(match, EdictMatchType.FROM_KATAKANA);
