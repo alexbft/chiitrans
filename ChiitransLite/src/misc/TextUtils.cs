@@ -107,6 +107,17 @@ namespace ChiitransLite.misc {
             return isKatakana(c) || isHiragana(c);
         }
 
+        internal static bool containsJapanese(string text) {
+            return text.Any((c) => isJapanese(c));
+        }
+
+        private static bool isJapanese(char c) {
+            return (c >= '\u3000' && c <= '\u303f') || // punctuation
+                (c >= '\u3040' && c <= '\u309f') || // hiragana
+                (c >= '\u30a0' && c <= '\u30ff') || // katakana
+                (c >= '\uff00' && c <= '\uffef') || // full-width roman or half-width
+                (c >= '\u4e00' && c <= '\u9faf'); // kanji
+        }
     }
 }
 

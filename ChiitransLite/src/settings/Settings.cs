@@ -359,6 +359,15 @@ namespace ChiitransLite.settings {
             }
         }
 
+        public bool clipboardJapanese {
+            get {
+                return Properties.Settings.Default.clipboardJapanese;
+            }
+            set {
+                Properties.Settings.Default.clipboardJapanese = value;
+            }
+        }
+
         public string atlasEnv {
             get {
                 string res = Properties.Settings.Default.atlasEnv;

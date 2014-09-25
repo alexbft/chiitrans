@@ -633,7 +633,10 @@ namespace ChiitransLite.forms {
 
         void clipboardMonitor1_ClipboardChanged(object sender, EventArgs e) {
             if (Clipboard.ContainsText()) {
-                TranslationService.instance.update(TextHookContext.cleanText(Clipboard.GetText()));
+                string text = Clipboard.GetText();
+                if (!Settings.app.clipboardJapanese || TextUtils.containsJapanese(text)) {
+                    TranslationService.instance.update(TextHookContext.cleanText(Clipboard.GetText()));
+                }
             }
         }
 

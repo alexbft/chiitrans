@@ -110,7 +110,8 @@ namespace ChiitransLite.forms {
                 nameDict = Settings.app.nameDict.ToString(),
                 atlasEnv = Settings.app.atlasEnv,
                 atlasEnvList = getAtlasEnvList(),
-                stayOnTop = Settings.app.stayOnTop
+                stayOnTop = Settings.app.stayOnTop,
+                clipboardJapanese = Settings.app.clipboardJapanese
             };
         }
 
@@ -125,6 +126,7 @@ namespace ChiitransLite.forms {
             string nameDictStr = (string)op["nameDict"];
             string atlasEnv = (string)op["atlasEnv"];
             bool stayOnTop = (bool)op["stayOnTop"];
+            bool clipboardJapanese = (bool)op["clipboardJapanese"];
 
             TranslationForm.instance.setClipboardTranslation(clipboard);
             if (sentenceDelay >= 10) {
@@ -150,6 +152,7 @@ namespace ChiitransLite.forms {
             Settings.app.separateWords = separateWords;
             Settings.app.separateSpeaker = separateSpeaker;
             Settings.app.stayOnTop = stayOnTop;
+            Settings.app.clipboardJapanese = clipboardJapanese;
             TranslationForm.instance.applyCurrentSettings();
         }
 

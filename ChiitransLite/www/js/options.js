@@ -110,6 +110,7 @@
     $('#separateWords').prop('checked', op.separateWords);
     $('#separateSpeaker').prop('checked', op.separateSpeaker);
     $('#stayOnTop').prop('checked', op.stayOnTop);
+    $('#clipboardJapanese').prop('checked', op.clipboardJapanese);
     $('#ok').focus();
     return setDirty(false);
   };
@@ -127,7 +128,8 @@
         separateWords: $('#separateWords').prop('checked'),
         separateSpeaker: $('#separateSpeaker').prop('checked'),
         atlasEnv: $('#atlasEnv').val(),
-        stayOnTop: $('#stayOnTop').prop('checked')
+        stayOnTop: $('#stayOnTop').prop('checked'),
+        clipboardJapanese: $('#clipboardJapanese').prop('checked')
       };
       host().saveOptions(op);
       return setDirty(false);

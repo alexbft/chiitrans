@@ -374,13 +374,13 @@ namespace ChiitransLite.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool clipboardOnlyJapanese {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool clipboardJapanese {
             get {
-                return ((bool)(this["clipboardOnlyJapanese"]));
+                return ((bool)(this["clipboardJapanese"]));
             }
             set {
-                this["clipboardOnlyJapanese"] = value;
+                this["clipboardJapanese"] = value;
             }
         }
     }

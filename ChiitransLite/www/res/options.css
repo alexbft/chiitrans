@@ -1,8 +1,12 @@
-﻿body {
+body {
   background-color: #e4e4e4;
   overflow: hidden;
   font: 14px Microsoft Sans Serif;
   line-height: 150%;
+}
+label,
+button {
+  font: 14px Microsoft Sans Serif;
 }
 .content {
   position: relative;

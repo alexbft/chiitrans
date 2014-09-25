@@ -90,6 +90,7 @@ resetOptionsInt = (op) ->
     $('#separateWords').prop 'checked', op.separateWords
     $('#separateSpeaker').prop 'checked', op.separateSpeaker
     $('#stayOnTop').prop 'checked', op.stayOnTop
+    $('#clipboardJapanese').prop 'checked', op.clipboardJapanese
     $('#ok').focus()
     setDirty false
 
@@ -106,6 +107,7 @@ saveOptions = ->
             separateSpeaker: $('#separateSpeaker').prop('checked')
             atlasEnv: $('#atlasEnv').val()
             stayOnTop: $('#stayOnTop').prop('checked')
+            clipboardJapanese: $('#clipboardJapanese').prop('checked')
         host().saveOptions op
         setDirty false
 
