@@ -4,6 +4,7 @@ log.txt
 *.exe
 *.manifest
 *.vshost.*
+*.vshost.*.*
 Installer/
 
 ## Ignore Visual Studio temporary files, build results, and
