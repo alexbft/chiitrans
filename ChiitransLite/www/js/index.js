@@ -1,21 +1,14 @@
 (function() {
-  var clearContexts, connectError, connectSuccess, contexts, disableContexts, disconnect, formatAddr, formatProcessName, isSelectWindow, log, logParse, longToHex, newContext, newSentence, selectWindowEnd, setDefaultProcess;
+  var clearContexts, connectError, connectSuccess, contexts, disableContexts, disconnect, formatAddr, formatProcessName, isSelectWindow, log, logParse, longToHex, newContext, newSentence, selectWindowEnd, setDefaultProcess, updateProcesses;
 
   isSelectWindow = false;
 
-  $(function() {
-    $(document).keydown(function(ev) {
-      if (ev.keyCode === 27 && isSelectWindow) {
-        ev.preventDefault();
-        isSelectWindow = false;
-        $('#connect_status').empty();
-        return host().selectWindowClick(isSelectWindow);
-      }
-    });
-    host().getProcesses(function(_arg) {
+  updateProcesses = function() {
+    return host().getProcesses(function(_arg) {
       var $op, $pSel, defaultName, defaultPid, p, procs, _i, _len;
       procs = _arg.procs, defaultName = _arg.defaultName, defaultPid = _arg.defaultPid;
       $pSel = $('#process');
+      $pSel.html('<option id="process_default" value="" selected></option>');
       for (_i = 0, _len = procs.length; _i < _len; _i++) {
         p = procs[_i];
         $op = $("<option value=\"" + p.pid + "\">" + (formatProcessName(p.name)) + "</option>");
@@ -23,6 +16,18 @@
         $pSel.append($op);
       }
       setDefaultProcess(defaultPid, defaultName);
+    });
+  };
+
+  $(function() {
+    updateProcesses();
+    $(document).keydown(function(ev) {
+      if (ev.keyCode === 27 && isSelectWindow) {
+        ev.preventDefault();
+        isSelectWindow = false;
+        $('#connect_status').empty();
+        return host().selectWindowClick(isSelectWindow);
+      }
     });
     $('#select_window').click(function() {
       isSelectWindow = !isSelectWindow;
@@ -139,6 +144,7 @@
     $('#working').hide();
     connectError('Disconnected.');
     $('body').removeClass('working').addClass('startup');
+    updateProcesses();
     $('#startup').show();
     clearContexts();
   };

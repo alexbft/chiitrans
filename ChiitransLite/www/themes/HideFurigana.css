@@ -1,0 +1,7 @@
+rt {
+    visibility: hidden;
+}
+
+.parsed:hover rt {
+    visibility: visible;
+}

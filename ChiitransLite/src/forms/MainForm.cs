@@ -214,21 +214,26 @@ namespace ChiitransLite.forms {
             webBrowser1.callScript("connectError", errMsg);
         }
 
+        private bool eventsSetUp = false;
+        
         private void connectSuccess() {
             MyContextFactory fac = TextHook.instance.getContextFactory() as MyContextFactory;
             webBrowser1.callScript("connectSuccess", fac.getNewContextsBehaviorAsString());
-            TextHook.instance.onNewContext += (ctx) => {
-                webBrowser1.callScript("newContext", ctx.id, ctx.name, ctx.context, ctx.subcontext, (ctx as MyContext).enabled);
-                ctx.onSentence += ctx_onSentence;
-                List<int> disabledContexts = fac.disableContextsIfNeeded(ctx);
-                if (disabledContexts != null && disabledContexts.Count > 0) {
-                    webBrowser1.callScript("disableContexts", Utils.toJson(disabledContexts));
-                }
-            };
-            TextHook.instance.onDisconnect += () => {
-                webBrowser1.callScript("disconnect");
-                TranslationForm.instance.Close();
-            };
+            if (!eventsSetUp) {
+                eventsSetUp = true;
+                TextHook.instance.onNewContext += (ctx) => {
+                    webBrowser1.callScript("newContext", ctx.id, ctx.name, ctx.context, ctx.subcontext, (ctx as MyContext).enabled);
+                    ctx.onSentence += ctx_onSentence;
+                    List<int> disabledContexts = fac.disableContextsIfNeeded(ctx);
+                    if (disabledContexts != null && disabledContexts.Count > 0) {
+                        webBrowser1.callScript("disableContexts", Utils.toJson(disabledContexts));
+                    }
+                };
+                TextHook.instance.onDisconnect += () => {
+                    webBrowser1.callScript("disconnect");
+                    TranslationForm.instance.Close();
+                };
+            }
             Invoke(new Action(() => {
                 TranslationForm.instance.setCaption(TextHook.instance.currentProcessTitle + " - Chiitrans Lite");
                 showTranslationForm();

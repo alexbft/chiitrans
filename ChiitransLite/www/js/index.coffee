@@ -1,5 +1,16 @@
 ﻿isSelectWindow = false
 
+updateProcesses = ->
+    host().getProcesses ({procs, defaultName, defaultPid}) ->
+        $pSel = $ '#process'
+        $pSel.html '<option id="process_default" value="" selected></option>'
+        for p in procs
+            $op = $ """<option value="#{p.pid}">#{formatProcessName p.name}</option>"""
+            $op.data 'exe', p.name
+            $pSel.append $op
+        setDefaultProcess defaultPid, defaultName
+        return
+
 $ ->
     #document.ondragover = (e) ->
     #    ev = $.Event e
@@ -17,21 +28,14 @@ $ ->
     #        alert JSON.stringify q
     #    return
 
+    updateProcesses()
+
     $(document).keydown (ev) ->
         if ev.keyCode == 27 and isSelectWindow
             ev.preventDefault()
             isSelectWindow = false
             $('#connect_status').empty()
             host().selectWindowClick(isSelectWindow)
-
-    host().getProcesses ({procs, defaultName, defaultPid}) ->
-        $pSel = $ '#process'
-        for p in procs
-            $op = $ """<option value="#{p.pid}">#{formatProcessName p.name}</option>"""
-            $op.data 'exe', p.name
-            $pSel.append $op
-        setDefaultProcess defaultPid, defaultName
-        return
 
     $('#select_window').click ->
         isSelectWindow = not isSelectWindow
@@ -133,6 +137,7 @@ disconnect = window.disconnect = ->
     $('#working').hide()
     connectError('Disconnected.')
     $('body').removeClass('working').addClass('startup')
+    updateProcesses()
     $('#startup').show()
     clearContexts()
     return

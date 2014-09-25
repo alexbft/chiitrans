@@ -13,21 +13,18 @@ body {
   background-color: #000001;
   color: #FFF;
 }
-.transparent #parse, .transparent #translation{
-   text-shadow:
-     -1px -1px 0 #000,  
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-       1px 1px 0 #000;
+/*.transparent {
+    .basetext, #translation {
+        text-shadow: 2px 2px 1px #000;
+    }
+}*/
+.transparent #parse,
+.transparent #translation {
+  text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
 }
 .transparent ruby rt {
-   text-shadow:
-     -1px -1px 0 #000,  
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-       1px 1px 0 #000;
+  text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
 }
-
 .sides div {
   z-index: 3;
   background: #666;
@@ -179,7 +176,6 @@ body {
 }
 .text {
   cursor: default;
-  /*display: inline-block;*/
 }
 .parsed0 {
   color: #1B3C91;
@@ -190,23 +186,18 @@ body {
 .parsed_name {
   color: #AF4141;
 }
-
 .parsed0:hover .basetext {
   color: #1B3C90;
   background-color: #D4E0F4;
 }
-
 .parsed1:hover .basetext {
   color: #559830;
   background-color: #D4E0F4;
 }
-
 .parsed_name:hover .basetext {
   color: #AF4140;
   background-color: #D4E0F4;
 }
-
-
 .transparent .parsed0 {
   color: #bfcae8;
 }
@@ -219,15 +210,15 @@ body {
 /*ie11 bug - have to change text color */
 .transparent .parsed0:hover .basetext {
   color: #bfcae9;
-  background-color: #3469DB;
+  background-color: #3469DB !important;
 }
 .transparent .parsed1:hover .basetext {
   color: #c5ebac;
-  background-color: #3469DB;
+  background-color: #3469DB !important;
 }
 .transparent .parsed_name:hover .basetext {
   color: #E0BCBd;
-  background-color: #3469DB;
+  background-color: #3469DB !important;
 }
 .parse_frame {
   font: 29px 'MS Gothic';
