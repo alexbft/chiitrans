@@ -36,6 +36,7 @@
             this.transparentModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clipboardMonitor1 = new ChiitransLite.forms.ClipboardMonitor();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.editTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,13 +48,14 @@
             this.parseSelectionToolStripMenuItem,
             this.translateSelectionToolStripMenuItem,
             this.addNewNameToolStripMenuItem,
+            this.editTextToolStripMenuItem,
             this.toolStripSeparator2,
             this.copyToolStripMenuItem,
             this.pasteToolStripMenuItem,
             this.toolStripSeparator1,
             this.transparentModeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(207, 192);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(207, 214);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // banWordToolStripMenuItem
@@ -146,6 +148,14 @@
             this.webBrowser1.WebBrowserShortcutsEnabled = false;
             this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webBrowser1_PreviewKeyDown);
             // 
+            // editTextToolStripMenuItem
+            // 
+            this.editTextToolStripMenuItem.Name = "editTextToolStripMenuItem";
+            this.editTextToolStripMenuItem.ShortcutKeyDisplayString = "Backspace";
+            this.editTextToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.editTextToolStripMenuItem.Text = "Edit text...";
+            this.editTextToolStripMenuItem.Click += new System.EventHandler(this.editTextToolStripMenuItem_Click);
+            // 
             // TranslationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -187,5 +197,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private ClipboardMonitor clipboardMonitor1;
         private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.ToolStripMenuItem editTextToolStripMenuItem;
     }
 }

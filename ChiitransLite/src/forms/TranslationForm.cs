@@ -6,6 +6,7 @@ using ChiitransLite.translation.atlas;
 using ChiitransLite.translation.edict;
 using ChiitransLite.translation.edict.parseresult;
 using ChiitransLite.translation.po;
+using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -330,6 +331,8 @@ namespace ChiitransLite.forms {
                 addNewNameToolStripMenuItem_Click(null, null);
             } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.T) {
                 transparentModeToolStripMenuItem_Click(null, null);
+            } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Back) {
+                editTextToolStripMenuItem_Click(null, null);
             }
         }
 
@@ -653,6 +656,22 @@ namespace ChiitransLite.forms {
                 setTransparentMode(Settings.app.transparentMode);
             }
             base.WndProc(ref m);
+        }
+
+        private void editTextToolStripMenuItem_Click(object sender, EventArgs e) {
+            string text;
+            if (lastParseResult != null) {
+                text = lastParseResult.asText();
+            } else {
+                text = "";
+            }
+            string newText = null;
+            this.SuspendTopMost(() => {
+                newText = Interaction.InputBox("Enter new text:", "Edit Text", text);
+            });
+            if (!string.IsNullOrWhiteSpace(newText) && text != newText) {
+                TranslationService.instance.update(newText);
+            }
         }
     }
 }
