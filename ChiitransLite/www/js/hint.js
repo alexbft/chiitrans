@@ -1,5 +1,5 @@
-﻿(function() {
-  var $body, $hint, $html, $infType, $kana, $kanji, $nameType, $page, $pageNum, $pageNumFrame, $sense, $tense, data, defs, makeDictKey, makeMisc, makeMiscSingle, makeReading, makeSense, nameDefs, pageNext, pageNum, pagePrev, setDefinitions, setNameDefinitions, show, showPage, showSense;
+(function() {
+  var $body, $hint, $html, $infType, $kana, $kanji, $nameType, $page, $pageNum, $pageNumFrame, $priority, $sense, $tense, data, defs, makeDictKey, makeMisc, makeMiscSingle, makeReading, makeSense, nameDefs, pageNext, pageNum, pagePrev, setDefinitions, setNameDefinitions, show, showPage, showSense;
 
   data = null;
 
@@ -9,7 +9,7 @@
 
   nameDefs = {};
 
-  $page = $pageNum = $pageNumFrame = $kanji = $kana = $sense = $nameType = $infType = $tense = $hint = null;
+  $page = $pageNum = $pageNumFrame = $kanji = $kana = $sense = $nameType = $infType = $tense = $hint = $priority = null;
 
   $html = $body = null;
 
@@ -42,6 +42,7 @@
     $infType = $('#infType');
     $tense = $('#tense');
     $hint = $('#hint');
+    $priority = $('#priority');
     return $page.on('click', '.reading', function() {
       host().setReading(data.stem, $(this).data('text'));
     });
@@ -141,6 +142,11 @@
       } else {
         $nameType.empty();
       }
+      if (page.priority) {
+        $priority.html(makeMisc(page.priority.split(", ")));
+      } else {
+        $priority.empty();
+      }
       infType = null;
       if (data.inf.isFormal && data.inf.isNegative) {
         infType = "Formal, negative";
@@ -201,10 +207,15 @@
   };
 
   makeMiscSingle = function(misc) {
-    var src, title;
+    var res, src, title;
     src = data.isName ? nameDefs : defs;
-    if (src[misc] != null) {
-      title = " title=\"" + (_.escape(src[misc])) + "\"";
+    if (misc.length >= 2 && misc.substr(0, 2) === "nf") {
+      res = src["nf"];
+    } else {
+      res = src[misc];
+    }
+    if (res != null) {
+      title = " title=\"" + (_.escape(res)) + "\"";
     } else {
       title = "";
     }

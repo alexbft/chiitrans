@@ -3,7 +3,7 @@ pageNum = 0
 defs = {}
 nameDefs = {}
 
-$page = $pageNum = $pageNumFrame = $kanji = $kana = $sense = $nameType = $infType = $tense = $hint = null
+$page = $pageNum = $pageNumFrame = $kanji = $kana = $sense = $nameType = $infType = $tense = $hint = $priority = null
 $html = $body = null
 
 $ ->
@@ -39,6 +39,7 @@ $ ->
     $infType = $('#infType')
     $tense = $('#tense')
     $hint = $('#hint')
+    $priority = $('#priority')
 
     $page.on 'click', '.reading', ->
         host().setReading data.stem, $(this).data('text')
@@ -114,6 +115,10 @@ showPage = (data, pageNum) ->
             $nameType.html makeMisc [page.nameType]
         else
             $nameType.empty()
+        if page.priority
+            $priority.html makeMisc page.priority.split(", ")
+        else
+            $priority.empty()
         infType = null
         if data.inf.isFormal and data.inf.isNegative
             infType = "Formal, negative"
@@ -160,8 +165,12 @@ makeMisc = (misc) ->
 
 makeMiscSingle = (misc) ->
     src = if data.isName then nameDefs else defs
-    if src[misc]?
-        title = " title=\"#{_.escape src[misc]}\""
+    if misc.length >= 2 and misc.substr(0, 2) == "nf"
+        res = src["nf"]
+    else
+        res = src[misc]
+    if res?
+        title = " title=\"#{_.escape res}\""
     else
         title = ""
     """<span class="misc"#{title}>#{misc}</span>"""

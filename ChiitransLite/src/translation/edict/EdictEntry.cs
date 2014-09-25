@@ -10,6 +10,7 @@ namespace ChiitransLite.translation.edict {
         public List<DictionarySense> sense;
         public List<string> POS;
         public string nameType;
+        public string priority;
 
         internal string getText() {
             if (kanji.Count > 0) {

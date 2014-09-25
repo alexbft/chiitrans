@@ -182,7 +182,8 @@ namespace ChiitransLite.translation.edict.parseresult {
                 kana = (from k in entry.kana select serializeDictKey(k)),
                 sense = (from s in entry.sense select serializeSense(s)),
                 POS = entry.POS,
-                nameType = entry.nameType
+                nameType = entry.nameType,
+                priority = entry.priority
             };
         }
 

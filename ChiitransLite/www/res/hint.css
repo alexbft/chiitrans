@@ -1,4 +1,4 @@
-﻿html {
+html {
   font: 14px Verdana;
 }
 body {
@@ -25,7 +25,6 @@ a {
 }
 #pageNumFrame {
   /*text-align: center;*/
-
   padding-left: 0.8em;
   font-family: Segoe UI;
   color: gray;
@@ -69,11 +68,13 @@ a {
 .sense {
   margin-bottom: 0.3em;
 }
-#tense {
+#tense,
+#priority {
   color: #66b;
   font-size: 85%;
 }
-#tense .misc_set {
+#tense .misc_set,
+#priority .misc_set {
   color: #66b;
   font-size: 100%;
 }

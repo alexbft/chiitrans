@@ -51,8 +51,8 @@ namespace ChiitransLite.translation.edict {
                 addToIndex(mainIndex, "オレ", 2.0, ore);
                 RatedEntry tachi = kanaIndex["たち"].entries.First((re) => re.entry.kanji[0].text == "達");
                 tachi.rate = 2.0F;
-                RatedEntry ii = kanaIndex["い"].entries.First((re) => re.entry.kanji[0].text == "良い");
-                addToIndex(kanaIndex, "いい", 2.0, ii.entry);
+                //RatedEntry ii = kanaIndex["い"].entries.First((re) => re.entry.kanji[0].text == "良い");
+                //addToIndex(kanaIndex, "いい", 2.0, ii.entry);
                 mainIndex.Remove("もの");
                 var haji = mainIndex["初めまして"].entries[0];
                 haji.rate = 2.0F;
@@ -77,6 +77,8 @@ namespace ChiitransLite.translation.edict {
                         zeroStemForms[suffix] = zeroStem;
                     }
                 }
+
+                addFrequencyEntities();
 
                 definitions = entities;
                 entities = new Dictionary<string, string>();
@@ -107,6 +109,23 @@ namespace ChiitransLite.translation.edict {
             } catch (Exception ex) {
                 Logger.logException(ex);
             }
+        }
+
+        private void addFrequencyEntities() {
+            string news12 = "appears in the \"wordfreq\" file compiled by Alexandre Girardi from the Mainichi Shimbun. (See the Monash ftp archive for a copy.) Words in the first 12,000 in that file are marked \"news1\" and words in the second 12,000 are marked \"news2\".";
+            string ichi12 = "appears in the \"Ichimango goi bunruishuu\", Senmon Kyouiku Publishing, Tokyo, 1998. (The entries marked \"ichi2\" were demoted from ichi1 because they were observed to have low frequencies in the WWW and newspapers.)";
+            string spec12 = "a small number of words use this marker when they are detected as being common, but are not included in other lists.";
+            string gai12 = "common loanwords, based on the wordfreq file.";
+            string nf = "this is an indicator of frequency-of-use ranking in the wordfreq file. \"xx\" is the number of the set of 500 words in which the entry can be found, with \"01\" assigned to the first 500, \"02\" to the second, and so on.";
+            entities["news1"] = news12;
+            entities["news2"] = news12;
+            entities["ichi1"] = ichi12;
+            entities["ichi2"] = ichi12;
+            entities["spec1"] = spec12;
+            entities["spec2"] = spec12;
+            entities["gai1"] = gai12;
+            entities["gai2"] = gai12;
+            entities["nf"] = nf;
         }
 
         private void readEntry(XmlReader xml) {
@@ -169,7 +188,9 @@ namespace ChiitransLite.translation.edict {
                             misc.Add(fromEntity(xml));
                             break;
                         case "ke_pri":
-                            mult = Math.Max(mult, getMultiplierFromCode(xml.ReadString()));
+                            string priority = xml.ReadString();
+                            entry.addPriority(priority);
+                            mult = Math.Max(mult, getMultiplierFromCode(priority));
                             break;
                     }
                 }
@@ -207,8 +228,10 @@ namespace ChiitransLite.translation.edict {
                             misc.Add(fromEntity(xml));
                             break;
                         case "re_pri":
+                            string priority = xml.ReadString();
+                            entry.addPriority(priority);
                             if (mult > 0) {
-                                mult = Math.Max(mult, getMultiplierFromCode(xml.ReadString()));
+                                mult = Math.Max(mult, getMultiplierFromCode(priority));
                             }
                             break;
                     }

@@ -9,6 +9,7 @@ namespace ChiitransLite.translation.edict {
         public List<DictionaryKeyBuilder> kana = new List<DictionaryKeyBuilder>();
         public List<DictionarySense> sense = new List<DictionarySense>();
         public List<string> POS = new List<string>();
+        public ISet<string> priority = new HashSet<string>();
         public double globalMultiplier = 1.0;
         public double globalKanaMultiplier = 0.8;
         public string nameType = null;
@@ -42,8 +43,13 @@ namespace ChiitransLite.translation.edict {
                 kana = kana.Select((k) => k.build()).ToList(),
                 sense = sense,
                 POS = POS.Distinct().ToList(),
-                nameType = nameType
+                nameType = nameType,
+                priority = string.Join(", ", priority)
             };
+        }
+
+        internal void addPriority(string priority) {
+            this.priority.Add(priority);
         }
     }
 }
