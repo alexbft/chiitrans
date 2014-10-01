@@ -50,6 +50,9 @@
     "ATLAS": function(src, callback) {
       return host().translateAtlas(src, callback);
     },
+    "ATLAS with TAHelper replacements": function(src, callback) {
+      return host().translateAtlas2(src, callback);
+    },
     "Custom": function(src, callback, ex) {
       return host().translateCustom(ex.rawText, callback);
     },
@@ -90,7 +93,7 @@
           }
           return _results;
         })();
-        return ss.join(' ').replace(/~\s.+?у\b/ig, '');
+        return ss.join(' ').replace(/~\s\S+у/ig, '');
       });
     }),
     "Babylon": wrap(function(src, callback) {

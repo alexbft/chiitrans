@@ -253,5 +253,11 @@ namespace ChiitransLite.translation.atlas {
                 return Enumerable.Repeat("General", 1);
             }
         }
+
+        internal string translateWithReplacements(string src) {
+            ReplacementScript rs = ReplacementScript.get();
+            string repl = rs.process(src);
+            return translate(repl);
+        }
     }
 }

@@ -166,6 +166,10 @@ namespace ChiitransLite.forms {
                 return Atlas.instance.translate(src);
             }
 
+            public string translateAtlas2(string src) {
+                return Atlas.instance.translateWithReplacements(src);
+            }
+
             public string translateCustom(string src) {
                 return PoManager.instance.getTranslation(src);
             }

@@ -204,6 +204,7 @@
     <Compile Include="src\translation\edict\RatedEntry.cs" />
     <Compile Include="src\translation\po\PoManager.cs" />
     <Compile Include="src\translation\po\PoTranslation.cs" />
+    <Compile Include="src\translation\ReplacementScript.cs" />
     <Compile Include="src\translation\TranslationResult.cs" />
     <Compile Include="src\translation\TranslationService.cs" />
     <EmbeddedResource Include="src\forms\AboutForm.resx">

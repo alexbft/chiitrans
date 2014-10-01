@@ -33,6 +33,9 @@ wrap = (fn) ->
 registerTranslators
     "ATLAS": (src, callback) ->
         host().translateAtlas src, callback
+        
+    "ATLAS with TAHelper replacements": (src, callback) ->
+        host().translateAtlas2 src, callback
 
     "Custom": (src, callback, ex) ->
         host().translateCustom ex.rawText, callback
@@ -51,7 +54,7 @@ registerTranslators
         get url, callback, (res) ->
             res = evalAsJson res
             ss = ($.trim(s[0]) for s in res[0])
-            ss.join(' ').replace /~\s.+?у\b/ig, ''
+            ss.join(' ').replace /~\s\S+у/ig, ''
 
     "Babylon": wrap (src, callback) ->
         src = encodeURIComponent src

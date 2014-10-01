@@ -344,9 +344,13 @@ renderSimpleTranslationResult = (text) ->
 renderMultiTranslationResult = (translators) ->
     $res = $('<table class="multiTranslation">')
     for t in translators
+        if t == "ATLAS with TAHelper replacements"
+            text = "ATLAS2"
+        else
+            text = t
         $res.append """
             <tr>
-                <td class="translator">#{t}</td>
+                <td class="translator">#{text}</td>
                 <td class="result" data-trans="#{t}"></td>
             </tr>"""
     $res

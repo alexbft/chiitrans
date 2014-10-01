@@ -433,11 +433,16 @@
   };
 
   renderMultiTranslationResult = function(translators) {
-    var $res, t, _i, _len;
+    var $res, t, text, _i, _len;
     $res = $('<table class="multiTranslation">');
     for (_i = 0, _len = translators.length; _i < _len; _i++) {
       t = translators[_i];
-      $res.append("<tr>\n    <td class=\"translator\">" + t + "</td>\n    <td class=\"result\" data-trans=\"" + t + "\"></td>\n</tr>");
+      if (t === "ATLAS with TAHelper replacements") {
+        text = "ATLAS2";
+      } else {
+        text = t;
+      }
+      $res.append("<tr>\n    <td class=\"translator\">" + text + "</td>\n    <td class=\"result\" data-trans=\"" + t + "\"></td>\n</tr>");
     }
     return $res;
   };
