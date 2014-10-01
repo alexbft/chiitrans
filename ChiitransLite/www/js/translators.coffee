@@ -24,12 +24,12 @@ wrap = (fn) ->
         if q
             fixedSrc = q[2].substr 1, q[2].length - 2
             fixedCallback = (res) ->
-                res = q[1] + '\n' + q[2].charAt(0) + res + q[2].charAt(q[2].length - 1)
+                res = q[1] + q[2].charAt(0) + res + q[2].charAt(q[2].length - 1)
                 callback res
             fn fixedSrc, fixedCallback, ex
         else
             fn src, callback, ex
-
+            
 registerTranslators
     "ATLAS": (src, callback) ->
         host().translateAtlas src, callback
@@ -44,6 +44,14 @@ registerTranslators
             res = evalAsJson res
             ss = ($.trim(s[0]) for s in res[0])
             ss.join(' ').replace /\btsu\b/ig, ''
+            
+    "Меховой пончик": wrap (src, callback) ->
+        src = encodeURIComponent src
+        url = "http://translate.google.com/translate_a/t?client=t&text=#{src}&sl=ja&tl=ru"
+        get url, callback, (res) ->
+            res = evalAsJson res
+            ss = ($.trim(s[0]) for s in res[0])
+            ss.join(' ').replace /~\s.+?у\b/ig, ''
 
     "Babylon": wrap (src, callback) ->
         src = encodeURIComponent src

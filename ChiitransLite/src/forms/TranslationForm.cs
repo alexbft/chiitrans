@@ -223,6 +223,7 @@ namespace ChiitransLite.forms {
             };
             SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             //Utils.setWindowNoActivate(this.Handle);
+            Winapi.RegisterHotKey(Handle, 0, (int)Winapi.KeyModifier.None, (int)Keys.Oemtilde);
         }
 
         void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) {
@@ -650,12 +651,31 @@ namespace ChiitransLite.forms {
         }
 
         const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
+        const int WM_HOTKEY = 0x0312;
         
         protected override void WndProc(ref Message m) {
             if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
                 setTransparentMode(Settings.app.transparentMode);
+            } else if (m.Msg == WM_HOTKEY) {
+                hotKeyPressed();
             }
             base.WndProc(ref m);
+        }
+
+        private void hotKeyPressed() {
+            IntPtr handle = Winapi.WindowFromPoint(Cursor.Position);
+            if (handle != Winapi.INVALID_HANDLE_VALUE) {
+                string txt = Winapi.GetWindowTextRaw(handle);
+                if (!string.IsNullOrWhiteSpace(txt)) {
+                    if (txt.Length > 1000) {
+                        txt = txt.Substring(0, 1000);
+                    }
+                    TranslationService.instance.update(txt);
+                    /*if (TextUtils.containsJapanese(txt)) {
+                        
+                    }*/
+                }
+            }
         }
 
         private void editTextToolStripMenuItem_Click(object sender, EventArgs e) {

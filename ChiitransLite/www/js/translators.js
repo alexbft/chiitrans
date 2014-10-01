@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   var evalAsJson, get, html2text, wrap;
 
   evalAsJson = function(json) {
@@ -36,7 +36,7 @@
       if (q) {
         fixedSrc = q[2].substr(1, q[2].length - 2);
         fixedCallback = function(res) {
-          res = q[1] + '\n' + q[2].charAt(0) + res + q[2].charAt(q[2].length - 1);
+          res = q[1] + q[2].charAt(0) + res + q[2].charAt(q[2].length - 1);
           return callback(res);
         };
         return fn(fixedSrc, fixedCallback, ex);
@@ -71,6 +71,26 @@
           return _results;
         })();
         return ss.join(' ').replace(/\btsu\b/ig, '');
+      });
+    }),
+    "Меховой пончик": wrap(function(src, callback) {
+      var url;
+      src = encodeURIComponent(src);
+      url = "http://translate.google.com/translate_a/t?client=t&text=" + src + "&sl=ja&tl=ru";
+      return get(url, callback, function(res) {
+        var s, ss;
+        res = evalAsJson(res);
+        ss = (function() {
+          var _i, _len, _ref, _results;
+          _ref = res[0];
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            s = _ref[_i];
+            _results.push($.trim(s[0]));
+          }
+          return _results;
+        })();
+        return ss.join(' ').replace(/~\s.+?у\b/ig, '');
       });
     }),
     "Babylon": wrap(function(src, callback) {

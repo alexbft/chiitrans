@@ -100,6 +100,65 @@ namespace ChiitransLite.misc {
         public const int SWP_NOMOVE = 0x0002;
         public const int SWP_NOSIZE = 0x0001;
 
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        public enum KeyModifier {
+            None = 0,
+            Alt = 1,
+            Control = 2,
+            Shift = 4,
+            WinKey = 8
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT {
+            public int X;
+            public int Y;
+
+            public POINT(int x, int y) {
+                this.X = x;
+                this.Y = y;
+            }
+
+            public POINT(System.Drawing.Point pt) : this(pt.X, pt.Y) { }
+
+            public static implicit operator System.Drawing.Point(POINT p) {
+                return new System.Drawing.Point(p.X, p.Y);
+            }
+
+            public static implicit operator POINT(System.Drawing.Point p) {
+                return new POINT(p.X, p.Y);
+            }
+        }
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr WindowFromPoint(POINT Point);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr WindowFromPoint(int xPoint, int yPoint);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, [Out] StringBuilder lParam);
+
+        const int WM_GETTEXTLENGTH = 0x000E;
+        const int WM_GETTEXT = 0x000D;
+
+        public static string GetWindowTextRaw(IntPtr hwnd) {
+            // Allocate correct string length first
+            int length = (int)SendMessage(hwnd, WM_GETTEXTLENGTH, IntPtr.Zero, IntPtr.Zero);
+            if (length <= 0) {
+                return null;
+            }
+            StringBuilder sb = new StringBuilder(length + 1);
+            SendMessage(hwnd, WM_GETTEXT, (IntPtr)sb.Capacity, sb);
+            return sb.ToString();
+        }
 
     }
 }
