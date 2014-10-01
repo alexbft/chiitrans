@@ -1,6 +1,7 @@
 *dict.xml
 todo.txt
 log.txt
+words.txt
 *.exe
 *.manifest
 *.vshost.*

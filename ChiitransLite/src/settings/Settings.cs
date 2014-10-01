@@ -40,6 +40,7 @@ namespace ChiitransLite.settings {
         public readonly string JMnedictPath = Path.Combine(Utils.getRootPath(), "data/JMnedict.xml");
         public readonly string ConjugationsPath = Path.Combine(Utils.getRootPath(), "data/Conjugations.txt");
         public readonly string ReplacementScriptPath = Path.Combine(Utils.getRootPath(), "data/names.txt");
+        public readonly string SaveWordPath = Path.Combine(Utils.getRootPath(), "words.txt");
 
         private ConcurrentDictionary<string, int> selectedPages;
         private bool selectedPagesDirty = false;

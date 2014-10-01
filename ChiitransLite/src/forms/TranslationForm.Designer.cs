@@ -29,14 +29,15 @@
             this.parseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.transparentModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clipboardMonitor1 = new ChiitransLite.forms.ClipboardMonitor();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.editTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clipboardMonitor1 = new ChiitransLite.forms.ClipboardMonitor();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,19 +50,21 @@
             this.translateSelectionToolStripMenuItem,
             this.addNewNameToolStripMenuItem,
             this.editTextToolStripMenuItem,
+            this.saveWordToolStripMenuItem,
             this.toolStripSeparator2,
             this.copyToolStripMenuItem,
             this.pasteToolStripMenuItem,
             this.toolStripSeparator1,
             this.transparentModeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(207, 214);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(235, 236);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // banWordToolStripMenuItem
             // 
             this.banWordToolStripMenuItem.Name = "banWordToolStripMenuItem";
-            this.banWordToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.banWordToolStripMenuItem.ShortcutKeyDisplayString = "Del";
+            this.banWordToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.banWordToolStripMenuItem.Text = "Mark as incorrect";
             this.banWordToolStripMenuItem.Click += new System.EventHandler(this.banWordToolStripMenuItem_Click);
             // 
@@ -69,15 +72,15 @@
             // 
             this.parseSelectionToolStripMenuItem.Name = "parseSelectionToolStripMenuItem";
             this.parseSelectionToolStripMenuItem.ShortcutKeyDisplayString = "Space";
-            this.parseSelectionToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.parseSelectionToolStripMenuItem.Text = "Parse selection";
+            this.parseSelectionToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.parseSelectionToolStripMenuItem.Text = "Re-parse with selection";
             this.parseSelectionToolStripMenuItem.Click += new System.EventHandler(this.parseSelectionToolStripMenuItem_Click);
             // 
             // translateSelectionToolStripMenuItem
             // 
             this.translateSelectionToolStripMenuItem.Name = "translateSelectionToolStripMenuItem";
             this.translateSelectionToolStripMenuItem.ShortcutKeyDisplayString = "Enter";
-            this.translateSelectionToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.translateSelectionToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.translateSelectionToolStripMenuItem.Text = "Translate selection";
             this.translateSelectionToolStripMenuItem.Click += new System.EventHandler(this.translateSelectionToolStripMenuItem_Click);
             // 
@@ -85,20 +88,28 @@
             // 
             this.addNewNameToolStripMenuItem.Name = "addNewNameToolStripMenuItem";
             this.addNewNameToolStripMenuItem.ShortcutKeyDisplayString = "Ins";
-            this.addNewNameToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.addNewNameToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.addNewNameToolStripMenuItem.Text = "Add new name...";
             this.addNewNameToolStripMenuItem.Click += new System.EventHandler(this.addNewNameToolStripMenuItem_Click);
+            // 
+            // editTextToolStripMenuItem
+            // 
+            this.editTextToolStripMenuItem.Name = "editTextToolStripMenuItem";
+            this.editTextToolStripMenuItem.ShortcutKeyDisplayString = "Backspace";
+            this.editTextToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.editTextToolStripMenuItem.Text = "Edit text...";
+            this.editTextToolStripMenuItem.Click += new System.EventHandler(this.editTextToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(231, 6);
             // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+C";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -106,32 +117,22 @@
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+V";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(203, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(231, 6);
             // 
             // transparentModeToolStripMenuItem
             // 
             this.transparentModeToolStripMenuItem.Name = "transparentModeToolStripMenuItem";
             this.transparentModeToolStripMenuItem.ShortcutKeyDisplayString = "T";
-            this.transparentModeToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.transparentModeToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.transparentModeToolStripMenuItem.Text = "Transparent Mode";
             this.transparentModeToolStripMenuItem.Click += new System.EventHandler(this.transparentModeToolStripMenuItem_Click);
-            // 
-            // clipboardMonitor1
-            // 
-            this.clipboardMonitor1.BackColor = System.Drawing.Color.Red;
-            this.clipboardMonitor1.Location = new System.Drawing.Point(0, 0);
-            this.clipboardMonitor1.Name = "clipboardMonitor1";
-            this.clipboardMonitor1.Size = new System.Drawing.Size(75, 23);
-            this.clipboardMonitor1.TabIndex = 1;
-            this.clipboardMonitor1.Text = "clipboardMonitor1";
-            this.clipboardMonitor1.Visible = false;
             // 
             // webBrowser1
             // 
@@ -148,13 +149,23 @@
             this.webBrowser1.WebBrowserShortcutsEnabled = false;
             this.webBrowser1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webBrowser1_PreviewKeyDown);
             // 
-            // editTextToolStripMenuItem
+            // saveWordToolStripMenuItem
             // 
-            this.editTextToolStripMenuItem.Name = "editTextToolStripMenuItem";
-            this.editTextToolStripMenuItem.ShortcutKeyDisplayString = "Backspace";
-            this.editTextToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.editTextToolStripMenuItem.Text = "Edit text...";
-            this.editTextToolStripMenuItem.Click += new System.EventHandler(this.editTextToolStripMenuItem_Click);
+            this.saveWordToolStripMenuItem.Name = "saveWordToolStripMenuItem";
+            this.saveWordToolStripMenuItem.ShortcutKeyDisplayString = "S";
+            this.saveWordToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.saveWordToolStripMenuItem.Text = "Save word to file";
+            this.saveWordToolStripMenuItem.Click += new System.EventHandler(this.saveWordToolStripMenuItem_Click);
+            // 
+            // clipboardMonitor1
+            // 
+            this.clipboardMonitor1.BackColor = System.Drawing.Color.Red;
+            this.clipboardMonitor1.Location = new System.Drawing.Point(0, 0);
+            this.clipboardMonitor1.Name = "clipboardMonitor1";
+            this.clipboardMonitor1.Size = new System.Drawing.Size(75, 23);
+            this.clipboardMonitor1.TabIndex = 1;
+            this.clipboardMonitor1.Text = "clipboardMonitor1";
+            this.clipboardMonitor1.Visible = false;
             // 
             // TranslationForm
             // 
@@ -198,5 +209,6 @@
         private ClipboardMonitor clipboardMonitor1;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ToolStripMenuItem editTextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveWordToolStripMenuItem;
     }
 }

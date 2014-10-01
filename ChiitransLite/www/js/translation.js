@@ -1,5 +1,5 @@
 (function() {
-  var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, flash, getSelectedEntryId, getTextSelection, http, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, registerTranslators, renderMultiTranslationResult, renderOldTranslationResult, renderParseResult, renderSimpleTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, translate, translators, updateMultiTranslationResult, updateReading, updateTranslationResult;
+  var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, currentEntryId, currentWord, flash, getCurrentWord, getSelectedEntryId, getTextSelection, http, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, registerTranslators, renderMultiTranslationResult, renderOldTranslationResult, renderParseResult, renderSimpleTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, translate, translators, updateMultiTranslationResult, updateReading, updateTranslationResult;
 
   MAX_LOG = 20;
 
@@ -20,6 +20,10 @@
   roundTo1_100 = function(n) {
     return Math.round(n * 100) / 100;
   };
+
+  currentWord = null;
+
+  currentEntryId = 0;
 
   $(function() {
     var captionLastClick, fromLg, hiding, hidingTimer, makeResizer, options, toLg;
@@ -117,6 +121,12 @@
           host().showContextMenu($(this).data('text'), false, $(this).parents('.entry').data('id'));
         }
       }
+    }).on('mouseenter', '.parsed', function() {
+      currentWord = $(this).data('text');
+      return currentEntryId = $(this).parents('.entry').data('id');
+    }).on('mouseleave', '.parsed', function() {
+      currentWord = null;
+      return currentEntryId = 0;
     });
     $content = $('#content');
     $history = $('#history');
@@ -275,10 +285,10 @@
       if (res != null) {
         return +res;
       } else {
-        return 0;
+        return currentEntryId;
       }
     } else {
-      return 0;
+      return currentEntryId;
     }
   };
 
@@ -501,6 +511,14 @@
       $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: " + size + "% }";
     } catch (e) {
       $('#fontSizeStyle').html(".font_zoom { font-size: " + size + "% }");
+    }
+  };
+
+  getCurrentWord = window.getCurrentWord = function() {
+    if (getTextSelection()) {
+      return null;
+    } else {
+      return currentWord;
     }
   };
 

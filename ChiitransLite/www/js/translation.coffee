@@ -10,6 +10,9 @@ separateSpeaker = false
 roundTo1_100 = (n) ->
     Math.round(n * 100) / 100
 
+currentWord = null
+currentEntryId = 0
+
 $ ->
     options = host().getOptions()
 
@@ -64,7 +67,7 @@ $ ->
 
     hiding = false
     hidingTimer = null
-
+    
     $(document).on('mouseenter', '.basetext', (ev) ->
         if hiding
             hiding = false
@@ -98,7 +101,13 @@ $ ->
                 host().showContextMenu $(this).data('text'), false, $(this).parents('.entry').data('id')
         return
     )
-
+    .on 'mouseenter', '.parsed', ->
+        currentWord = $(this).data 'text'
+        currentEntryId = $(this).parents('.entry').data('id')
+    .on 'mouseleave', '.parsed', ->
+        currentWord = null
+        currentEntryId = 0
+    
     $content = $('#content')
     $history = $('#history')
     $current = $('#current')
@@ -230,9 +239,9 @@ getSelectedEntryId = window.getSelectedEntryId = ->
         if res?
             +res
         else
-            0
+            currentEntryId
     else
-        0
+        currentEntryId
 
 updateReading = window.updateReading = (text, reading) ->
     if $currentEntry?
@@ -406,7 +415,12 @@ setFontSize = (size) ->
     catch e
         $('#fontSizeStyle').html ".font_zoom { font-size: #{size}% }"
     return
-
+    
+getCurrentWord = window.getCurrentWord = ->
+    if getTextSelection()
+        null
+    else
+        currentWord
 
 translators = {}
 

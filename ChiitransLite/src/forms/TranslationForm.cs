@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -338,6 +339,27 @@ namespace ChiitransLite.forms {
                 transparentModeToolStripMenuItem_Click(null, null);
             } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Back) {
                 editTextToolStripMenuItem_Click(null, null);
+            } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Delete) {
+                if (unrealSelection()) {
+                    banWordToolStripMenuItem_Click(null, null);
+                }
+            } else if (e.Modifiers == Keys.None && e.KeyCode == Keys.S) {
+                if (unrealSelection()) {
+                    saveWordToolStripMenuItem_Click(null, null);
+                }
+            }
+        }
+
+        private bool unrealSelection() {
+            string s = (string)webBrowser1.callScript("getCurrentWord");
+            //Logger.log("word: " + s);
+            if (!string.IsNullOrEmpty(s)) {
+                lastIsRealSelection = false;
+                lastSelection = s;
+                lastSelectedParseResult = getSelectedParseResult();
+                return true;
+            } else {
+                return false;
             }
         }
 
@@ -387,9 +409,11 @@ namespace ChiitransLite.forms {
             transparentModeToolStripMenuItem.Checked = Settings.app.transparentMode;
             if (hasSelection && !lastIsRealSelection) {
                 banWordToolStripMenuItem.Enabled = true;
+                saveWordToolStripMenuItem.Enabled = true;
                 banWordToolStripMenuItem.Text = "Mark as incorrect: " + lastSelection;
             } else {
                 banWordToolStripMenuItem.Enabled = false;
+                saveWordToolStripMenuItem.Enabled = false;
                 banWordToolStripMenuItem.Text = "Mark as incorrect";
             }
         }
@@ -696,6 +720,39 @@ namespace ChiitransLite.forms {
             if (!string.IsNullOrWhiteSpace(newText) && text != newText) {
                 TranslationService.instance.update(newText);
             }
+        }
+
+        private void saveWordToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (!lastIsRealSelection && !string.IsNullOrEmpty(lastSelection) && lastSelectedParseResult != null) {
+                foreach (ParseResult p in lastSelectedParseResult.getParts()) {
+                    if (p.asText() == lastSelection && (p is WordParseResult)) {
+                        saveWord(p as WordParseResult);
+                        webBrowser1.callScript("flash", "Word saved.");
+                    }
+                }
+            }
+        }
+
+        private void saveWord(WordParseResult wordParseResult) {
+            EdictEntry entry = wordParseResult.getSelectedEntry();
+            string kanji = string.Join(",", (from k in entry.kanji select k.text));
+            string kana = string.Join(",", (from k in entry.kana select k.text));
+            string meaning = string.Join("/", (from m in entry.sense select m.glossary.First()).Take(3));
+            string fn = Settings.app.SaveWordPath;
+            if (File.Exists(fn)) {
+                foreach (string s in File.ReadAllLines(fn)) {
+                    if (kanji != "") {
+                        if (s.StartsWith(kanji)) {
+                            return;
+                        }
+                    } else {
+                        if (s.StartsWith("\t" + kana)) {
+                            return;
+                        }
+                    }
+                }
+            }
+            File.AppendAllText(fn, kanji + "\t" + kana + "\t" + meaning + "\n");
         }
     }
 }
