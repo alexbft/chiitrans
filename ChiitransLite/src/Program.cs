@@ -25,6 +25,10 @@ namespace ChiitransLite {
                 Exception ex = (Exception)args.ExceptionObject;
                 Logger.logException(ex);
             };
+            try {
+                Logger.log("Chiitrans Lite " + Application.ProductVersion.ToString());
+            } catch {
+            }
             Task.Factory.StartNew(() => {
                 Atlas.instance.initialize();
             });
