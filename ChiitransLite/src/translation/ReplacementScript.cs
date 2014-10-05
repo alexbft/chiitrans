@@ -37,6 +37,9 @@ namespace ChiitransLite.translation {
                     continue;
                 }
                 string[] parts = ln.Split('\t');
+                if (parts.Length == 1) {
+                    replacements.Add(new Replacement(parts[0], ""));
+                } else
                 if (parts.Length == 2) {
                     replacements.Add(new Replacement(parts[0], parts[1]));
                 } else {

@@ -20,11 +20,14 @@ namespace ChiitransLite.misc {
         internal static void log(string value) {
 #if true //DEBUG
             lock (typeof(Logger)) {
-                if (logFile == null) {
-                    logFile = File.AppendText(Path.Combine(Utils.getRootPath(), "log.txt"));
+                try {
+                    if (logFile == null) {
+                        logFile = File.AppendText(Path.Combine(Utils.getRootPath(), "log.txt"));
+                    }
+                    logFile.WriteLine("[{0}] {1}", DateTime.Now.ToString(), value);
+                    logFile.Flush();
+                } catch (IOException) {
                 }
-                logFile.WriteLine("[{0}] {1}", DateTime.Now.ToString(), value);
-                logFile.Flush();
             }
 #endif
         }
