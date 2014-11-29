@@ -1,7 +1,7 @@
-.parsed {
-	background-color: transparent;
+.parsed0, .parsed1, .parsed_name {
+	color: inherit !important;
 }
 
-.parsed:hover {
-	background-color: #bfcae8;
+.parsed0:hover .basetext, .parsed1:hover .basetext, .parsed_name:hover .basetext {
+	color: inherit !important;
 }

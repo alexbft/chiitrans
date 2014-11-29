@@ -28,20 +28,15 @@ namespace ChiitransLite.misc {
             return true;
         }
 
-        internal static bool isAllKatakanaOrHasLongVowel(string s) {
-            bool isAllKatakana = true;
-            bool hasLong = false;
-            bool hasKatakanaExceptLong = false;
+        internal static bool isAnyKatakanaOrHasLongVowel(string s) {
             foreach (char c in s) {
                 if (c == 'ー') {
-                    hasLong = true;
+                    return true;
                 } else if (isKatakana(c)) {
-                    hasKatakanaExceptLong = true;
-                } else {
-                    isAllKatakana = false;
+                    return true;
                 }
             }
-            return isAllKatakana || (hasLong && !hasKatakanaExceptLong);
+            return false;
         }
 
         internal static bool isAnyKatakana(string s) {

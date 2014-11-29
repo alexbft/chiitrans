@@ -12,6 +12,25 @@
     ]
   },
   {
+    "Name": "vi",
+    "Part of Speech" : "Verb",
+    "Tenses" : [
+      {
+        "Formal" : false,
+        "Negative" : false,
+        "Suffix" : "う",
+        "Tense" : ""
+      },
+      {
+        "Formal" : false, 
+        "Negative" : false, 
+        "Next Type" : "adj-i", 
+        "Suffix" : "い", 
+        "Tense" : ""
+      }
+    ]
+  },
+  {
     "Name": "pn",
     "Part of Speech" : "Pronoun",
     "Tenses" : [

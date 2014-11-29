@@ -187,48 +187,59 @@ namespace ChiitransLite.forms {
 
         public TranslationForm() {
             InitializeComponent();
-            hintForm = new HintForm();
-            hintForm.setMainForm(this);
-            backgroundForm = new BackgroundForm();
-            backgroundForm.setMainForm(this);
-            FormUtil.restoreLocation(this);
-            TopMost = Settings.app.stayOnTop;
-            webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
-            webBrowser1.Url = Utils.getUriForBrowser("translation.html");
-            TranslationService.instance.onTranslationRequest += (id, raw, src) => {
-                var translators = Settings.app.getSelectedTranslators(!Atlas.instance.isNotFound);
-                if (translators.Count == 1 && Settings.session.po != null) {
-                    // trying .po translation
-                    var poTrans = PoManager.instance.getTranslation(raw);
-                    if (!string.IsNullOrEmpty(poTrans)) {
-                        webBrowser1.callScript("newTranslationResult", id, Utils.toJson(new TranslationResult(poTrans, false)));
+
+                hintForm = new HintForm();
+                hintForm.setMainForm(this);
+                backgroundForm = new BackgroundForm();
+                backgroundForm.setMainForm(this);
+                FormUtil.restoreLocation(this);
+                TopMost = Settings.app.stayOnTop;
+                webBrowser1.ObjectForScripting = new BrowserInterop(webBrowser1, new InteropMethods(this));
+                webBrowser1.Url = Utils.getUriForBrowser("translation.html");
+                TranslationService.instance.onTranslationRequest += (id, raw, src) =>
+                {
+                    var translators = Settings.app.getSelectedTranslators(!Atlas.instance.isNotFound);
+                    if (translators.Count == 1 && Settings.session.po != null)
+                    {
+                        // trying .po translation
+                        var poTrans = PoManager.instance.getTranslation(raw);
+                        if (!string.IsNullOrEmpty(poTrans))
+                        {
+                            webBrowser1.callScript("newTranslationResult", id, Utils.toJson(new TranslationResult(poTrans, false)));
+                            return;
+                        }
+                    }
+                    webBrowser1.callScript("translate", id, raw, src, Utils.toJson(translators));
+                };
+                TranslationService.instance.onEdictDone += (id, parse) =>
+                {
+                    lastParseResult = parse;
+                    if (id == waitingForId)
+                    {
+                        waitingForId = -1;
                         return;
                     }
-                }
-                webBrowser1.callScript("translate", id, raw, src, Utils.toJson(translators));
-            };
-            TranslationService.instance.onEdictDone += (id, parse) => {
-                lastParseResult = parse;
-                if (id == waitingForId) {
-                    waitingForId = -1;
-                    return;
-                }
-                lastParseOptions = null;
-                submitParseResult(parse);
-            };
-            if (OptionsForm.instance.Visible) {
-                this.SuspendTopMostBegin();
-            }
-            OptionsForm.instance.VisibleChanged += (sender, e) => {
-                if ((sender as Form).Visible) {
+                    lastParseOptions = null;
+                    submitParseResult(parse);
+                };
+                if (OptionsForm.instance.Visible)
+                {
                     this.SuspendTopMostBegin();
-                } else {
-                    this.SuspendTopMostEnd();
                 }
-            };
-            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
-            //Utils.setWindowNoActivate(this.Handle);
-            Winapi.RegisterHotKey(Handle, 0, (int)Winapi.KeyModifier.None, (int)Keys.Oemtilde);
+                OptionsForm.instance.VisibleChanged += (sender, e) =>
+                {
+                    if ((sender as Form).Visible)
+                    {
+                        this.SuspendTopMostBegin();
+                    }
+                    else
+                    {
+                        this.SuspendTopMostEnd();
+                    }
+                };
+                SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+                //Utils.setWindowNoActivate(this.Handle);
+                Winapi.RegisterHotKey(Handle, 0, (int)Winapi.KeyModifier.None, (int)Keys.Oemtilde);
         }
 
         void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) {
@@ -364,6 +375,10 @@ namespace ChiitransLite.forms {
         }
 
         private void TranslationForm_Move(object sender, EventArgs e) {
+            if (backgroundForm == null)
+            {
+                return;
+            }
             FormUtil.saveLocation(this);
             moveBackgroundForm();
         }
@@ -375,6 +390,10 @@ namespace ChiitransLite.forms {
         }
 
         private void TranslationForm_Resize(object sender, EventArgs e) {
+            if (backgroundForm == null)
+            {
+                return;
+            }
             FormUtil.saveLocation(this);
             moveBackgroundForm();
         }

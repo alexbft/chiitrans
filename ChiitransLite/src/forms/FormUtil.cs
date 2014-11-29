@@ -12,10 +12,12 @@ namespace ChiitransLite.forms {
 
         private class FormData {
             public int topMostSuspendLevel = 0;
+            public bool initializeCompleted = false;
         }
 
         internal static void restoreLocation(Form form) {
             Rectangle loc;
+            getFormData(form).initializeCompleted = true;
             form.VisibleChanged += form_VisibleChanged;
             if (Settings.app.getProperty("location_" + form.Name, out loc)) {
                 if (Screen.GetWorkingArea(loc).IntersectsWith(loc)) {
@@ -27,7 +29,7 @@ namespace ChiitransLite.forms {
         }
 
         internal static void fixFormPosition(Form form, IntPtr targetWindow = default(IntPtr)) {
-            if (form.Visible && form.WindowState != FormWindowState.Minimized) {
+            if (getFormData(form).initializeCompleted && form.Visible && form.WindowState != FormWindowState.Minimized) {
                 var bounds = form.DesktopBounds;
                 Rectangle workingArea;
                 if (targetWindow == IntPtr.Zero) {
@@ -64,7 +66,8 @@ namespace ChiitransLite.forms {
         }
 
         internal static void saveLocation(Form form) {
-            if (form.WindowState == FormWindowState.Normal) {
+            if (getFormData(form).initializeCompleted && form.WindowState == FormWindowState.Normal)
+            {
                 Settings.app.setProperty("location_" + form.Name, form.DesktopBounds);
             }
         }
