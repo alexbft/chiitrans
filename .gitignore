@@ -1,6 +1,7 @@
 Installer/
 ChiitransLite/
 ChiitransLiteTests/
+CLInstall/
 ithwrapper/
 *.sln
 *.suo
