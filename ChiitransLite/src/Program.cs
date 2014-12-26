@@ -14,6 +14,8 @@ using System.Threading;
 namespace ChiitransLite {
     static class Program {
 
+        private static System.Threading.Timer settingsSaveTimer;
+
         public static string[] arguments;
         /// <summary>
         /// The main entry point for the application.
@@ -39,6 +41,9 @@ namespace ChiitransLite {
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += new EventHandler((_1, _2) => {
                 try {
+                    if (settingsSaveTimer != null) {
+                        settingsSaveTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                    }
                     settings.Settings.app.save();
                     Atlas.instance.close();
                     texthook.TextHookInterop.TextHookCleanup();
@@ -52,6 +57,12 @@ namespace ChiitransLite {
                     Process.GetCurrentProcess().Kill();
                 }
             });
+            settingsSaveTimer = new System.Threading.Timer(new TimerCallback((_) => {
+                try {
+                    settings.Settings.app.save();
+                    //Logger.log("Settings saved.");
+                } catch { }
+            }), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
             Application.Run(new MainForm());
         }
     }

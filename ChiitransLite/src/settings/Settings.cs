@@ -81,22 +81,24 @@ namespace ChiitransLite.settings {
         }
 
         public void save() {
-            if (selectedPages != null && selectedPagesDirty) {
-                Properties.Settings.Default.selectedPages = Utils.getJsonSerializer().Serialize(selectedPages);
-                selectedPagesDirty = false;
+            lock (this) {
+                if (selectedPages != null && selectedPagesDirty) {
+                    Properties.Settings.Default.selectedPages = Utils.getJsonSerializer().Serialize(selectedPages);
+                    selectedPagesDirty = false;
+                }
+                if (bannedWords != null && isBannedWordsDirty) {
+                    Properties.Settings.Default.bannedWords = Utils.getJsonSerializer().Serialize(bannedWords.Keys);
+                    Properties.Settings.Default.bannedWordsKana = Utils.getJsonSerializer().Serialize(bannedWordsKana.Keys);
+                    isBannedWordsDirty = false;
+                }
+                if (selectedReadings != null && isSelectedReadingsDirty) {
+                    Properties.Settings.Default.selectedReadings = Utils.getJsonSerializer().Serialize(selectedReadings);
+                    isSelectedReadingsDirty = false;
+                }
+                Properties.Settings.Default.selectedTranslators = Utils.getJsonSerializer().Serialize(selectedTranslators);
+                Properties.Settings.Default.Save();
+                SessionSettings.saveAll();
             }
-            if (bannedWords != null && isBannedWordsDirty) {
-                Properties.Settings.Default.bannedWords = Utils.getJsonSerializer().Serialize(bannedWords.Keys);
-                Properties.Settings.Default.bannedWordsKana = Utils.getJsonSerializer().Serialize(bannedWordsKana.Keys);
-                isBannedWordsDirty = false;
-            }
-            if (selectedReadings != null && isSelectedReadingsDirty) {
-                Properties.Settings.Default.selectedReadings = Utils.getJsonSerializer().Serialize(selectedReadings);
-                isSelectedReadingsDirty = false;
-            }
-            Properties.Settings.Default.selectedTranslators = Utils.getJsonSerializer().Serialize(selectedTranslators);
-            Properties.Settings.Default.Save();
-            SessionSettings.saveAll();
         }
 
         private void initSelectedPages() {

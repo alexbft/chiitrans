@@ -1,4 +1,4 @@
-﻿MAX_LOG = 20
+﻿MAX_LOG = 30
 $history = null
 $content = null
 $current = null

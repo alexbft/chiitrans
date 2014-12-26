@@ -239,7 +239,7 @@ namespace ChiitransLite.forms {
                 };
                 SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
                 //Utils.setWindowNoActivate(this.Handle);
-                Winapi.RegisterHotKey(Handle, 0, (int)Winapi.KeyModifier.None, (int)Keys.Oemtilde);
+                Winapi.RegisterHotKey(Handle, 0, (int)Winapi.KeyModifier.Control, (int)Keys.Oemtilde);
         }
 
         void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) {

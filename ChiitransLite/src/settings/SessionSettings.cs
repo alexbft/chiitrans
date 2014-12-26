@@ -99,89 +99,99 @@ namespace ChiitransLite.settings {
         }
 
         private void tryLoad() {
-            try {
-                if (File.Exists(fileName)) {
-                    string json = File.ReadAllText(fileName);
-                    var serializer = Utils.getJsonSerializer();
-                    IDictionary data = serializer.DeserializeObject(json) as IDictionary;
-                    userNames.Clear();
-                    IList namesJson = data["names"] as IList;
-                    foreach (IDictionary nameData in namesJson.Cast<IDictionary>()) {
-                        string key = nameData["key"] as string;
-                        string sense = nameData["sense"] as string;
-                        string nameType = nameData["type"] as string;
-                        addUserName(key, sense, nameType);
-                    }
-                    contextsEnabled.Clear();
-                    IDictionary contextsJson = data["contexts"] as IDictionary;
-                    foreach (DictionaryEntry kv in contextsJson) {
-                        contextsEnabled[long.Parse((string)kv.Key)] = (bool)kv.Value;
-                    }
-                    _newContextsBehavior = (MyContextFactory.NewContextsBehavior) Enum.Parse(typeof(MyContextFactory.NewContextsBehavior), (string)data["newContexts"]);
-                    userHooks.Clear();
-                    IList hooksJson = data["hooks"] as IList;
-                    foreach (string code in hooksJson.Cast<string>()) {
-                        UserHook hook = UserHook.fromCode(code);
-                        if (hook != null) {
-                            userHooks.Add(hook);
+            lock (this) {
+                try {
+                    if (File.Exists(fileName)) {
+                        string json = File.ReadAllText(fileName);
+                        var serializer = Utils.getJsonSerializer();
+                        IDictionary data = serializer.DeserializeObject(json) as IDictionary;
+                        userNames.Clear();
+                        IList namesJson = data["names"] as IList;
+                        foreach (IDictionary nameData in namesJson.Cast<IDictionary>()) {
+                            string key = nameData["key"] as string;
+                            string sense = nameData["sense"] as string;
+                            string nameType = nameData["type"] as string;
+                            addUserName(key, sense, nameType);
+                        }
+                        contextsEnabled.Clear();
+                        IDictionary contextsJson = data["contexts"] as IDictionary;
+                        foreach (DictionaryEntry kv in contextsJson) {
+                            contextsEnabled[long.Parse((string)kv.Key)] = (bool)kv.Value;
+                        }
+                        _newContextsBehavior = (MyContextFactory.NewContextsBehavior)Enum.Parse(typeof(MyContextFactory.NewContextsBehavior), (string)data["newContexts"]);
+                        userHooks.Clear();
+                        IList hooksJson = data["hooks"] as IList;
+                        foreach (string code in hooksJson.Cast<string>()) {
+                            UserHook hook = UserHook.fromCode(code);
+                            if (hook != null) {
+                                userHooks.Add(hook);
+                            }
+                        }
+                        _po = data["po"] as string;
+                        if (data["sentenceDelay"] != null) {
+                            int sd = (int)data["sentenceDelay"];
+                            _sentenceDelay = TimeSpan.FromMilliseconds(sd);
                         }
                     }
-                    _po = data["po"] as string;
-                    if (data["sentenceDelay"] != null) {
-                        int sd = (int)data["sentenceDelay"];
-                        _sentenceDelay = TimeSpan.FromMilliseconds(sd);
-                    }
-                }
-            } catch (Exception e) {
-                Logger.logException(e);
-            }
-            isDirty = false;
-        }
-
-        public void loadNames(IEnumerable<object> names) {
-            userNames.Clear();
-            foreach (dynamic name in names) {
-                addUserName(name.key, name.sense, name.type);
-            }
-            this.isDirty = true;
-        }
-
-        public void addUserName(string key, string sense, string nameType) {
-            Settings.app.removeBannedWord(key);
-            EdictMatch match = new EdictMatch(key);
-            EdictEntryBuilder eb = new EdictEntryBuilder();
-            eb.addKanji(new DictionaryKeyBuilder(key));
-            eb.addKana(new DictionaryKeyBuilder(sense));
-            DictionarySense ds = new DictionarySense();
-            ds.addGloss(null, sense);
-            eb.addSense(ds);
-            if (nameType != "notname") {
-                eb.addPOS("name");
-            } else {
-                eb.addPOS("n");
-            }
-            eb.nameType = nameType;
-            match.addEntry(new RatedEntry { entry = eb.build(), rate = 5.0F });
-            userNames[key] = match;
-            this.isDirty = true;
-        }
-
-        public void removeUserName(string key) {
-            userNames.Remove(key);
-            this.isDirty = true;
-        }
-
-        private void save() {
-            if (isDirty) {
-                try {
-                    object res = serialize();
-                    string resJson = Utils.toJson(res);
-                    File.WriteAllText(fileName, resJson);
-                } catch (IOException) {
                 } catch (Exception e) {
                     Logger.logException(e);
                 }
                 isDirty = false;
+            }
+        }
+
+        public void loadNames(IEnumerable<object> names) {
+            lock (this) {
+                userNames.Clear();
+                foreach (dynamic name in names) {
+                    addUserName(name.key, name.sense, name.type);
+                }
+                this.isDirty = true;
+            }
+        }
+
+        public void addUserName(string key, string sense, string nameType) {
+            lock (this) {
+                Settings.app.removeBannedWord(key);
+                EdictMatch match = new EdictMatch(key);
+                EdictEntryBuilder eb = new EdictEntryBuilder();
+                eb.addKanji(new DictionaryKeyBuilder(key));
+                eb.addKana(new DictionaryKeyBuilder(sense));
+                DictionarySense ds = new DictionarySense();
+                ds.addGloss(null, sense);
+                eb.addSense(ds);
+                if (nameType != "notname") {
+                    eb.addPOS("name");
+                } else {
+                    eb.addPOS("n");
+                }
+                eb.nameType = nameType;
+                match.addEntry(new RatedEntry { entry = eb.build(), rate = 5.0F });
+                userNames[key] = match;
+                this.isDirty = true;
+            }
+        }
+
+        public void removeUserName(string key) {
+            lock (this) {
+                userNames.Remove(key);
+                this.isDirty = true;
+            }
+        }
+
+        private void save() {
+            lock (this) {
+                if (isDirty) {
+                    try {
+                        object res = serialize();
+                        string resJson = Utils.toJson(res);
+                        File.WriteAllText(fileName, resJson);
+                    } catch (IOException) {
+                    } catch (Exception e) {
+                        Logger.logException(e);
+                    }
+                    isDirty = false;
+                }
             }
         }
 
@@ -219,15 +229,17 @@ namespace ChiitransLite.settings {
         }
 
         public void setContextEnabled(int addr, int sub, bool enabled) {
-            long key = contextKey(addr, sub);
-            bool old;
-            if (contextsEnabled.TryGetValue(key, out old)) {
-                if (old == enabled) {
-                    return;
+            lock (this) {
+                long key = contextKey(addr, sub);
+                bool old;
+                if (contextsEnabled.TryGetValue(key, out old)) {
+                    if (old == enabled) {
+                        return;
+                    }
                 }
+                contextsEnabled[key] = enabled;
+                isDirty = true;
             }
-            contextsEnabled[key] = enabled;
-            isDirty = true;
         }
 
         public bool tryGetContextEnabled(int addr, int sub, out bool enabled) {
@@ -247,21 +259,27 @@ namespace ChiitransLite.settings {
         }
 
         internal void addUserHook(UserHook userHook) {
-            userHooks.Add(userHook);
-            isDirty = true;
+            lock (this) {
+                userHooks.Add(userHook);
+                isDirty = true;
+            }
         }
 
         internal bool removeUserHook(UserHook userHook) {
-            bool ok = userHooks.Remove(userHook);
-            if (ok) {
-                isDirty = true;
+            lock (this) {
+                bool ok = userHooks.Remove(userHook);
+                if (ok) {
+                    isDirty = true;
+                }
             }
             return isDirty;
         }
 
         internal void resetUserNames() {
-            userNames.Clear();
-            this.isDirty = true;
+            lock (this) {
+                userNames.Clear();
+                this.isDirty = true;
+            }
         }
     }
 }

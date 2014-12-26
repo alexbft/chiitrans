@@ -277,6 +277,7 @@
     <None Include="www\js\index.coffee" />
     <None Include="www\js\translation.coffee" />
     <None Include="www\js\translators.coffee" />
+    <None Include="www\res\font\fontello.eot" />
     <None Include="www\res\options.less" />
     <None Include="www\res\index.less" />
     <None Include="www\res\hint.less" />
@@ -290,13 +291,32 @@
     <Content Include="ohayo.ico" />
     <None Include="src\ohayo_small.ico" />
     <Content Include="src\todo.txt" />
+    <Content Include="www\js\jquery-ui.js" />
+    <Content Include="www\js\jquery.js" />
     <Content Include="www\js\options.js">
       <DependentUpon>options.coffee</DependentUpon>
     </Content>
     <Content Include="www\js\translators.js">
       <DependentUpon>translators.coffee</DependentUpon>
     </Content>
+    <Content Include="www\js\underscore.js" />
     <Content Include="www\options.html" />
+    <Content Include="www\res\fontello.css" />
+    <Content Include="www\res\images\animated-overlay.gif" />
+    <Content Include="www\res\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="www\res\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="www\res\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="www\res\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="www\res\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="www\res\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="www\res\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="www\res\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="www\res\images\ui-icons_222222_256x240.png" />
+    <Content Include="www\res\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="www\res\images\ui-icons_454545_256x240.png" />
+    <Content Include="www\res\images\ui-icons_888888_256x240.png" />
+    <Content Include="www\res\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="www\res\jquery-ui.css" />
     <Content Include="www\res\options.css">
       <DependentUpon>options.less</DependentUpon>
     </Content>
@@ -338,6 +358,10 @@
     <Content Include="www\res\translation.min.css">
       <DependentUpon>translation.less</DependentUpon>
     </Content>
+    <Content Include="www\themes\HideFurigana.css" />
+    <Content Include="www\themes\kuroneko.png" />
+    <Content Include="www\themes\Neko.css" />
+    <Content Include="www\themes\PlainText.css" />
     <Content Include="www\translation.html" />
   </ItemGroup>
   <ItemGroup />

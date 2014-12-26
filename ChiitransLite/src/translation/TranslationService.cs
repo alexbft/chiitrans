@@ -20,6 +20,7 @@ namespace ChiitransLite.translation {
     class TranslationService {
         const int MAX_CACHE = 100;
         const int MAX_TEXT_LENGTH = 1000;
+        const int MAX_CONCURRENT_TRANSLATION_TASKS = 5;
 
         private static TranslationService _instance = new TranslationService();
 
@@ -51,21 +52,6 @@ namespace ChiitransLite.translation {
 
         public Task<ParseResult> updateId(int curId, string text, ParseOptions options) {
             text = preParseReplacements(text);
-            /*if (Settings.app.translationDisplay == TranslationDisplay.TRANSLATION) {
-
-            }
-            if (doTranslation) {
-                startTranslationRequest(
-                if (Settings.session.po != null) {
-                    var poTrans = PoManager.instance.getTranslation(text);
-                    if (!string.IsNullOrEmpty(poTrans)) {
-                        if (onTranslationRequest != null) {
-                            onTranslationRequest(curId, new TranslationResult(poTrans, false));
-                        }
-                        doTranslation = false;
-                    }
-                }
-            }*/
             bool doTranslation = Settings.app.translationDisplay == TranslationDisplay.TRANSLATION || Settings.app.translationDisplay == TranslationDisplay.BOTH;
             return startParse(curId, text, doTranslation, options);
         }
@@ -114,34 +100,24 @@ namespace ChiitransLite.translation {
             });
         }
 
+        private int translationTasksActive = 0;
+
         private void sendTranslationRequest(int curId, ParseResult parseData) {
             if (onTranslationRequest != null) {
-                var raw = parseData.asText();
-                var src = Edict.instance.replaceNames(parseData);
-                onTranslationRequest(curId, raw, src);
+                int activeTasks = Interlocked.Increment(ref translationTasksActive);
+                try
+                {
+                    if (activeTasks < MAX_CONCURRENT_TRANSLATION_TASKS)
+                    {
+                        var raw = parseData.asText();
+                        var src = Edict.instance.replaceNames(parseData);
+                        onTranslationRequest(curId, raw, src);
+                    }
+                } finally {
+                    Interlocked.Decrement(ref translationTasksActive);
+                }
             }
         }
-
-        /*public void startTranslation(int curId, ParseResult parseData) {
-            Task.Factory.StartNew(() => {
-                try {
-                    var text2 = Edict.instance.replaceNames(parseData);
-                    string translatedText = Atlas.instance.translate(text2);
-                    if (translatedText != null) {
-                        var tres = new TranslationResult(translatedText, true);
-                        if (onTranslationRequest != null) {
-                            onTranslationRequest(curId, tres);
-                        }
-                        return tres;
-                    } else {
-                        return null;
-                    }
-                } catch (Exception e) {
-                    Logger.logException(e);
-                    return null;
-                }
-            });
-        }*/
 
         public ParseResult getParseResult(int id) {
             return parseCache.GetOrDefault(id);
