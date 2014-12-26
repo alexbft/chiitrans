@@ -20,7 +20,7 @@ namespace ChiitransLite.translation {
     class TranslationService {
         const int MAX_CACHE = 100;
         const int MAX_TEXT_LENGTH = 1000;
-        const int MAX_CONCURRENT_TRANSLATION_TASKS = 5;
+        const int MAX_CONCURRENT_TRANSLATION_TASKS = 4;
 
         private static TranslationService _instance = new TranslationService();
 
@@ -102,20 +102,24 @@ namespace ChiitransLite.translation {
 
         private int translationTasksActive = 0;
 
+        internal T limiter<T>(Func<T> func, T rejectValue = default(T)) {
+            int activeTasks = Interlocked.Increment(ref translationTasksActive);
+            try {
+                if (activeTasks < MAX_CONCURRENT_TRANSLATION_TASKS * Settings.app.getSelectedTranslators(true).Count) {
+                    return func();
+                } else {
+                    return rejectValue;
+                }
+            } finally {
+                Interlocked.Decrement(ref translationTasksActive);
+            }
+        }
+
         private void sendTranslationRequest(int curId, ParseResult parseData) {
             if (onTranslationRequest != null) {
-                int activeTasks = Interlocked.Increment(ref translationTasksActive);
-                try
-                {
-                    if (activeTasks < MAX_CONCURRENT_TRANSLATION_TASKS)
-                    {
-                        var raw = parseData.asText();
-                        var src = Edict.instance.replaceNames(parseData);
-                        onTranslationRequest(curId, raw, src);
-                    }
-                } finally {
-                    Interlocked.Decrement(ref translationTasksActive);
-                }
+                var raw = parseData.asText();
+                var src = Edict.instance.replaceNames(parseData);
+                onTranslationRequest(curId, raw, src);
             }
         }
 

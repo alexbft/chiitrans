@@ -164,11 +164,15 @@ namespace ChiitransLite.forms {
             }
 
             public string translateAtlas(string src) {
-                return Atlas.instance.translate(src);
+                return TranslationService.instance.limiter(
+                    () => Atlas.instance.translate(src),
+                    "(skip)");
             }
 
             public string translateAtlas2(string src) {
-                return Atlas.instance.translateWithReplacements(src);
+                return TranslationService.instance.limiter(
+                    () => Atlas.instance.translateWithReplacements(src),
+                    "(skip)");
             }
 
             public string translateCustom(string src) {
@@ -176,13 +180,16 @@ namespace ChiitransLite.forms {
             }
 
             public object httpRequest(string url, bool useShiftJis, string method, string query) {
-                try {
-                    return new { res = Utils.httpRequest(url, useShiftJis, method, query) };
-                } catch (Exception ex) {
-                    return new { error = ex.Message };
-                }
+                return TranslationService.instance.limiter<object>(
+                    () => {
+                        try {
+                            return new { res = Utils.httpRequest(url, useShiftJis, method, query) };
+                        } catch (Exception ex) {
+                            return new { error = ex.Message };
+                        }
+                    },
+                    new { error = "(skip)" });
             }
-
         }
 
         public TranslationForm() {

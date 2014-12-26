@@ -42,8 +42,9 @@ $ ->
 
     makeResizer = (ctl, dx, dy) ->
         $('#' + ctl).mousedown (ev) ->
-            ev.preventDefault()
-            host().resizeForm(dx, dy)
+            if ev.which == 1
+                ev.preventDefault()
+                host().resizeForm(dx, dy)
     
     makeResizer('sideTop', 0, -1)
     makeResizer('sideBottom', 0, 1)
@@ -113,13 +114,9 @@ $ ->
     $current = $('#current')
 
     document_attachEvent 'onmousewheel', (e) ->
-        ev = $.Event e
-        if host().onWheel(-(e.wheelDelta / 120))
-            ev.preventDefault()
-        else
-            if e.wheelDelta > 0 and $history.css('display') == 'none'
-                $history.show()
-                $content.scrollTop 99999
+        if e.wheelDelta > 0 and $history.css('display') == 'none'
+            $history.show()
+            $content.scrollTop 99999
         return
 
     $(document).keydown (ev) ->

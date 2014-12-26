@@ -1,7 +1,7 @@
 (function() {
   var $content, $current, $currentEntry, $font, $history, $trans, MAX_LOG, createNewEntry, currentEntryId, currentWord, flash, getCurrentWord, getSelectedEntryId, getTextSelection, http, lastEntryId, lastParseResult, log, makePopupSlider, moveToHistory, newParseResult, newTranslationResult, onNewEntry, registerTranslators, renderMultiTranslationResult, renderOldTranslationResult, renderParseResult, renderSimpleTranslationResult, roundTo1_100, separateSpeaker, separateWords, setFontSize, setSeparateSpeaker, setSeparateWords, setTransparencyLevel, setTransparentMode, translate, translators, updateMultiTranslationResult, updateReading, updateTranslationResult;
 
-  MAX_LOG = 20;
+  MAX_LOG = 30;
 
   $history = null;
 
@@ -55,8 +55,10 @@
     });
     makeResizer = function(ctl, dx, dy) {
       return $('#' + ctl).mousedown(function(ev) {
-        ev.preventDefault();
-        return host().resizeForm(dx, dy);
+        if (ev.which === 1) {
+          ev.preventDefault();
+          return host().resizeForm(dx, dy);
+        }
       });
     };
     makeResizer('sideTop', 0, -1);
@@ -132,15 +134,9 @@
     $history = $('#history');
     $current = $('#current');
     document_attachEvent('onmousewheel', function(e) {
-      var ev;
-      ev = $.Event(e);
-      if (host().onWheel(-(e.wheelDelta / 120))) {
-        ev.preventDefault();
-      } else {
-        if (e.wheelDelta > 0 && $history.css('display') === 'none') {
-          $history.show();
-          $content.scrollTop(99999);
-        }
+      if (e.wheelDelta > 0 && $history.css('display') === 'none') {
+        $history.show();
+        $content.scrollTop(99999);
       }
     });
     $(document).keydown(function(ev) {
@@ -339,7 +335,7 @@
     i = 0;
     format = function(s) {
       var j, q;
-      if (!(s != null)) {
+      if (s == null) {
         return "";
       }
       q = (function() {
@@ -388,7 +384,7 @@
       if (_.isArray(part)) {
         text = part[0], stem = part[1], reading = part[2], isName = part[3];
         parsedClassSuffix = isName ? "_name" : colorNum;
-        if (!(reading != null) || reading === "") {
+        if ((reading == null) || reading === "") {
           $block = $("<span class=\"noruby\"><span data-num=\"" + i + "\" class=\"text parsed parsed" + parsedClassSuffix + "\"><span class=\"basetext\">" + (format(text)) + "</span></span></span>");
         } else {
           readingFormatted = "&#8203;" + (_.escape(reading)) + "&#8203;";
@@ -506,10 +502,12 @@
   };
 
   setFontSize = function(size) {
+    var e;
     $font.attr('title', "Font size: " + (roundTo1_100(size)) + "%");
     try {
       $('#fontSizeStyle')[0].styleSheet.cssText = ".font_zoom { font-size: " + size + "% }";
-    } catch (e) {
+    } catch (_error) {
+      e = _error;
       $('#fontSizeStyle').html(".font_zoom { font-size: " + size + "% }");
     }
   };
@@ -530,8 +528,7 @@
   };
 
   translate = window.translate = function(id, raw, src, translatorsListJson) {
-    var container, ex, t, translatorsList, _fn, _i, _j, _len, _len1,
-      _this = this;
+    var container, ex, t, translatorsList, _fn, _i, _j, _len, _len1;
     translatorsList = JSON.parse(translatorsListJson);
     ex = {
       id: id,
@@ -547,11 +544,13 @@
     } else {
       container = renderMultiTranslationResult(translatorsList);
       updateTranslationResult(id, container);
-      _fn = function(t) {
-        return translators[t](src, function(res) {
-          return updateMultiTranslationResult(container, t, res);
-        }, ex);
-      };
+      _fn = (function(_this) {
+        return function(t) {
+          return translators[t](src, function(res) {
+            return updateMultiTranslationResult(container, t, res);
+          }, ex);
+        };
+      })(this);
       for (_j = 0, _len1 = translatorsList.length; _j < _len1; _j++) {
         t = translatorsList[_j];
         _fn(t);
@@ -571,7 +570,7 @@
         useShiftJis: false,
         method: "get"
       });
-      if (options.method.toLowerCase() !== "get" && !(options.query != null)) {
+      if (options.method.toLowerCase() !== "get" && (options.query == null)) {
         _ref = options.url.split('?'), options.url = _ref[0], options.query = _ref[1];
       }
       return host().httpRequest(options.url, options.useShiftJis, options.method, options.query, function(res) {

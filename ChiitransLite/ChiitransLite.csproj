@@ -296,6 +296,9 @@
     <Content Include="www\js\options.js">
       <DependentUpon>options.coffee</DependentUpon>
     </Content>
+    <Content Include="www\js\translation.js">
+      <DependentUpon>translation.coffee</DependentUpon>
+    </Content>
     <Content Include="www\js\translators.js">
       <DependentUpon>translators.coffee</DependentUpon>
     </Content>
